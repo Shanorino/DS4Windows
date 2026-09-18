@@ -2,7 +2,7 @@ using System;
 using System.Buffers.Binary;
 using System.Security.Cryptography;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// A scan-local keyed pseudonym for a BLE peer. It deliberately is not a

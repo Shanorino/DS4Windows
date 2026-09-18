@@ -2,9 +2,9 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Forms;
+namespace FUT404DSWPF.DS4Forms;
 
 internal static class ControllerSoundSettingsNavigation
 {

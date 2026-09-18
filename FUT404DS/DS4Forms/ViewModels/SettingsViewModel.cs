@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -29,44 +29,44 @@ using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Runtime.InteropServices;
-using DS4Windows;
-using static DS4Windows.Util;
+using FUT404DS;
+using static FUT404DS.Util;
 using Microsoft.Win32;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class SettingsViewModel
     {
         // Re-Enable Ex Mode
         public bool HideDS4Controller
         {
-            get => DS4Windows.Global.UseExclusiveMode;
-            set => DS4Windows.Global.UseExclusiveMode = value;
+            get => FUT404DS.Global.UseExclusiveMode;
+            set => FUT404DS.Global.UseExclusiveMode = value;
         }
 
         public bool ReclaimSteamInput
         {
-            get => DS4Windows.Global.ReclaimSteamInput;
-            set => DS4Windows.Global.ReclaimSteamInput = value;
+            get => FUT404DS.Global.ReclaimSteamInput;
+            set => FUT404DS.Global.ReclaimSteamInput = value;
         }
 
-        public bool SwipeTouchSwitchProfile { get => DS4Windows.Global.SwipeProfiles;
-            set => DS4Windows.Global.SwipeProfiles = value; }
+        public bool SwipeTouchSwitchProfile { get => FUT404DS.Global.SwipeProfiles;
+            set => FUT404DS.Global.SwipeProfiles = value; }
 
         public bool AutomaticJoyConPairing
         {
-            get => DS4Windows.Global.DeviceOptions.JoyConDeviceOpts.
+            get => FUT404DS.Global.DeviceOptions.JoyConDeviceOpts.
                 AutomaticPairing;
             set
             {
-                if (DS4Windows.Global.DeviceOptions.JoyConDeviceOpts.
+                if (FUT404DS.Global.DeviceOptions.JoyConDeviceOpts.
                         AutomaticPairing == value)
                 {
                     return;
                 }
-                DS4Windows.Global.DeviceOptions.JoyConDeviceOpts.
+                FUT404DS.Global.DeviceOptions.JoyConDeviceOpts.
                     AutomaticPairing = value;
-                DS4Windows.Global.Save();
+                FUT404DS.Global.Save();
             }
         }
 
@@ -167,7 +167,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public int ShowNotificationsIndex
         {
-            get => DS4Windows.Global.Notifications;
+            get => FUT404DS.Global.Notifications;
             set
             {
                 Global.Notifications = value;
@@ -176,52 +176,52 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
         }
 
-        public bool DisconnectBTStop { get => DS4Windows.Global.DCBTatStop; set => DS4Windows.Global.DCBTatStop = value; }
-        public bool FlashHighLatency { get => DS4Windows.Global.FlashWhenLate; set => DS4Windows.Global.FlashWhenLate = value; }
-        public int FlashHighLatencyAt { get => DS4Windows.Global.FlashWhenLateAt; set => DS4Windows.Global.FlashWhenLateAt = value; }
-        public bool StartMinimize { get => DS4Windows.Global.StartMinimized; set => DS4Windows.Global.StartMinimized = value; }
-        public bool MinimizeToTaskbar { get => DS4Windows.Global.MinToTaskbar; set => DS4Windows.Global.MinToTaskbar = value; }
-        public bool CloseMinimizes { get => DS4Windows.Global.CloseMini; set => DS4Windows.Global.CloseMini = value; }
-        public bool QuickCharge { get => DS4Windows.Global.QuickCharge; set => DS4Windows.Global.QuickCharge = value; }
+        public bool DisconnectBTStop { get => FUT404DS.Global.DCBTatStop; set => FUT404DS.Global.DCBTatStop = value; }
+        public bool FlashHighLatency { get => FUT404DS.Global.FlashWhenLate; set => FUT404DS.Global.FlashWhenLate = value; }
+        public int FlashHighLatencyAt { get => FUT404DS.Global.FlashWhenLateAt; set => FUT404DS.Global.FlashWhenLateAt = value; }
+        public bool StartMinimize { get => FUT404DS.Global.StartMinimized; set => FUT404DS.Global.StartMinimized = value; }
+        public bool MinimizeToTaskbar { get => FUT404DS.Global.MinToTaskbar; set => FUT404DS.Global.MinToTaskbar = value; }
+        public bool CloseMinimizes { get => FUT404DS.Global.CloseMini; set => FUT404DS.Global.CloseMini = value; }
+        public bool QuickCharge { get => FUT404DS.Global.QuickCharge; set => FUT404DS.Global.QuickCharge = value; }
         public bool VerboseStartupLogging
         {
-            get => DS4Windows.Global.VerboseStartupLogging;
+            get => FUT404DS.Global.VerboseStartupLogging;
             set
             {
-                if (DS4Windows.Global.VerboseStartupLogging == value)
+                if (FUT404DS.Global.VerboseStartupLogging == value)
                 {
                     return;
                 }
 
-                DS4Windows.Global.VerboseStartupLogging = value;
-                DS4Windows.Global.Save();
+                FUT404DS.Global.VerboseStartupLogging = value;
+                FUT404DS.Global.Save();
             }
         }
 
         public bool PromptForViiperSetup
         {
-            get => !DS4Windows.Global.SuppressViiperSetupPrompt;
+            get => !FUT404DS.Global.SuppressViiperSetupPrompt;
             set
             {
                 bool suppress = !value;
-                if (DS4Windows.Global.SuppressViiperSetupPrompt == suppress)
+                if (FUT404DS.Global.SuppressViiperSetupPrompt == suppress)
                 {
                     return;
                 }
 
-                DS4Windows.Global.SuppressViiperSetupPrompt = suppress;
-                DS4Windows.Global.Save();
+                FUT404DS.Global.SuppressViiperSetupPrompt = suppress;
+                FUT404DS.Global.Save();
             }
         }
 
         public int IconChoiceIndex
         {
-            get => (int)DS4Windows.Global.UseIconChoice;
+            get => (int)FUT404DS.Global.UseIconChoice;
             set
             {
-                int temp = (int)DS4Windows.Global.UseIconChoice;
+                int temp = (int)FUT404DS.Global.UseIconChoice;
                 if (temp == value) return;
-                DS4Windows.Global.UseIconChoice = (DS4Windows.TrayIconChoice)value;
+                FUT404DS.Global.UseIconChoice = (FUT404DS.TrayIconChoice)value;
                 IconChoiceIndexChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -229,12 +229,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public int AppChoiceIndex
         {
-            get => (int)DS4Windows.Global.UseCurrentTheme;
+            get => (int)FUT404DS.Global.UseCurrentTheme;
             set
             {
-                int temp = (int)DS4Windows.Global.UseCurrentTheme;
+                int temp = (int)FUT404DS.Global.UseCurrentTheme;
                 if (temp == value) return;
-                DS4Windows.Global.UseCurrentTheme = (DS4Windows.AppThemeChoice)value;
+                FUT404DS.Global.UseCurrentTheme = (FUT404DS.AppThemeChoice)value;
                 AppChoiceIndexChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -242,10 +242,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public bool CheckForUpdates
         {
-            get => DS4Windows.Global.CheckWhen > 0;
+            get => FUT404DS.Global.CheckWhen > 0;
             set
             {
-                DS4Windows.Global.CheckWhen = value ? 24 : 0;
+                FUT404DS.Global.CheckWhen = value ? 24 : 0;
                 CheckForNoUpdatesWhen();
             }
         }
@@ -255,7 +255,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             get
             {
-                int temp = DS4Windows.Global.CheckWhen;
+                int temp = FUT404DS.Global.CheckWhen;
                 if (temp > 23)
                 {
                     temp = temp / 24;
@@ -267,19 +267,19 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 int temp;
                 if (checkEveryUnitIdx == 0 && value < 24)
                 {
-                    temp = DS4Windows.Global.CheckWhen;
+                    temp = FUT404DS.Global.CheckWhen;
                     if (temp != value)
                     {
-                        DS4Windows.Global.CheckWhen = value;
+                        FUT404DS.Global.CheckWhen = value;
                         CheckForNoUpdatesWhen();
                     }
                 }
                 else if (checkEveryUnitIdx == 1)
                 {
-                    temp = DS4Windows.Global.CheckWhen / 24;
+                    temp = FUT404DS.Global.CheckWhen / 24;
                     if (temp != value)
                     {
-                        DS4Windows.Global.CheckWhen = value * 24;
+                        FUT404DS.Global.CheckWhen = value * 24;
                         CheckForNoUpdatesWhen();
                     }
                 }
@@ -305,59 +305,59 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public bool UseOSCServer
         {
-            get => DS4Windows.Global.isUsingOSCServer();
+            get => FUT404DS.Global.isUsingOSCServer();
             set
             {
-                if (DS4Windows.Global.isUsingOSCServer() == value) return;
-                DS4Windows.Global.setUsingOSCServer(value);
+                if (FUT404DS.Global.isUsingOSCServer() == value) return;
+                FUT404DS.Global.setUsingOSCServer(value);
                 UseOSCServerChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public event EventHandler UseOSCServerChanged;
-        public int OscPort { get => DS4Windows.Global.getOSCServerPortNum(); set => DS4Windows.Global.setOSCServerPort(value); }
+        public int OscPort { get => FUT404DS.Global.getOSCServerPortNum(); set => FUT404DS.Global.setOSCServerPort(value); }
         
-        public bool InterpretingOscMonitoring { get => DS4Windows.Global.isInterpretingOscMonitoring(); set => DS4Windows.Global.setInterpretingOscMonitoring(value); }
+        public bool InterpretingOscMonitoring { get => FUT404DS.Global.isInterpretingOscMonitoring(); set => FUT404DS.Global.setInterpretingOscMonitoring(value); }
 
         public bool UseOSCSender
         {
-            get => DS4Windows.Global.isUsingOSCSender();
+            get => FUT404DS.Global.isUsingOSCSender();
             set
             {
-                if (DS4Windows.Global.isUsingOSCSender() == value) return;
-                DS4Windows.Global.setUsingOSCSender(value);
+                if (FUT404DS.Global.isUsingOSCSender() == value) return;
+                FUT404DS.Global.setUsingOSCSender(value);
                 UseOSCSenderChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public event EventHandler UseOSCSenderChanged;
-        public int OscSendPort { get => DS4Windows.Global.getOSCSenderPortNum(); set => DS4Windows.Global.setOSCSenderPort(value); }
+        public int OscSendPort { get => FUT404DS.Global.getOSCSenderPortNum(); set => FUT404DS.Global.setOSCSenderPort(value); }
 
         public string OscSenderAddress
         {
-            get => DS4Windows.Global.getOSCSenderAddress();
-            set => DS4Windows.Global.setOSCSenderAddress(value);
+            get => FUT404DS.Global.getOSCSenderAddress();
+            set => FUT404DS.Global.setOSCSenderAddress(value);
         }
 
 
         public bool UseUDPServer
         {
-            get => DS4Windows.Global.isUsingUDPServer();
+            get => FUT404DS.Global.isUsingUDPServer();
             set
             {
-                if (DS4Windows.Global.isUsingUDPServer() == value) return;
-                DS4Windows.Global.setUsingUDPServer(value);
+                if (FUT404DS.Global.isUsingUDPServer() == value) return;
+                FUT404DS.Global.setUsingUDPServer(value);
                 UseUDPServerChanged?.Invoke(this, EventArgs.Empty);
             }
         }
         public event EventHandler UseUDPServerChanged;
 
-        public string UdpIpAddress { get => DS4Windows.Global.getUDPServerListenAddress();
-            set => DS4Windows.Global.setUDPServerListenAddress(value); }
-        public int UdpPort { get => DS4Windows.Global.getUDPServerPortNum(); set => DS4Windows.Global.setUDPServerPort(value); }
+        public string UdpIpAddress { get => FUT404DS.Global.getUDPServerListenAddress();
+            set => FUT404DS.Global.setUDPServerListenAddress(value); }
+        public int UdpPort { get => FUT404DS.Global.getUDPServerPortNum(); set => FUT404DS.Global.setUDPServerPort(value); }
 
         // Keep edits local until Apply validates the entire endpoint. A failed
         // bind can retain a valid requested preference, but an invalid draft
         // must not silently enable the previous endpoint on the next Start.
-        private bool useDSXUDPServer = DS4Windows.Global.IsUsingDSXUDPServer();
+        private bool useDSXUDPServer = FUT404DS.Global.IsUsingDSXUDPServer();
         public bool UseDSXUDPServer
         {
             get => useDSXUDPServer;
@@ -370,18 +370,18 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         }
         public event EventHandler UseDSXUDPServerChanged;
 
-        public string DSXUdpIpAddress { get; set; } = DS4Windows.Global.GetDSXUDPServerListenAddress();
+        public string DSXUdpIpAddress { get; set; } = FUT404DS.Global.GetDSXUDPServerListenAddress();
 
-        public int DSXUdpPort { get; set; } = DS4Windows.Global.GetDSXUDPServerPortNum();
+        public int DSXUdpPort { get; set; } = FUT404DS.Global.GetDSXUDPServerPortNum();
 
         public bool UseUdpSmoothing
         {
-            get => DS4Windows.Global.UseUDPSeverSmoothing;
+            get => FUT404DS.Global.UseUDPSeverSmoothing;
             set
             {
-                bool temp = DS4Windows.Global.UseUDPSeverSmoothing;
+                bool temp = FUT404DS.Global.UseUDPSeverSmoothing;
                 if (temp == value) return;
-                DS4Windows.Global.UseUDPSeverSmoothing = value;
+                FUT404DS.Global.UseUDPSeverSmoothing = value;
                 UseUdpSmoothingChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -389,18 +389,18 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public Visibility UdpServerOneEuroPanelVisibility
         {
-            get => DS4Windows.Global.isUsingUDPServer() && DS4Windows.Global.UseUDPSeverSmoothing ? Visibility.Visible : Visibility.Collapsed;
+            get => FUT404DS.Global.isUsingUDPServer() && FUT404DS.Global.UseUDPSeverSmoothing ? Visibility.Visible : Visibility.Collapsed;
         }
         public event EventHandler UdpServerOneEuroPanelVisibilityChanged;
 
         public double UdpSmoothMinCutoff
         {
-            get => DS4Windows.Global.UDPServerSmoothingMincutoff;
+            get => FUT404DS.Global.UDPServerSmoothingMincutoff;
             set
             {
-                double temp = DS4Windows.Global.UDPServerSmoothingMincutoff;
+                double temp = FUT404DS.Global.UDPServerSmoothingMincutoff;
                 if (temp == value) return;
-                DS4Windows.Global.UDPServerSmoothingMincutoff = value;
+                FUT404DS.Global.UDPServerSmoothingMincutoff = value;
                 UdpSmoothMinCutoffChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -408,12 +408,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public double UdpSmoothBeta
         {
-            get => DS4Windows.Global.UDPServerSmoothingBeta;
+            get => FUT404DS.Global.UDPServerSmoothingBeta;
             set
             {
-                double temp = DS4Windows.Global.UDPServerSmoothingBeta;
+                double temp = FUT404DS.Global.UDPServerSmoothingBeta;
                 if (temp == value) return;
-                DS4Windows.Global.UDPServerSmoothingBeta = value;
+                FUT404DS.Global.UDPServerSmoothingBeta = value;
                 UdpSmoothBetaChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -421,10 +421,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public bool UseCustomSteamFolder
         {
-            get => DS4Windows.Global.UseCustomSteamFolder;
+            get => FUT404DS.Global.UseCustomSteamFolder;
             set
             {
-                DS4Windows.Global.UseCustomSteamFolder = value;
+                FUT404DS.Global.UseCustomSteamFolder = value;
                 UseCustomSteamFolderChanged?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -432,14 +432,14 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string CustomSteamFolder
         {
-            get => DS4Windows.Global.CustomSteamFolder;
+            get => FUT404DS.Global.CustomSteamFolder;
             set
             {
-                string temp = DS4Windows.Global.CustomSteamFolder;
+                string temp = FUT404DS.Global.CustomSteamFolder;
                 if (temp == value) return;
                 if (Directory.Exists(value) || value == string.Empty)
                 {
-                    DS4Windows.Global.CustomSteamFolder = value;
+                    FUT404DS.Global.CustomSteamFolder = value;
                 }
             }
         }
@@ -458,10 +458,10 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public string FakeExeName
         {
-            get => DS4Windows.Global.FakeExeName;
+            get => FUT404DS.Global.FakeExeName;
             set
             {
-                string temp = DS4Windows.Global.FakeExeName;
+                string temp = FUT404DS.Global.FakeExeName;
                 if (temp == value) return;
                 try
                 {
@@ -475,12 +475,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                     FakeExeNameChanged?.Invoke(this, EventArgs.Empty);
                     return;
                 }
-                DS4Windows.Global.FakeExeName = value;
+                FUT404DS.Global.FakeExeName = value;
                 if (!PortableLabContext.IsActive && !string.IsNullOrEmpty(temp))
                 {
                     try
                     {
-                        if (!ExecutableAliasFiles.RemoveOwned(DS4Windows.Global.exelocation, temp))
+                        if (!ExecutableAliasFiles.RemoveOwned(FUT404DS.Global.exelocation, temp))
                             AppLogger.LogToGui("Previous executable alias was left in place because it is in use or no longer matches this build.", false);
                     }
                     catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
@@ -502,8 +502,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         {
             get
             {
-                bool result = DS4Windows.Global.hidHideInstalled &&
-                    !string.IsNullOrEmpty(DS4Windows.Util.GetHidHideClientPath());
+                bool result = FUT404DS.Global.hidHideInstalled &&
+                    !string.IsNullOrEmpty(FUT404DS.Util.GetHidHideClientPath());
 
                 return result;
             }
@@ -540,12 +540,12 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             changeStartupRegistration = StartupMethods.SetRegistrationMode;
             refreshViiperStartup = ViiperSetupManager.RefreshSelectedStartupTaskAfterRunAtStartupChange;
             reportStartupError = ReportStartupChangeFailure;
-            logStartupDiagnostic = error => DS4Windows.AppLogger.LogToGui(
+            logStartupDiagnostic = error => FUT404DS.AppLogger.LogToGui(
                 "Could not read Windows startup settings: " + error, true);
             checkEveryUnitIdx = 1;
             IsProfileChangedCheckVisible = Global.Notifications == 2 ? Visibility.Visible : Visibility.Collapsed;
 
-            int checklapse = DS4Windows.Global.CheckWhen;
+            int checklapse = FUT404DS.Global.CheckWhen;
             if (checklapse < 24 && checklapse > 0)
             {
                 checkEveryUnitIdx = 0;
@@ -568,7 +568,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                       BitmapSizeOptions.FromEmptyOptions());
             questionMarkSource = wpfBitmap;
 
-            canWriteTask = DS4Windows.Global.IsAdministrator();
+            canWriteTask = FUT404DS.Global.IsAdministrator();
             try
             {
                 SetStartupDisplay(readStartupRegistration());
@@ -656,8 +656,8 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private static void ReportStartupChangeFailure(string error)
         {
-            DS4Windows.AppLogger.LogToGui("The startup change could not be completed. " + error, true);
-            const string message = "The startup change could not be completed. Check the status under Run at Startup in Settings, and see the Log tab for details. You can still open DS4Windows manually.";
+            FUT404DS.AppLogger.LogToGui("The startup change could not be completed. " + error, true);
+            const string message = "The startup change could not be completed. Check the status under Run at Startup in Settings, and see the Log tab for details. You can still open FUT404DS manually.";
             MessageBox.Show(message, "Run at startup", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
@@ -672,7 +672,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         private void CheckForNoUpdatesWhen()
         {
-            if (DS4Windows.Global.CheckWhen == 0)
+            if (FUT404DS.Global.CheckWhen == 0)
             {
                 checkEveryUnitIdx = 1;
             }
@@ -685,7 +685,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void CreateFakeExe(string filename)
         {
             if (PortableLabContext.IsActive) return;
-            ExecutableAliasFiles.Create(DS4Windows.Global.exelocation, filename);
+            ExecutableAliasFiles.Create(FUT404DS.Global.exelocation, filename);
         }
 
         public void DriverCheckRefresh()

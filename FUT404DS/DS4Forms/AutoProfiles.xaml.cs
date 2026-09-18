@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -33,17 +33,17 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using Ookii.Dialogs.Wpf;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DSWPF.DS4Forms.ViewModels;
 using Microsoft.Win32;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for AutoProfiles.xaml
     /// </summary>
     public partial class AutoProfiles : UserControl
     {
-        protected String m_Profile = DS4Windows.Global.appdatapath + "\\Auto Profiles.xml";
+        protected String m_Profile = FUT404DS.Global.appdatapath + "\\Auto Profiles.xml";
         public const string steamCommx86Loc = @"C:\Program Files (x86)\Steam\steamapps\common";
         public const string steamCommLoc = @"C:\Program Files\Steam\steamapps\common";
         private string steamgamesdir;
@@ -63,14 +63,14 @@ namespace DS4WinWPF.DS4Forms
         {
             InitializeComponent();
 
-            if (!File.Exists(DS4Windows.Global.appdatapath + @"\Auto Profiles.xml"))
-                DS4Windows.Global.CreateAutoProfiles(m_Profile);
+            if (!File.Exists(FUT404DS.Global.appdatapath + @"\Auto Profiles.xml"))
+                FUT404DS.Global.CreateAutoProfiles(m_Profile);
 
             //LoadP();
 
-            if (DS4Windows.Global.UseCustomSteamFolder &&
-                Directory.Exists(DS4Windows.Global.CustomSteamFolder))
-                steamgamesdir = DS4Windows.Global.CustomSteamFolder;
+            if (FUT404DS.Global.UseCustomSteamFolder &&
+                Directory.Exists(FUT404DS.Global.CustomSteamFolder))
+                steamgamesdir = FUT404DS.Global.CustomSteamFolder;
             else if (Directory.Exists(steamCommx86Loc))
                 steamgamesdir = steamCommx86Loc;
             else if (Directory.Exists(steamCommLoc))
@@ -81,9 +81,9 @@ namespace DS4WinWPF.DS4Forms
             autoProfileHolder = new AutoProfileHolder();
 
             int currentRowCount = autoProfilesGrid.RowDefinitions.Count;
-            if (currentRowCount > DS4Windows.ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
+            if (currentRowCount > FUT404DS.ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                for (int i = currentRowCount-1; i >= DS4Windows.ControlService.CURRENT_DS4_CONTROLLER_LIMIT; i--)
+                for (int i = currentRowCount-1; i >= FUT404DS.ControlService.CURRENT_DS4_CONTROLLER_LIMIT; i--)
                 {
                     autoProfilesGrid.RowDefinitions.RemoveAt(i);
                 }
@@ -373,7 +373,7 @@ namespace DS4WinWPF.DS4Forms
                 editControlsPanel.DataContext = null;
                 autoProfVM.AddExeToHIDHideWhenSaving(autoProfVM.SelectedItem, false);
                 autoProfVM.RemoveAutoProfileEntry(autoProfVM.SelectedItem);
-                autoProfVM.AutoProfileHolder.Save(DS4Windows.Global.appdatapath + @"\Auto Profiles.xml");
+                autoProfVM.AutoProfileHolder.Save(FUT404DS.Global.appdatapath + @"\Auto Profiles.xml");
                 autoProfVM.SelectedItem = null;
             }
         }
@@ -392,7 +392,7 @@ namespace DS4WinWPF.DS4Forms
                 }
 
                 autoProfVM.AddExeToHIDHideWhenSaving(autoProfVM.SelectedItem, autoProfVM.SelectedItem.Turnoff);
-                autoProfVM.AutoProfileHolder.Save(DS4Windows.Global.appdatapath + @"\Auto Profiles.xml");
+                autoProfVM.AutoProfileHolder.Save(FUT404DS.Global.appdatapath + @"\Auto Profiles.xml");
             }
         }
 
@@ -401,7 +401,7 @@ namespace DS4WinWPF.DS4Forms
             if (autoProfVM.SelectedItem != null)
             {
                 ProgramItem duplicateItem = autoProfVM.DuplicateAutoProfileEntry(autoProfVM.SelectedItem);
-                autoProfVM.AutoProfileHolder.Save(DS4Windows.Global.appdatapath + @"\Auto Profiles.xml");
+                autoProfVM.AutoProfileHolder.Save(FUT404DS.Global.appdatapath + @"\Auto Profiles.xml");
 
                 if (duplicateItem != null)
                 {
@@ -446,7 +446,7 @@ namespace DS4WinWPF.DS4Forms
             if (autoProfVM.SelectedItem != null && sender != null)
             {
                 if(autoProfVM.MoveItemUpDown(autoProfVM.SelectedItem, ((sender as MenuItem).Name == "MoveUp") ? -1 : 1))
-                    autoProfVM.AutoProfileHolder.Save(DS4Windows.Global.appdatapath + @"\Auto Profiles.xml");
+                    autoProfVM.AutoProfileHolder.Save(FUT404DS.Global.appdatapath + @"\Auto Profiles.xml");
             }
         }
     }

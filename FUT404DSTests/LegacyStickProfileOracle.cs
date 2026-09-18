@@ -2,9 +2,9 @@
 // Kept independent of the production typed reducers: every historical byte
 // cast, outer-binding truncation and radial custom-curve LUT stage is retained.
 using System;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 internal static class LegacyStickProfileOracle
 {

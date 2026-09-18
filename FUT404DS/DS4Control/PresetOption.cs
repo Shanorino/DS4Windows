@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DS4WinWPF.DS4Control
+namespace FUT404DSWPF.DS4Control
 {
     public abstract class PresetOption
     {
@@ -52,12 +52,12 @@ namespace DS4WinWPF.DS4Control
 
         protected static void ApplyDualSenseViiperDefaults(int idx)
         {
-            DS4Windows.Global.OutContType[idx] = DS4Windows.OutContType.ViiperDualSense;
-            DS4Windows.Global.UseGenericRumbleStrRescaleForDualSenses[idx] = true;
-            DS4Windows.Global.DualSenseSpeakerCompression[idx] =
-                (byte)DS4Windows.DualSenseSpeakerProcessor.RecommendedCompression;
-            DS4Windows.Global.DualSenseSpeakerBassBoost[idx] =
-                DS4Windows.DualSenseSpeakerProcessor.RecommendedBassBoostDb;
+            FUT404DS.Global.OutContType[idx] = FUT404DS.OutContType.ViiperDualSense;
+            FUT404DS.Global.UseGenericRumbleStrRescaleForDualSenses[idx] = true;
+            FUT404DS.Global.DualSenseSpeakerCompression[idx] =
+                (byte)FUT404DS.DualSenseSpeakerProcessor.RecommendedCompression;
+            FUT404DS.Global.DualSenseSpeakerBassBoost[idx] =
+                FUT404DS.DualSenseSpeakerProcessor.RecommendedBassBoostDb;
         }
     }
 
@@ -75,15 +75,15 @@ namespace DS4WinWPF.DS4Control
         {
             if (outputCont == OutputContChoice.Xbox360)
             {
-                DS4Windows.Global.LoadBlankDevProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadBlankDevProfile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualShock4)
             {
-                DS4Windows.Global.LoadBlankDS4Profile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadBlankDS4Profile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualSense)
             {
-                DS4Windows.Global.LoadBlankDS4Profile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadBlankDS4Profile(idx, false, App.rootHub, false);
                 ApplyDualSenseViiperDefaults(idx);
             }
         }
@@ -103,15 +103,15 @@ namespace DS4WinWPF.DS4Control
         {
             if (outputCont == OutputContChoice.Xbox360)
             {
-                DS4Windows.Global.LoadDefaultGamepadGyroProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultGamepadGyroProfile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualShock4)
             {
-                DS4Windows.Global.LoadDefaultDS4GamepadGyroProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultDS4GamepadGyroProfile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualSense)
             {
-                DS4Windows.Global.LoadDefaultDS4GamepadGyroProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultDS4GamepadGyroProfile(idx, false, App.rootHub, false);
                 ApplyDualSenseViiperDefaults(idx);
             }
         }
@@ -131,15 +131,15 @@ namespace DS4WinWPF.DS4Control
         {
             if (outputCont == OutputContChoice.Xbox360)
             {
-                DS4Windows.Global.LoadDefaultMixedControlsProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultMixedControlsProfile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualShock4)
             {
-                DS4Windows.Global.LoadDefaultDS4MixedControlsProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultDS4MixedControlsProfile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualSense)
             {
-                DS4Windows.Global.LoadDefaultDS4MixedControlsProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultDS4MixedControlsProfile(idx, false, App.rootHub, false);
                 ApplyDualSenseViiperDefaults(idx);
             }
         }
@@ -159,15 +159,15 @@ namespace DS4WinWPF.DS4Control
         {
             if (outputCont == OutputContChoice.Xbox360)
             {
-                DS4Windows.Global.LoadDefaultMixedGyroMouseProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultMixedGyroMouseProfile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualShock4)
             {
-                DS4Windows.Global.LoadDefaultDS4MixedGyroMouseProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultDS4MixedGyroMouseProfile(idx, false, App.rootHub, false);
             }
             else if (outputCont == OutputContChoice.DualSense)
             {
-                DS4Windows.Global.LoadDefaultDS4MixedGyroMouseProfile(idx, false, App.rootHub, false);
+                FUT404DS.Global.LoadDefaultDS4MixedGyroMouseProfile(idx, false, App.rootHub, false);
                 ApplyDualSenseViiperDefaults(idx);
             }
         }
@@ -183,7 +183,7 @@ namespace DS4WinWPF.DS4Control
 
         public override void ApplyPreset(int idx)
         {
-            DS4Windows.Global.LoadDefaultKBMProfile(idx, false, App.rootHub, false);
+            FUT404DS.Global.LoadDefaultKBMProfile(idx, false, App.rootHub, false);
         }
     }
 
@@ -197,7 +197,7 @@ namespace DS4WinWPF.DS4Control
 
         public override void ApplyPreset(int idx)
         {
-            DS4Windows.Global.LoadDefaultKBMGyroMouseProfile(idx, false, App.rootHub, false);
+            FUT404DS.Global.LoadDefaultKBMGyroMouseProfile(idx, false, App.rootHub, false);
         }
     }
 }

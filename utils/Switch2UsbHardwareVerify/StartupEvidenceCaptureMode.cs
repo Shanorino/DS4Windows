@@ -1,9 +1,9 @@
-namespace DS4Windows.Switch2.Verification;
+namespace FUT404DS.Switch2.Verification;
 
 /// <summary>
 /// Explicit, dormant laboratory evidence mode. It reuses the verifier's sole
 /// MI_01 command owner and read-only MI_00 input owner. Nothing in this class
-/// is referenced by DS4Windows production registration.
+/// is referenced by FUT404DS production registration.
 /// </summary>
 internal static class StartupEvidenceCaptureMode
 {

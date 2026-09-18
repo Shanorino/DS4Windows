@@ -5,10 +5,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     public sealed class ProfileFeatureSettingsChangedEventArgs : EventArgs
     {
@@ -257,7 +257,7 @@ namespace DS4WinWPF.DS4Forms
         private bool IsNintendoAudioHapticsDevice => deviceIndex >= 0 &&
             deviceIndex < ControlService.CURRENT_DS4_CONTROLLER_LIMIT &&
             Program.rootHub?.DS4Controllers[deviceIndex] is
-                DS4Windows.Switch2.Switch2RuntimeInputDevice;
+                FUT404DS.Switch2.Switch2RuntimeInputDevice;
 
         private void UpdateGainPresetVisuals(int gainPercent)
         {

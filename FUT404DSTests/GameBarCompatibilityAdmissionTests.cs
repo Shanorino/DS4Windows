@@ -1,8 +1,8 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]

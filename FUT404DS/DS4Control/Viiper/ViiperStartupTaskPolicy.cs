@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 // Scheduler-independent task data keeps the ownership decision and the actual
 // registration boundary testable without reading or changing Windows tasks.
@@ -37,7 +37,7 @@ internal static class ViiperStartupTaskPolicy
     internal static ViiperStartupTaskState Create(string executablePath,
         string currentSid) => new()
     {
-        Description = DS4WinWPF.StartupRegistrationPolicy.ManagedTaskDescription,
+        Description = FUT404DSWPF.StartupRegistrationPolicy.ManagedTaskDescription,
         Enabled = true,
         ActionCount = 1,
         TriggerCount = 1,
@@ -57,7 +57,7 @@ internal static class ViiperStartupTaskPolicy
         string executablePath, string currentSid) =>
         task != null && !string.IsNullOrWhiteSpace(currentSid) &&
         string.Equals(task.Description,
-            DS4WinWPF.StartupRegistrationPolicy.ManagedTaskDescription,
+            FUT404DSWPF.StartupRegistrationPolicy.ManagedTaskDescription,
             StringComparison.Ordinal) && task.Enabled && task.ActionCount == 1 &&
         task.TriggerCount == 1 && task.ExecutableAction && task.LogonTrigger &&
         task.Highest && task.InteractiveToken &&
@@ -122,12 +122,12 @@ internal static class ViiperStartupTaskPolicy
         // All unmarked legacy tasks require the installer's identity checks and
         // XML backup before adoption, including those at the installed path.
         bool marked = string.Equals(task.Description,
-            DS4WinWPF.StartupRegistrationPolicy.ManagedTaskDescription,
+            FUT404DSWPF.StartupRegistrationPolicy.ManagedTaskDescription,
             StringComparison.Ordinal);
         if (!marked || !currentUser || !contract)
             throw new InvalidOperationException(
                 "RunVIIPER belongs to another startup configuration and was preserved. " +
-                "Run setup to recover a verified older DS4Windows registration.");
+                "Run setup to recover a verified older FUT404DS registration.");
     }
 
     internal static string SelectRuntimePath(bool startupEnabled,

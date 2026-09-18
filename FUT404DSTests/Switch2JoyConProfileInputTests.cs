@@ -1,11 +1,11 @@
 using System.Buffers.Binary;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.DS4Control;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.DS4Control;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class Switch2JoyConProfileInputTests

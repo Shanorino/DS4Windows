@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class RealtimeCallGraphTests
@@ -9,7 +9,7 @@ namespace DS4WindowsTests
         public void EveryCanonicalReportDefersDirectDiagnosticsAfterPublication()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "ControlService.cs"));
+                "FUT404DS", "DS4Control", "ControlService.cs"));
             string report = Extract(source, "private void On_Report(",
                 "internal static void OSCPostMappingStep");
             AssertDoesNotContain(report, "latencyCriticalReport");
@@ -31,7 +31,7 @@ namespace DS4WindowsTests
         public void PhysicalReadLoopContainsNoOutputIoOrMicrophoneCallback()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs"));
             string readLoop = Extract(source,
                 "private unsafe void ReadInput()",
@@ -83,7 +83,7 @@ namespace DS4WindowsTests
         public void BluetoothPhysicalOutputLocksMergeButNotCompletionWait()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs"));
             string physicalLoop = Extract(source,
                 "private void PhysicalOutputLoop(long generation)",
@@ -138,7 +138,7 @@ namespace DS4WindowsTests
         public void UsbReportIdGuardPrecedesPhysicalStatusAndControlParsing()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs"));
             string readLoop = Extract(source,
                 "private unsafe void ReadInput()",
@@ -165,7 +165,7 @@ namespace DS4WindowsTests
         public void PhysicalHidTransfersReuseCompletionEvents()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "HidLibrary", "HidDevice.cs"));
+                "FUT404DS", "HidLibrary", "HidDevice.cs"));
             string legacyRead = Extract(source,
                 "public ReadStatus ReadFile(Span<byte> inputBuffer, uint timeout",
                 "public ReadStatus ReadFile(Span<byte> inputBuffer, out int bytesRead");
@@ -210,7 +210,7 @@ namespace DS4WindowsTests
         public void DualShock4AudioUsesBlockingCadenceAndDefinitiveRetirement()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control",
+                "FUT404DS", "DS4Control",
                 "DualShock4BluetoothSpeakerPassthrough.cs")).
                 Replace("\r\n", "\n");
             string wait = Extract(source,
@@ -362,7 +362,7 @@ namespace DS4WindowsTests
                 "effectMailbox.Acknowledge(effectVersion)");
 
             string deviceSource = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "DS4Device.cs"));
+                "FUT404DS", "DS4Library", "DS4Device.cs"));
             string inputLoop = Extract(deviceSource,
                 "protected unsafe void performDs4Input()",
                 "protected Debouncer SetupDebouncer()");
@@ -402,7 +402,7 @@ namespace DS4WindowsTests
                 "The last-sent effect state must advance only after mailbox admission.");
 
             string ownerSource = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control",
+                "FUT404DS", "DS4Control",
                 "DualShock4AudioPassthrough.cs"));
             StringAssert.Contains(ownerSource,
                 "EnqueueWhileHolding(syncRoot");
@@ -429,7 +429,7 @@ namespace DS4WindowsTests
         public void RemovalCallbackRunsAfterLifecycleOwnedPhysicalRetirement()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs"));
             string lifecycle = Extract(source,
                 "private void PhysicalLifecycleLoop()",
@@ -453,7 +453,7 @@ namespace DS4WindowsTests
         public void MicrophoneCompatibilityMonitorNeverUsesBroadStatusQuery()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
             string compatibility = Extract(source,
                 "private void MicrophoneInterfaceMonitorLoop",
@@ -473,7 +473,7 @@ namespace DS4WindowsTests
         public void MappedAndMicrophoneProducersCannotStartWorkers()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
             string mappedProducer = Extract(source,
                 "public override void ConvertandSendReport",
@@ -516,7 +516,7 @@ namespace DS4WindowsTests
         public void ProductionFramedWriterUsesOnlyOwnerEntryPoint()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
             string microphoneOwner = Extract(source,
                 "private bool TryWritePreparedMicrophoneFromWriter",
@@ -559,7 +559,7 @@ namespace DS4WindowsTests
         public void StreamRecoveryUsesAtomicElectionWithoutSlowMonitorLease()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
             string election = Extract(source,
                 "private bool TryRecoverStream",
@@ -605,7 +605,7 @@ namespace DS4WindowsTests
         public void FeedbackAndMicrophoneControlNeverHoldGenerationLocksAcrossCallbacksOrIo()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
 
             AssertDoesNotContain(source,
@@ -642,7 +642,7 @@ namespace DS4WindowsTests
         public void NativeOutputTraceAvoidsDiagnosticLogsAndQueriesProcessesOutsideTraceLock()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
             string trace = Extract(source,
                 "private void TraceNativeGameOutput(byte[] feedback",
@@ -808,13 +808,13 @@ namespace DS4WindowsTests
         public void NativeLedExpiryUsesNoCallbackUnderQueueLockOrFullRelease()
         {
             string outDevice = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
             string dispatchBuffer = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperFeedbackDispatchBuffer.cs"));
             string physical = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs"));
 
             string idleObservation = Extract(dispatchBuffer,
@@ -851,7 +851,7 @@ namespace DS4WindowsTests
         public void NativeOutputDispatchOwnsOnePersistentBuildIntoScratch()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperOutDevice.cs"));
             string controlOwner = Extract(source,
                 "private void FeedbackControlDispatchLoop",
@@ -886,7 +886,7 @@ namespace DS4WindowsTests
         public void PhysicalWorkerStartUsesAtomicElectionWithoutLifecycleMonitor()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs"));
             string start = Extract(source,
                 "private void StartPhysicalWorkers()",
@@ -917,7 +917,7 @@ namespace DS4WindowsTests
         public void BluetoothRecoveryRetryIsGenerationOwnedAndRetiredBeforeRestart()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs"));
             string recovery = Extract(source,
                 "private void RequestUnifiedBluetoothOutputTransportRecovery()",
@@ -947,7 +947,7 @@ namespace DS4WindowsTests
         public void CombinedControlAndSpeakerShareAdmissionBeforeCompletionWait()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Library", "InputDevices",
+                "FUT404DS", "DS4Library", "InputDevices",
                 "DualSenseDevice.cs")).Replace("\r\n", "\n");
             string queue = Extract(source,
                 "private bool TryQueueBluetoothControlThroughAudioPacer",
@@ -986,7 +986,7 @@ namespace DS4WindowsTests
         public void ControlServiceShutdownRetiresAsyncMonitoringOwners()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "ControlService.cs"));
+                "FUT404DS", "DS4Control", "ControlService.cs"));
             string shutdown = Extract(source, "private void ShutDownCore()",
                 "private void DS4Devices_RequestElevation");
             Assert.IsTrue(shutdown.Contains("DisposeRealtimeWorkers();",
@@ -1006,7 +1006,7 @@ namespace DS4WindowsTests
         public void ExplicitRateWaiterDoesNotUseUnmeasuredBusySpin()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "Viiper",
+                "FUT404DS", "DS4Control", "Viiper",
                 "ViiperHighResolutionWaiter.cs"));
             AssertDoesNotContain(source, "SpinWait");
         }

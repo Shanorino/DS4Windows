@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DS4Windows.InputDevices;
+namespace FUT404DS.InputDevices;
 
 // One physical legacy Nintendo lifetime, not another feedback mapper. Input
 // prepares the existing packet format; this owner alone submits rumble to HID.

@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WinWPF.DS4Control
+namespace FUT404DSWPF.DS4Control
 {
     public static class OutputSlotPersist
     {
@@ -75,7 +75,7 @@ namespace DS4WinWPF.DS4Control
 
                 // Write header explicitly
                 xmlWriter.WriteStartDocument();
-                xmlWriter.WriteComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+                xmlWriter.WriteComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
                 xmlWriter.WriteWhitespace("\r\n");
                 xmlWriter.WriteWhitespace("\r\n");
 

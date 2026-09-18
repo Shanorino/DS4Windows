@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Registers a short-lived, event-driven transport worker with MMCSS.

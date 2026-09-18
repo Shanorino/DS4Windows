@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DS4Windows.Bootstrapper
+namespace FUT404DS.Bootstrapper
 {
     internal static class InfrastructureProbe
     {
@@ -23,7 +23,7 @@ namespace DS4Windows.Bootstrapper
             try
             {
                 var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-                var viiper = Path.Combine(programFiles, "DS4Windows", "VIIPER", "viiper.exe");
+                var viiper = Path.Combine(programFiles, "FUT404DS", "VIIPER", "viiper.exe");
                 var usbip = Path.Combine(programFiles, "USBip", "usbip.exe");
                 if (!File.Exists(viiper) || !File.Exists(usbip)) return false;
 
@@ -44,7 +44,7 @@ namespace DS4Windows.Bootstrapper
                 using (var machine = RegistryKey.OpenBaseKey(
                            RegistryHive.LocalMachine,
                            RegistryView.Registry64))
-                using (var key = machine.OpenSubKey(@"SOFTWARE\DS4Windows"))
+                using (var key = machine.OpenSubKey(@"SOFTWARE\FUT404DS"))
                 {
                     if (!string.Equals(key?.GetValue("InfrastructureVersion") as string,
                             ExpectedMarker, StringComparison.Ordinal) ||

@@ -195,9 +195,9 @@ function Assert-BurnBundleIntegrity(
     $extractedMsi = Join-Path $attachedRoot (
         Split-Path -Leaf $expectedMsiPath)
     $extractedSetupActions = Join-Path $attachedRoot `
-        'DS4Windows.SetupActions.Preflight.exe'
+        'FUT404DS.SetupActions.Preflight.exe'
     $extractedBootstrapper = Join-Path $bootstrapperRoot `
-        'DS4Windows.Bootstrapper.exe'
+        'FUT404DS.Bootstrapper.exe'
     $requiredPairs = @(
         @($extractedMsi, $expectedMsiPath),
         @($extractedSetupActions, $expectedSetupActionsPath),
@@ -218,7 +218,7 @@ function Assert-BurnBundleIntegrity(
 }
 
 $buildMutex = [Threading.Mutex]::new($false,
-    "Global\DS4Windows-Installer-Build")
+    "Global\FUT404DS-Installer-Build")
 $buildMutexOwned = $false
 try {
     try {
@@ -229,7 +229,7 @@ try {
     }
     if (-not $buildMutexOwned) {
         throw (
-            "Another DS4Windows installer composition is already running. " +
+            "Another FUT404DS installer composition is already running. " +
             "Wait for that build to finish instead of overlapping WiX/MSI validation."
         )
     }
@@ -240,7 +240,7 @@ try {
     # line points into this repository before starting another composition.
     $repoPattern = [regex]::Escape($repoRoot.TrimEnd('\', '/'))
     $installerProjectPattern =
-        '(?i)(DS4Windows\.Package|DS4Windows\.Bundle|build-installer\.ps1)'
+        '(?i)(FUT404DS\.Package|FUT404DS\.Bundle|build-installer\.ps1)'
     $orphanedBuilds = @()
     for ($attempt = 0; $attempt -lt 120; $attempt++) {
         $orphanedBuilds = @(Get-CimInstance Win32_Process `
@@ -290,27 +290,27 @@ if ([string]::IsNullOrWhiteSpace($DisplayVersion) -or
 }
 
 if (-not $SkipApplicationPublish) {
-    & dotnet publish (Join-Path $repoRoot "DS4Windows\DS4WinWPF.csproj") `
+    & dotnet publish (Join-Path $repoRoot "FUT404DS\FUT404DSWPF.csproj") `
         -c Release -p:Platform=x64 -r win-x64 --self-contained true `
         -p:AssemblyVersion=$ProductVersion -p:FileVersion=$ProductVersion `
         -p:Version=$ProductVersion -p:InformationalVersion=$DisplayVersion `
         -o $publishPath
-    if ($LASTEXITCODE -ne 0) { throw "DS4Windows publish failed." }
+    if ($LASTEXITCODE -ne 0) { throw "FUT404DS publish failed." }
 }
-if (-not (Test-Path -LiteralPath (Join-Path $publishPath "DS4Windows.exe") -PathType Leaf)) {
-    throw "DS4Windows publish output is incomplete: $publishPath"
+if (-not (Test-Path -LiteralPath (Join-Path $publishPath "FUT404DS.exe") -PathType Leaf)) {
+    throw "FUT404DS publish output is incomplete: $publishPath"
 }
-Invoke-SignOrVerify (Join-Path $publishPath "DS4Windows.exe")
+Invoke-SignOrVerify (Join-Path $publishPath "FUT404DS.exe")
 # VIIPER is an immutable upstream release payload. Its compiled-in SHA-256
 # and generated package sidecar are validated below; signing it here would
-# mutate the executable after DS4Windows has pinned that identity.
+# mutate the executable after FUT404DS has pinned that identity.
 $bundledViiper = Join-Path $publishPath "extras\VIIPER-0.1.5-rc4.6-x64.exe"
 if (-not (Test-Path -LiteralPath $bundledViiper -PathType Leaf)) {
     throw "Published VIIPER payload is missing: $bundledViiper"
 }
-$releaseMarker = Join-Path $publishPath "DS4Windows.release"
+$releaseMarker = Join-Path $publishPath "FUT404DS.release"
 if (-not (Test-Path -LiteralPath $releaseMarker -PathType Leaf)) {
-    throw "DS4Windows publish output has no release identity: $releaseMarker"
+    throw "FUT404DS publish output has no release identity: $releaseMarker"
 }
 $publishedRelease = (Get-Content -LiteralPath $releaseMarker -Raw).Trim()
 if (-not [string]::Equals($publishedRelease, $DisplayVersion,
@@ -322,42 +322,42 @@ if (-not [string]::Equals($publishedRelease, $DisplayVersion,
     )
 }
 
-$generatedWix = Join-Path $repoRoot "installer\DS4Windows.Package\GeneratedFiles.wxs"
+$generatedWix = Join-Path $repoRoot "installer\FUT404DS.Package\GeneratedFiles.wxs"
 $manifestPath = Join-Path $publishPath "package-manifest.json"
 & python (Join-Path $repoRoot "utils\generate-installer-files.py") `
     $publishPath $generatedWix $manifestPath --version $DisplayVersion
 if ($LASTEXITCODE -ne 0) { throw "Installer manifest generation failed." }
 
-& dotnet publish (Join-Path $repoRoot "installer\DS4Windows.SetupActions\DS4Windows.SetupActions.csproj") `
+& dotnet publish (Join-Path $repoRoot "installer\FUT404DS.SetupActions\FUT404DS.SetupActions.csproj") `
     -c Release -p:Platform=x64 -p:Version=$ProductVersion `
     -r win-x64 --self-contained true `
-    -o (Join-Path $repoRoot "installer\DS4Windows.SetupActions\bin\x64\Release\publish")
+    -o (Join-Path $repoRoot "installer\FUT404DS.SetupActions\bin\x64\Release\publish")
 if ($LASTEXITCODE -ne 0) { throw "Setup action host build failed." }
-$setupActions = Join-Path $repoRoot "installer\DS4Windows.SetupActions\bin\x64\Release\publish\DS4Windows.SetupActions.exe"
+$setupActions = Join-Path $repoRoot "installer\FUT404DS.SetupActions\bin\x64\Release\publish\FUT404DS.SetupActions.exe"
 Invoke-SignAndVerify $setupActions
 
-& dotnet publish (Join-Path $repoRoot "installer\DS4Windows.Bootstrapper\DS4Windows.Bootstrapper.csproj") `
+& dotnet publish (Join-Path $repoRoot "installer\FUT404DS.Bootstrapper\FUT404DS.Bootstrapper.csproj") `
     -c Release -p:Platform=x64 -p:Version=$ProductVersion `
     -r win-x64 --self-contained true `
-    -o (Join-Path $repoRoot "installer\DS4Windows.Bootstrapper\bin\x64\Release\publish")
+    -o (Join-Path $repoRoot "installer\FUT404DS.Bootstrapper\bin\x64\Release\publish")
 if ($LASTEXITCODE -ne 0) { throw "Bootstrapper UI build failed." }
-$baRoot = Join-Path $repoRoot "installer\DS4Windows.Bootstrapper\bin\x64\Release\publish"
-Invoke-SignAndVerify (Join-Path $baRoot "DS4Windows.Bootstrapper.exe")
+$baRoot = Join-Path $repoRoot "installer\FUT404DS.Bootstrapper\bin\x64\Release\publish"
+Invoke-SignAndVerify (Join-Path $baRoot "FUT404DS.Bootstrapper.exe")
 
-$packageProject = Join-Path $repoRoot "installer\DS4Windows.Package\DS4Windows.Package.wixproj"
+$packageProject = Join-Path $repoRoot "installer\FUT404DS.Package\FUT404DS.Package.wixproj"
 & dotnet build $packageProject -t:Rebuild -c Release -p:Platform=x64 `
     -p:Version=$ProductVersion -p:ProductVersion=$ProductVersion `
     -p:PublishRoot=$publishPath
-if ($LASTEXITCODE -ne 0) { throw "DS4Windows MSI build failed." }
+if ($LASTEXITCODE -ne 0) { throw "FUT404DS MSI build failed." }
 
-$msiPath = Join-Path $repoRoot "installer\DS4Windows.Package\bin\x64\Release\DS4Windows_${ProductVersion}_x64.msi"
+$msiPath = Join-Path $repoRoot "installer\FUT404DS.Package\bin\x64\Release\FUT404DS_${ProductVersion}_x64.msi"
 Invoke-SignAndVerify $msiPath
 $setupActionsHash = (Get-FileHash -LiteralPath $setupActions -Algorithm SHA256).Hash
 if ($setupActionsHash -notmatch '^[0-9A-F]{64}$') {
     throw "Could not derive a content-addressed setup-helper cache identity."
 }
 $extrasRoot = Join-Path $repoRoot "extras"
-$bundleProject = Join-Path $repoRoot "installer\DS4Windows.Bundle\DS4Windows.Bundle.wixproj"
+$bundleProject = Join-Path $repoRoot "installer\FUT404DS.Bundle\FUT404DS.Bundle.wixproj"
 $wixExecutable = Resolve-WixExecutable $bundleProject
 & dotnet build $bundleProject -t:Rebuild -c Release -p:Platform=x64 `
     -p:Version=$ProductVersion -p:BundleVersion=$BundleVersion `
@@ -365,11 +365,11 @@ $wixExecutable = Resolve-WixExecutable $bundleProject
     -p:MsiPath=$msiPath -p:BootstrapperRoot=$baRoot `
     -p:SetupActionsPath=$setupActions -p:SetupActionsHash=$setupActionsHash `
     -p:ExtrasRoot=$extrasRoot
-if ($LASTEXITCODE -ne 0) { throw "DS4Windows Burn bundle build failed." }
+if ($LASTEXITCODE -ne 0) { throw "FUT404DS Burn bundle build failed." }
 
-$builtInstaller = Join-Path $repoRoot "installer\DS4Windows.Bundle\bin\x64\Release\DS4Windows_${DisplayVersion}_Setup_x64.exe"
+$builtInstaller = Join-Path $repoRoot "installer\FUT404DS.Bundle\bin\x64\Release\FUT404DS_${DisplayVersion}_Setup_x64.exe"
 New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
-$finalInstaller = Join-Path $outputPath "DS4Windows_${DisplayVersion}_Setup_x64.exe"
+$finalInstaller = Join-Path $outputPath "FUT404DS_${DisplayVersion}_Setup_x64.exe"
 $finalManifest = Join-Path $outputPath "package-manifest.json"
 $publishId = [Guid]::NewGuid().ToString("N")
 $pendingInstaller = $finalInstaller + ".pending-" + $publishId
@@ -438,7 +438,7 @@ try {
 
     Assert-BurnBundleIntegrity $wixExecutable $pendingInstaller `
         $burnWorkRoot $msiPath $setupActions `
-        (Join-Path $baRoot 'DS4Windows.Bootstrapper.exe')
+        (Join-Path $baRoot 'FUT404DS.Bootstrapper.exe')
 
 & (Join-Path $env:SystemRoot `
     "System32\WindowsPowerShell\v1.0\powershell.exe") `
@@ -465,7 +465,7 @@ if ($LASTEXITCODE -ne 0) {
 
 & python (Join-Path $repoRoot "utils\validate-installer.py") `
     --publish-root $publishPath --manifest $manifestPath `
-    --installer $pendingInstaller --bundle-source (Join-Path $repoRoot "installer\DS4Windows.Bundle\Bundle.wxs")
+    --installer $pendingInstaller --bundle-source (Join-Path $repoRoot "installer\FUT404DS.Bundle\Bundle.wxs")
 if ($LASTEXITCODE -ne 0) { throw "Installer validation failed." }
 
 Assert-ReleaseSignature $pendingInstaller

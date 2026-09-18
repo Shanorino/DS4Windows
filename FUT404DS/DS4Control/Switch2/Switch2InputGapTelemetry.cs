@@ -1,7 +1,7 @@
 using System;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Diagnostic-only counters owned by the existing publication gate. These are
 // accepted physical-report publication gaps, not radio packet-loss evidence.

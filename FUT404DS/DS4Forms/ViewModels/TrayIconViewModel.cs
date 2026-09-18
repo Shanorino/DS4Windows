@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -23,16 +23,16 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public sealed class TrayIconViewModel : IDisposable
     {
-        private string tooltipText = "DS4Windows";
+        private string tooltipText = "FUT404DS";
         private string iconSource;
-        public const string ballonTitle = "DS4Windows";
-        public const string trayTitle = "DS4Windows";
+        public const string ballonTitle = "FUT404DS";
+        public const string trayTitle = "FUT404DS";
         private ContextMenu contextMenu;
         private MenuItem changeServiceItem;
         private MenuItem openItem;
@@ -184,7 +184,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
             catch (Exception ex)
             {
-                DS4Windows.AppLogger.LogToGui($"Tray hotplug update failed: {ex.Message}", true);
+                FUT404DS.AppLogger.LogToGui($"Tray hotplug update failed: {ex.Message}", true);
             }
         }
 
@@ -202,7 +202,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
             catch (Exception ex)
             {
-                DS4Windows.AppLogger.LogToGui($"Tray controller list update failed: {ex.Message}", true);
+                FUT404DS.AppLogger.LogToGui($"Tray controller list update failed: {ex.Message}", true);
             }
         }
 

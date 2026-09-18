@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,14 +10,14 @@ the Free Software Foundation, either version 3 of the License, or
 The axis selection and subtractive soft-deadzone law are adapted from the
 GPL-3.0 Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/controller.py. This
-allocation-free implementation remains inside DS4Windows' existing Switch 2
+allocation-free implementation remains inside FUT404DS' existing Switch 2
 motion projection and canonical mapping path.
 */
 
 using System;
 using System.Numerics;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal static class Switch2MotionSoftDeadzone
 {

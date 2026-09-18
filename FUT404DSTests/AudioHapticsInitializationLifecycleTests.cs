@@ -4,15 +4,15 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NAudio.Wave;
-using Fixture = DS4Windows.Tests.AudioHapticsSourceBoundaryTests.Fixture;
-using NintendoFixture = DS4WindowsTests.Switch2AudioHapticsOutputTests.RuntimeFixture;
+using Fixture = FUT404DS.Tests.AudioHapticsSourceBoundaryTests.Fixture;
+using NintendoFixture = FUT404DSTests.Switch2AudioHapticsOutputTests.RuntimeFixture;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 [DoNotParallelize]

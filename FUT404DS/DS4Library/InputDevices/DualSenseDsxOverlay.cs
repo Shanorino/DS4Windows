@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.InputDevices;
+namespace FUT404DS.InputDevices;
 
 // Value-owned presentation state; profile and native feedback remain separate
 // and continue updating while a mod temporarily owns an output field.

@@ -1,11 +1,11 @@
 using System.Runtime.ExceptionServices;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF;
+using FUT404DSWPF.DS4Forms.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]

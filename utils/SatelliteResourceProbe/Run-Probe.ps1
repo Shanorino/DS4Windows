@@ -14,16 +14,16 @@ New-Item -ItemType Directory -Path $packageRoot, $outsideRoot | Out-Null
 
 # Preserve the real application's resource/dependency identities, but omit
 # unrelated libraries: this child only requests resources, never runs the app.
-$sourceDeps = Get-Content -LiteralPath (Join-Path $sourceRoot 'DS4Windows.deps.json') -Raw | ConvertFrom-Json -AsHashtable
+$sourceDeps = Get-Content -LiteralPath (Join-Path $sourceRoot 'FUT404DS.deps.json') -Raw | ConvertFrom-Json -AsHashtable
 $sourceTarget = $sourceDeps.targets[$sourceDeps.runtimeTarget.name]
 $probeDeps = Get-Content -LiteralPath (Join-Path $probeBuild 'SatelliteResourceProbe.deps.json') -Raw | ConvertFrom-Json -AsHashtable
 $probeTarget = $probeDeps.targets[$probeDeps.runtimeTarget.name]
 foreach ($libraryName in $sourceTarget.Keys) {
-    if ($libraryName -notlike 'DS4Windows/*' -and $libraryName -notlike 'TaskScheduler/*') { continue }
+    if ($libraryName -notlike 'FUT404DS/*' -and $libraryName -notlike 'TaskScheduler/*') { continue }
     $library = $sourceTarget[$libraryName]
     $probeTarget[$libraryName] = @{ runtime = $library.runtime; resources = $library.resources }
     $probeDeps.libraries[$libraryName] = $sourceDeps.libraries[$libraryName]
-    if ($libraryName -like 'DS4Windows/*') {
+    if ($libraryName -like 'FUT404DS/*') {
         # This is the exact application-path adjustment made by post-build.py.
         $probeDeps.libraries[$libraryName].path = './'
     }

@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text.Json;
-using DS4Windows.DS4Control;
+using FUT404DS.DS4Control;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Isolated ephemeral loopback sockets only. No ControlService, HID device,
 // controller driver, profile, actual mod port, or output backend is instantiated.

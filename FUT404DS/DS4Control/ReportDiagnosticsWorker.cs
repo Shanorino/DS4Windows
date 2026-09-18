@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,9 +10,9 @@ the Free Software Foundation, either version 3 of the License, or
 
 using System;
 using System.Threading;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Optional diagnostics only, never a canonical controller-input queue. Each
@@ -187,7 +187,7 @@ internal sealed class ReportDiagnosticsWorker : IDisposable
         private int writeIndex, readIndex = 1, middle = 2, retired, publishing;
         private long coalesced, concurrentPublishRejections;
         private readonly bool traceSwitch2Mouse = PortableLabContext.IsActive &&
-            Environment.GetEnvironmentVariable("DS4WINDOWS_SWITCH2_MOUSE_TRACE") == "1";
+            Environment.GetEnvironmentVariable("FUT404DS_SWITCH2_MOUSE_TRACE") == "1";
         private Switch2MouseTraceWindow mouseTrace;
 
         internal Source(ReportDiagnosticsWorker owner, int controller, DS4Device device)

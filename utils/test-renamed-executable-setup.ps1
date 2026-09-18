@@ -52,8 +52,8 @@ function Start-Sleep { param($Milliseconds) }
 function Write-SetupLog { param($Message, $Color) }
 function Test-RecognizedProductExecutable {
     param($Path, $ExpectedProduct)
-    return $ExpectedProduct -eq 'DS4Windows' -and $Path -and
-        $Path -ne 'C:\Unrelated\DS4Windows.exe'
+    return $ExpectedProduct -eq 'FUT404DS' -and $Path -and
+        $Path -ne 'C:\Unrelated\FUT404DS.exe'
 }
 function New-FakeProcess($Id, $Path, $Name) {
     if (-not $Name) { $Name = [IO.Path]::GetFileName($Path) }
@@ -66,7 +66,7 @@ function Reset-Fixture {
     $script:InstallerHostPid = 12
     $script:TargetDs4WindowsPath = 'C:\Portable\Controller Companion.exe'
     $script:Ds4WindowsRestartPath = $script:TargetDs4WindowsPath
-    $script:Ds4WindowsInstallDir = 'C:\Program Files\DS4Windows'
+    $script:Ds4WindowsInstallDir = 'C:\Program Files\FUT404DS'
     $script:KeepDs4WindowsPortable = $false
 }
 $failures = [Collections.Generic.List[string]]::new()
@@ -85,12 +85,12 @@ Test-Case 'renamed parent stopped; host and unrelated aliases preserved' {
     Assert-True ($script:Stopped.Count -eq 1 -and $script:Stopped[0] -eq 11) 'Wrong or missing process termination.'
 }
 Test-Case 'canonical parent still stopped' {
-    $script:FakeProcesses = @((New-FakeProcess 11 'C:\Portable\DS4Windows.exe'))
+    $script:FakeProcesses = @((New-FakeProcess 11 'C:\Portable\FUT404DS.exe'))
     Assert-True (Stop-Ds4WindowsProcesses 'fixture') 'Canonical quiesce failed.'
     Assert-True ($script:Stopped.Count -eq 1 -and $script:Stopped[0] -eq 11) 'Canonical parent was not stopped.'
 }
 Test-Case 'unverified same-name process blocks cleanup' {
-    $script:FakeProcesses = @((New-FakeProcess 11 'C:\Unrelated\DS4Windows.exe'))
+    $script:FakeProcesses = @((New-FakeProcess 11 'C:\Unrelated\FUT404DS.exe'))
     Assert-True (-not (Stop-Ds4WindowsProcesses 'fixture')) 'Unverified process accepted.'
     Assert-True ($script:Stopped.Count -eq 0) 'Unverified process terminated.'
 }
@@ -112,7 +112,7 @@ Test-Case 'wrong-path host refused' {
     Assert-True ($script:Stopped.Count -eq 0) 'Wrong-path host terminated.'
 }
 Test-Case 'unrecognized exact host refused' {
-    $script:TargetDs4WindowsPath = 'C:\Unrelated\DS4Windows.exe'
+    $script:TargetDs4WindowsPath = 'C:\Unrelated\FUT404DS.exe'
     $script:FakeProcesses = @((New-FakeProcess 12 $script:TargetDs4WindowsPath))
     $rejected = $false
     try { Stop-InstallerHostForStandardMigration } catch { $rejected = $true }

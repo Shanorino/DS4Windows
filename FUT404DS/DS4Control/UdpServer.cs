@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Buffers.Binary;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public enum DsState : byte
     {

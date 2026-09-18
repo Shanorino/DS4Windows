@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -8,7 +8,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 */
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal readonly record struct DualSenseSpeakerTransportState(
         byte TransportVolume,

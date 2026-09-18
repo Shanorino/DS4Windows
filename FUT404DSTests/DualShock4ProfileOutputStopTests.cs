@@ -1,10 +1,10 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Control;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Control;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Actual DS4 composition and report construction; only the final transport
 // admission is replaced. No PostInit, HID handle, input worker or hardware.

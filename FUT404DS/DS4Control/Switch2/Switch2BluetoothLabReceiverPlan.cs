@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Explicit portable-lab contract, not a general command or GATT API. Only
 // documented receiver-related packet shapes are admitted. In particular, the

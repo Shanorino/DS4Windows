@@ -1,6 +1,6 @@
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -104,7 +104,7 @@ public sealed class MappedStickTransformTests
         }
     }
 
-    // Frozen pre-migration DS4Windows wrapper + DS4SquareStick equations. The
+    // Frozen pre-migration FUT404DS wrapper + DS4SquareStick equations. The
     // legacy oracle quantizes each returned coordinate at the historical site;
     // precise checks use the unquantized result of the same existing algorithm.
     private static (double X, double Y) OriginalSquare(double rawX, double rawY, double roundness)

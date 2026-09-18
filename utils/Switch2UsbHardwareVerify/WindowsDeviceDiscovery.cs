@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Microsoft.Win32.SafeHandles;
 
-namespace DS4Windows.Switch2.Verification;
+namespace FUT404DS.Switch2.Verification;
 
 internal enum VerificationFailureCode
 {

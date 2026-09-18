@@ -11,7 +11,7 @@ the release. Dynamic-frequency mode derives frequency from the instantaneous
 decayed strength; fixed-frequency mode retains the selected carrier.
 
 The donor resolves this state from its approximately 16.6 ms rumble loop.
-DS4Windows uses a 16 ms presentation cadence with an exact 90 ms terminal
+FUT404DS uses a 16 ms presentation cadence with an exact 90 ms terminal
 point. The linear state law is transport-independent and uses the canonical
 microsecond clock.
 

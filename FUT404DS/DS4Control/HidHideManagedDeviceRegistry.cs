@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal readonly record struct HidHideConnectionClaim<TDevice>(
         TDevice Device, long Generation, long LifecycleGeneration,

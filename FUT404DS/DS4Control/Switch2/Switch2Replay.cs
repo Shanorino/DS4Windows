@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 public enum Switch2FixtureEvidence : byte
 {

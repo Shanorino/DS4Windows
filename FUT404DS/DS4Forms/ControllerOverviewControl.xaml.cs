@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -13,10 +13,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     public partial class ControllerOverviewControl : UserControl
     {

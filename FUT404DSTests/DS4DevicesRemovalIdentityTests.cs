@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
+using FUT404DS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]

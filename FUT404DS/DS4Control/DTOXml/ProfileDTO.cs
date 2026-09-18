@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -23,16 +23,16 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.StickModifiers;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms.ViewModels;
-using static DS4Windows.Mouse;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.StickModifiers;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using static FUT404DS.Mouse;
 using Switch2CemuhookYawPolicy =
-    DS4Windows.Switch2.Switch2CemuhookYawSensitivity;
+    FUT404DS.Switch2.Switch2CemuhookYawSensitivity;
 
-namespace DS4WinWPF.DS4Control.DTOXml
+namespace FUT404DSWPF.DS4Control.DTOXml
 {
     public sealed class Switch2IrGyroTuningDTO
     {
@@ -354,7 +354,7 @@ namespace DS4WinWPF.DS4Control.DTOXml
         }
     }
 
-    [XmlRoot("DS4Windows")]
+    [XmlRoot("FUT404DS")]
     public class ProfileDTO : IDTO<BackingStore>
     {
         public const bool SERIALIZE_HEADER_ATTRS_DEFAULT = true;
@@ -2071,7 +2071,7 @@ namespace DS4WinWPF.DS4Control.DTOXml
         }
 
         [XmlElement("L2TriggerEffect")]
-        public DS4Windows.InputDevices.TriggerEffects L2TriggerEffect
+        public FUT404DS.InputDevices.TriggerEffects L2TriggerEffect
         {
             get; set;
         }
@@ -2089,7 +2089,7 @@ namespace DS4WinWPF.DS4Control.DTOXml
         }
 
         [XmlElement("R2TriggerEffect")]
-        public DS4Windows.InputDevices.TriggerEffects R2TriggerEffect
+        public FUT404DS.InputDevices.TriggerEffects R2TriggerEffect
         {
             get; set;
         }
@@ -4348,7 +4348,7 @@ namespace DS4WinWPF.DS4Control.DTOXml
         public string CalibrationTriggerString
         {
             get => Enum.GetName(typeof(DS4Controls), CalibrationTrigger) ?? nameof(DS4Controls.None);
-            set => CalibrationTrigger = DS4Windows.FlickStickSettings.ParseCalibrationTrigger(value);
+            set => CalibrationTrigger = FUT404DS.FlickStickSettings.ParseCalibrationTrigger(value);
         }
 
         [XmlElement("RealWorldCalibration")]
@@ -4471,7 +4471,7 @@ namespace DS4WinWPF.DS4Control.DTOXml
             public byte MicrophoneNoiseSuppression
             {
                 get; set;
-            } = (byte)DS4Windows.DualSenseMicrophoneNoiseSuppression.Balanced;
+            } = (byte)FUT404DS.DualSenseMicrophoneNoiseSuppression.Balanced;
 
             [XmlElement("CaptureEndpointId")]
             public string CaptureEndpointId

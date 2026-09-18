@@ -5,7 +5,7 @@ using System.Threading;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32.Foundation;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Maintains one input read ahead of report processing. The completed

@@ -1,14 +1,14 @@
-using DS4WinWPF.ApiDTO;
+using FUT404DSWPF.ApiDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public static class ReleaseChannelPolicy
     {
-        public const string InstalledReleaseFileName = "DS4Windows.release";
+        public const string InstalledReleaseFileName = "FUT404DS.release";
 
         private static readonly Regex prereleaseNameRegex = new(
             @"(?i)(alpha|beta|preview|pre[- ]?release|prerelease|release candidate|viiperrc|(?:^|[^a-z])rc(?:\d|[^a-z]|$))",

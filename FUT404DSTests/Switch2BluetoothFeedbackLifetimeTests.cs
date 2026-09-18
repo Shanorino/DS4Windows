@@ -1,9 +1,9 @@
 using System;
 using System.Diagnostics;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class Switch2BluetoothFeedbackLifetimeTests
@@ -134,8 +134,8 @@ public class Switch2BluetoothFeedbackLifetimeTests
     {
         const System.Reflection.BindingFlags fields = System.Reflection.BindingFlags.Instance |
             System.Reflection.BindingFlags.NonPublic;
-        var previousHub = DS4Windows.Program.rootHub;
-        var previousAppHub = DS4WinWPF.App.rootHub;
+        var previousHub = FUT404DS.Program.rootHub;
+        var previousAppHub = FUT404DSWPF.App.rootHub;
         bool previousOutput = Global.EnableOutputDataToDS4[0];
         bool previousImpulse = Global.Switch2MapXboxImpulseTriggersToHdRumble[0];
         int previousDelay = Global.Switch2RumbleDelayMilliseconds[0];
@@ -154,8 +154,8 @@ public class Switch2BluetoothFeedbackLifetimeTests
             var output = new ViiperOutDevice(OutContType.ViiperXboxOne, ViiperVirtualDeviceType.XboxOne);
             hub.DS4Controllers = new DS4Device[] { target };
             hub.outputDevices = new OutputDevice[] { output };
-            DS4Windows.Program.rootHub = hub;
-            DS4WinWPF.App.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
+            FUT404DSWPF.App.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Global.Switch2MapXboxImpulseTriggersToHdRumble[0] = true;
             Global.Switch2RumbleDelayMilliseconds[0] = 0;
@@ -175,9 +175,9 @@ public class Switch2BluetoothFeedbackLifetimeTests
                 GetMethod("ProcessXboxFeedbackPolicyRefresh", fields).CreateDelegate(typeof(Func<bool>), output);
             var signal = (WaitHandle)typeof(ViiperOutDevice).GetField("feedbackControlSignal", fields).GetValue(output);
             // Setter-only fixture avoids constructing an unrelated WPF view.
-            var profile = (DS4WinWPF.DS4Forms.ViewModels.ProfileSettingsViewModel)
+            var profile = (FUT404DSWPF.DS4Forms.ViewModels.ProfileSettingsViewModel)
                 System.Runtime.CompilerServices.RuntimeHelpers.GetUninitializedObject(
-                    typeof(DS4WinWPF.DS4Forms.ViewModels.ProfileSettingsViewModel));
+                    typeof(FUT404DSWPF.DS4Forms.ViewModels.ProfileSettingsViewModel));
             int acknowledgements = 0, faults = 0;
             using var dispatcher = new XboxOneFeedbackDeliveryDispatcher(deliver,
                 (_, _) => Interlocked.Increment(ref acknowledgements),
@@ -211,8 +211,8 @@ public class Switch2BluetoothFeedbackLifetimeTests
             Global.EnableOutputDataToDS4[0] = previousOutput;
             Global.Switch2MapXboxImpulseTriggersToHdRumble[0] = previousImpulse;
             Global.Switch2RumbleDelayMilliseconds[0] = previousDelay;
-            DS4Windows.Program.rootHub = previousHub;
-            DS4WinWPF.App.rootHub = previousAppHub;
+            FUT404DS.Program.rootHub = previousHub;
+            FUT404DSWPF.App.rootHub = previousAppHub;
         }
     }
 

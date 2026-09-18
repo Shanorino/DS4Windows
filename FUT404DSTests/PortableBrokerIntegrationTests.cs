@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 // No app, process, scheduled task, registry, driver, or controller is started.
 // Runtime coverage uses an inert image, a fake process host, and loopback TCP.
@@ -34,7 +34,7 @@ public class PortableBrokerIntegrationTests
         })
             Before(core, initialize, later);
         StringAssert.Contains(core,
-            "if (!DS4Windows.PortableBrokerContext.IsActive)\n                StartupMethods.RetargetExistingTaskToCurrentExecutable();");
+            "if (!FUT404DS.PortableBrokerContext.IsActive)\n                StartupMethods.RetargetExistingTaskToCurrentExecutable();");
     }
 
     [TestMethod]
@@ -47,11 +47,11 @@ public class PortableBrokerIntegrationTests
         Before(core, "if (!StartPortableBroker()) return;", "CreateTempWorkerThread();");
         Before(core, "if (!StartPortableBroker()) return;", "Global.FindConfigLocation();");
         StringAssert.Contains(core,
-            "requireNew: DS4Windows.PortableLabContext.IsActive ||\n                        DS4Windows.PortableBrokerContext.IsActive");
+            "requireNew: FUT404DS.PortableLabContext.IsActive ||\n                        FUT404DS.PortableBrokerContext.IsActive");
         // A second ordinary launch can activate its existing matching mapper;
         // the explicit development lab retains its no-signal policy.
         StringAssert.Contains(core,
-            "if (!DS4Windows.PortableLabContext.IsActive)\n                        tempComEvent.Set();");
+            "if (!FUT404DS.PortableLabContext.IsActive)\n                        tempComEvent.Set();");
     }
 
     [TestMethod]
@@ -161,7 +161,7 @@ public class PortableBrokerIntegrationTests
         StringAssert.Contains(prompt, "if (!status.Ready || forcePrompt)");
         StringAssert.Contains(prompt, "return status.Ready;");
         Assert.IsFalse(prompt.Contains("LaunchInstaller(", StringComparison.Ordinal));
-        Assert.IsFalse(prompt.Contains("new DS4WinWPF.DS4Forms.ViiperSetupPrompt",
+        Assert.IsFalse(prompt.Contains("new FUT404DSWPF.DS4Forms.ViiperSetupPrompt",
             StringComparison.Ordinal));
         string launch = Section(source, "public static bool LaunchInstaller(",
             "status ??= GetStatus();");
@@ -383,7 +383,7 @@ public class PortableBrokerIntegrationTests
         for (DirectoryInfo directory = new(AppContext.BaseDirectory);
              directory != null; directory = directory.Parent)
         {
-            string path = Path.Combine(new[] { directory.FullName, "DS4Windows" }.Concat(parts).ToArray());
+            string path = Path.Combine(new[] { directory.FullName, "FUT404DS" }.Concat(parts).ToArray());
             if (File.Exists(path)) return File.ReadAllText(path).Replace("\r\n", "\n");
         }
         throw new AssertFailedException("Repository source file was not found: " + Path.Combine(parts));

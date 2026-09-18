@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -13,9 +13,9 @@ using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 public enum Switch2RuntimeInputDeviceCreateFailure : byte
 {
@@ -101,10 +101,10 @@ public enum Switch2RuntimePublicationResult : byte
 
 /// <summary>
 /// Logical Switch 2 mapping device. It accepts only already-validated input
-/// frames and publishes them through DS4Windows' existing DS4State/Report seam.
+/// frames and publishes them through FUT404DS' existing DS4State/Report seam.
 /// It owns no HID, discovery, WinRT, registration, command transport, or raw
 /// physical writer. An authenticated transport lifetime can attach the shared
-/// canonical feedback owner; this type may then publish DS4Windows profile and
+/// canonical feedback owner; this type may then publish FUT404DS profile and
 /// preview effects into that owner without acquiring a second writer.
 /// </summary>
 public sealed partial class Switch2RuntimeInputDevice : DS4Device
@@ -245,7 +245,7 @@ public sealed partial class Switch2RuntimeInputDevice : DS4Device
 
         PrimaryDevice = true;
         PerformStateMerge = false;
-        // The Switch 2 projections already produce DS4Windows' canonical
+        // The Switch 2 projections already produce FUT404DS' canonical
         // SixAxis shape. Keep the ordinary gyro mapping seam enabled so the
         // existing mouse, mouse-joystick, controls, and steering modes consume
         // that state rather than requiring a Switch 2-specific mapper.

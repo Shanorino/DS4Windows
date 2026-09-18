@@ -1,9 +1,9 @@
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Xml.Linq;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class XboxOnePersonaPackagingTests
@@ -32,7 +32,7 @@ public sealed class XboxOnePersonaPackagingTests
     [DataRow("XBOX-ONE-PERSONA-NOTICE.md", "extras\\XBOX-ONE-PERSONA-NOTICE.md")]
     public void PersonaAndNoticeAreIncludedInRawBuildAndPublish(string name, string link)
     {
-        XDocument project = XDocument.Load(RepositoryPath("DS4Windows/DS4WinWPF.csproj"));
+        XDocument project = XDocument.Load(RepositoryPath("FUT404DS/FUT404DSWPF.csproj"));
         XElement content = project.Descendants("Content").Single(element =>
             (string)element.Attribute("Include") == "..\\extras\\" + name);
         Assert.AreEqual(link, (string)content.Element("Link"));

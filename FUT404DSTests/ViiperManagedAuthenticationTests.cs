@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 public sealed class ViiperManagedAuthenticationTests

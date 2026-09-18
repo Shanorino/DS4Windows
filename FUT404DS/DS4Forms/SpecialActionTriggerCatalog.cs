@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Forms;
+namespace FUT404DSWPF.DS4Forms;
 
 /// <summary>
 /// The regular and unload checklists share these entries. Labels may improve,

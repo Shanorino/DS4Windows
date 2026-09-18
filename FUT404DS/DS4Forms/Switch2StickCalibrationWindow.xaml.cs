@@ -1,10 +1,10 @@
 using System;
 using System.Windows;
 using System.Windows.Threading;
-using DS4WinWPF.DS4Forms.ViewModels;
-using DS4Windows.Switch2;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms;
+namespace FUT404DSWPF.DS4Forms;
 
 public partial class Switch2StickCalibrationWindow : Window
 {

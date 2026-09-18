@@ -1,7 +1,7 @@
 using System.Reflection;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualSenseBluetoothMicrophoneProtocolTests

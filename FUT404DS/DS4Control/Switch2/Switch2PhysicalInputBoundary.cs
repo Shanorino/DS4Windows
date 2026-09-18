@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,7 +10,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Driver relationship observed by the discovery/control plane. These values
@@ -284,7 +284,7 @@ public enum Switch2PhysicalAdmissionFailure : byte
 
 /// <summary>
 /// Versioned control-plane result shared by transport-specific workers and the
-/// future DS4Windows registration adapter. It deliberately contains no
+/// future FUT404DS registration adapter. It deliberately contains no
 /// <c>HidDevice</c>, WinUSB handle, GATT object, path, or callback.
 /// </summary>
 public readonly struct Switch2PhysicalInputRegistration :

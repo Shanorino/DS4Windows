@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,13 +11,13 @@ The independent default-on conversion preferences follow Switch2Connect
 61ac6642ce12fe7217e38a860b14863b18ca7e28 (GPL-3.0-or-later), src/config.py
 audio_haptics_enabled/adaptive_triggers_enabled and src/gui.py
 open_audio_haptics_settings. Ownership and expiry handling are local to
-DS4Windows; no reference transport or bundled binary is reused.
+FUT404DS; no reference transport or bundled binary is reused.
 */
 
 using System;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal readonly record struct Switch2DualSenseConversionPolicy(
     bool AudioHapticsEnabled, bool AdaptiveTriggersEnabled,

@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     public partial class ViiperSetupProgress : Window
     {
@@ -32,7 +32,7 @@ namespace DS4WinWPF.DS4Forms
 
         public void ShowPreparing()
         {
-            phaseText.Text = "Verifying the DS4Windows package...";
+            phaseText.Text = "Verifying the FUT404DS package...";
             Show();
             logTimer.Start();
             // Render the window before the protected package snapshot begins.
@@ -93,7 +93,7 @@ namespace DS4WinWPF.DS4Forms
                 ? "Setup completed successfully."
                 : "Setup stopped safely before verification completed.";
             detailText.Text = success
-                ? "DS4Windows will continue automatically."
+                ? "FUT404DS will continue automatically."
                 : "A detailed error and the diagnostic log will appear next.";
             Dispatcher.Invoke(() => { }, DispatcherPriority.Background);
             allowClose = true;

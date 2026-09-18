@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class XboxImpulseRuntimePolicyTests
@@ -227,7 +227,7 @@ public sealed class XboxImpulseRuntimePolicyTests
     private static void WithRuntime(DS4Device target,
         Action<ViiperOutDevice, XboxOnePhysicalFeedbackSession, XboxOnePhysicalFeedbackWatchdogTests.ManualClock, Action> action)
     {
-        var previousHub = DS4Windows.Program.rootHub;
+        var previousHub = FUT404DS.Program.rootHub;
         bool previousOutput = Global.EnableOutputDataToDS4[0];
         bool previousMaster = Global.MapXboxImpulseTriggers[0];
         bool previousRoute = Global.XboxImpulseToAdaptiveTriggers[0];
@@ -240,7 +240,7 @@ public sealed class XboxImpulseRuntimePolicyTests
             var clock = new XboxOnePhysicalFeedbackWatchdogTests.ManualClock();
             var hub = (ControlService)RuntimeHelpers.GetUninitializedObject(typeof(ControlService));
             hub.DS4Controllers = new[] { target };
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Global.MapXboxImpulseTriggers[0] = true;
             Global.XboxImpulseToAdaptiveTriggers[0] = true;
@@ -264,7 +264,7 @@ public sealed class XboxImpulseRuntimePolicyTests
         finally
         {
             session?.TryRetire();
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
             Global.EnableOutputDataToDS4[0] = previousOutput;
             Global.MapXboxImpulseTriggers[0] = previousMaster;
             Global.XboxImpulseToAdaptiveTriggers[0] = previousRoute;

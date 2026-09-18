@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -156,7 +156,7 @@
     <value>Jetzt nach Updates suchen</value>
   </data>
   <data name="CheckUpdateStartup" xml:space="preserve">
-    <value>Nach Updates beim Starten von DS4Windows suchen</value>
+    <value>Nach Updates beim Starten von FUT404DS suchen</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Leeren</value>
@@ -358,9 +358,9 @@
     <value>Eigener EXE-Name</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Einige Spiele ignorieren DS4-Eingaben wenn sie erkennen, dass DS4Windows.exe oder InputMapper.exe läuft. Mit dem Umbenennen von DS4Windows.exe schlägt die Überprüfung im Spiel fehl und die Sperre kann somit umgangen werden. Wird hier ein eigener EXE-Name angegeben, kann DS4Updater eine Kopie von DS4Windows mit dem eigenen Namen automatisch aktualisieren. Stelle sicher, dass die Dateiendung weggelassen wird.
+    <value>Einige Spiele ignorieren DS4-Eingaben wenn sie erkennen, dass FUT404DS.exe oder InputMapper.exe läuft. Mit dem Umbenennen von FUT404DS.exe schlägt die Überprüfung im Spiel fehl und die Sperre kann somit umgangen werden. Wird hier ein eigener EXE-Name angegeben, kann DS4Updater eine Kopie von FUT404DS mit dem eigenen Namen automatisch aktualisieren. Stelle sicher, dass die Dateiendung weggelassen wird.
 
-Beispiel: whyme_DS4Windows</value>
+Beispiel: whyme_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>XInput-Tester</value>
@@ -447,13 +447,13 @@ Beispiel: whyme_DS4Windows</value>
     <value>Echtwelt-Kalibrierung</value>
   </data>
   <data name="ViGEmPluginFailure" xml:space="preserve">
-    <value>ViGEm Geräte-Plugin fehlgeschlagen. Wahrscheinlich ein internes ViGEmBus-Problem. Verbindung getrennt. Wenn das Problem weiterhin besteht, schliessen Sie bitte DS4Windows und starten Sie Windows neu.</value>
+    <value>ViGEm Geräte-Plugin fehlgeschlagen. Wahrscheinlich ein internes ViGEmBus-Problem. Verbindung getrennt. Wenn das Problem weiterhin besteht, schliessen Sie bitte FUT404DS und starten Sie Windows neu.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Datenintegritätsprüfungen für drahtloses Gerät fehlgeschlagen. Gerät getrennt.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>.NET 5 Runtime wurde auf Ihrem System nicht erkannt. Bitte laden Sie .NET 5 Runtime herunter und installieren Sie es, um die Kompatibilität mit zukünftigen DS4Windows-Builds zu gewährleisten. Sie werden nach dem Schliessen dieses Fensters auf die Download-Seite für .NET 5 Runtime weitergeleitet.</value>
+    <value>.NET 5 Runtime wurde auf Ihrem System nicht erkannt. Bitte laden Sie .NET 5 Runtime herunter und installieren Sie es, um die Kompatibilität mit zukünftigen FUT404DS-Builds zu gewährleisten. Sie werden nach dem Schliessen dieses Fensters auf die Download-Seite für .NET 5 Runtime weitergeleitet.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Bitte aktualisieren Sie .NET Runtime</value>
@@ -507,7 +507,7 @@ Beispiel: whyme_DS4Windows</value>
     <value>In manchen Situationen kann es sinnvoll sein, den maximalen Wert zu begrenzen, der vom Analogknüppel ausgegeben wird. Max Output ermöglicht die Drosselung des endgültigen Ausgabewertes des Analogknüppels.</value>
   </data>
   <data name="AntiDeadzoneTooltip" xml:space="preserve">
-    <value>Eine Anti-Deadzone dient als Offset für die Verwendung mit einer Achse, um den minimalen Ausgangswert zu bezeichnen, der erzeugt wird, nachdem eine Achse ihre zugewiesene Deadzone verlassen hat. Dies soll hauptsächlich bei der Zuordnung einer Achse zum zugewiesenen Totzonenwert helfen, der für eine Achse in einem Videospiel verwendet wird. Zum Beispiel liegt die typische zugewiesene Totzone für XInput LS in einem Videospiel bei 8000 (25%). Wenn keine Antideadzone zugewiesen ist, müsste eine Achse die zugewiesene Deadzone in DS4Windows zusammen mit der zugewiesenen Achsen-Totzone des Spiels überschreiten.</value>
+    <value>Eine Anti-Deadzone dient als Offset für die Verwendung mit einer Achse, um den minimalen Ausgangswert zu bezeichnen, der erzeugt wird, nachdem eine Achse ihre zugewiesene Deadzone verlassen hat. Dies soll hauptsächlich bei der Zuordnung einer Achse zum zugewiesenen Totzonenwert helfen, der für eine Achse in einem Videospiel verwendet wird. Zum Beispiel liegt die typische zugewiesene Totzone für XInput LS in einem Videospiel bei 8000 (25%). Wenn keine Antideadzone zugewiesen ist, müsste eine Achse die zugewiesene Deadzone in FUT404DS zusammen mit der zugewiesenen Achsen-Totzone des Spiels überschreiten.</value>
   </data>
   <data name="StickInputCurveTooltip" xml:space="preserve">
     <value>ALTE, VERALTETE EINSTELLUNG. Es wird versucht, eine Kurve auf der Grundlage der rohen Eingabekoordinaten anzuwenden, bevor eine Totzoneninformation angewendet wird. Verrückt</value>
@@ -608,8 +608,8 @@ Beispiel: whyme_DS4Windows</value>
   <data name="RevertToDefaultProfileOnUnknown" xml:space="preserve">
     <value>Kehre zu Standardprofil zurück bei unbekannt</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>Schalte DS4Windows temporär ab</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>Schalte FUT404DS temporär ab</value>
   </data>
   <data name="Plug" xml:space="preserve">
     <value>Verbinden</value>

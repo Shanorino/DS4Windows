@@ -1,4 +1,4 @@
-using DS4Windows;
+using FUT404DS;
 using System.IO;
 using System.Text.Json;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class PortableUpdaterBootstrapTests
@@ -70,7 +70,7 @@ public sealed class PortableUpdaterBootstrapTests
         // A valid name must pass all other preconditions, so rejection below
         // proves the path guard rather than an obsolete version/root fixture.
         var valid = PortableUpdaterBootstrap.CreateStartInfo(ticket,
-            "VIIPERRC4.6.2", "DS4Windows.exe", 123, 456);
+            "VIIPERRC4.6.2", "FUT404DS.exe", 123, 456);
         Assert.AreEqual(fixture.Updater, valid.FileName);
         Assert.ThrowsException<ArgumentException>(() => PortableUpdaterBootstrap.CreateStartInfo(ticket,
             "VIIPERRC4.6.2", executable, 123, 456));
@@ -80,7 +80,7 @@ public sealed class PortableUpdaterBootstrapTests
     public void LaunchWithoutVerifiedPreparationIsRejected()
     {
         Assert.ThrowsException<ArgumentException>(() => PortableUpdaterBootstrap.CreateStartInfo(null,
-            "VIIPERRC4.5.1", "DS4Windows.exe", 123, 456));
+            "VIIPERRC4.5.1", "FUT404DS.exe", 123, 456));
     }
 
     [DataTestMethod]
@@ -129,7 +129,7 @@ public sealed class PortableUpdaterBootstrapTests
         var ticket = await PortableUpdaterBootstrap.PrepareAsync(f.Client, f.Root);
         CollectionAssert.AreEqual(f.Image, File.ReadAllBytes(f.Updater));
         bool called = false;
-        Assert.IsFalse(PortableUpdaterBootstrap.Launch(ticket, "VIIPERRC4.5.1", "DS4Windows.exe", info =>
+        Assert.IsFalse(PortableUpdaterBootstrap.Launch(ticket, "VIIPERRC4.5.1", "FUT404DS.exe", info =>
         {
             called = true;
             Assert.IsFalse(info.UseShellExecute);
@@ -154,7 +154,7 @@ public sealed class PortableUpdaterBootstrapTests
         Assert.IsTrue(image.Length > 260);
         File.WriteAllBytes(image, f.Image);
         string hash = Convert.ToHexString(SHA256.HashData(f.Image));
-        var version = Version.Parse(FileVersionInfo.GetVersionInfo(Path.Combine(AppContext.BaseDirectory, "DS4Windows.exe")).FileVersion!);
+        var version = Version.Parse(FileVersionInfo.GetVersionInfo(Path.Combine(AppContext.BaseDirectory, "FUT404DS.exe")).FileVersion!);
         Assert.IsTrue(PortableUpdaterBootstrap.VerifyImage(image, version, hash, f.Image.LongLength, out var failure), failure);
         Assert.IsFalse(PortableUpdaterBootstrap.VerifyImage(image, version, hash, f.Image.LongLength + 1, out failure));
         StringAssert.Contains(failure, "length mismatch");
@@ -178,7 +178,7 @@ public sealed class PortableUpdaterBootstrapTests
         internal readonly string Root = Path.Combine(AppContext.BaseDirectory, "updater-bootstrap-" + Guid.NewGuid().ToString("N"));
         internal string Updater => Path.Combine(Root, "DS4Updater.exe");
         // A real version-resource-bearing file, never executed as a process.
-        private static readonly string SourceImage = Path.Combine(AppContext.BaseDirectory, "DS4Windows.exe");
+        private static readonly string SourceImage = Path.Combine(AppContext.BaseDirectory, "FUT404DS.exe");
         internal readonly byte[] Image = File.ReadAllBytes(SourceImage);
         private readonly string imageVersion = FileVersionInfo.GetVersionInfo(SourceImage).FileVersion;
         internal readonly HttpClient Client;
@@ -191,7 +191,7 @@ public sealed class PortableUpdaterBootstrapTests
             Assert.IsTrue(version >= PortableUpdaterBootstrap.MinimumVersion);
             Directory.CreateDirectory(Root);
             File.WriteAllText(Path.Combine(Root, PortableBrokerContext.MarkerFileName), PortableBrokerContext.MarkerText);
-            File.WriteAllText(Path.Combine(Root, ".ds4windows-managed-files.txt"), "DS4Windows.exe\n");
+            File.WriteAllText(Path.Combine(Root, ".fut404ds-managed-files.txt"), "FUT404DS.exe\n");
             Client = new HttpClient(new Handler(this));
         }
         private sealed class Handler(DownloadFixture fixture) : HttpMessageHandler

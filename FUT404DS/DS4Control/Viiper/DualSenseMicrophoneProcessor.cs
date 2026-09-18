@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public enum DualSenseMicrophoneNoiseSuppression : byte
     {
@@ -74,7 +74,7 @@ namespace DS4Windows
             lock (syncRoot)
             {
                 float userGain = Math.Clamp(volume / 128.0f, 0.0f, 2.0f);
-                // Preserve DS4Windows' established profile response. VIIPER's
+                // Preserve FUT404DS' established profile response. VIIPER's
                 // virtual microphone presents this already decoded PCM at
                 // unity; transport-level compensation here would amplify
                 // codec noise and force ordinary speech into the limiter.

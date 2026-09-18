@@ -1,6 +1,6 @@
 DualSense adaptive-trigger effect packing
 
-DS4Windows' local DSX compatibility implementation adapts effect-packing
+FUT404DS' local DSX compatibility implementation adapts effect-packing
 mechanics documented by John "Nielk1" Klein:
 https://gist.github.com/Nielk1/6d54cc2c00d2201ccb8c2720ad7538db
 

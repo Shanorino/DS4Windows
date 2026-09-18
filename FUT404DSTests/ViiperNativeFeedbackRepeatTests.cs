@@ -1,10 +1,10 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -612,7 +612,7 @@ public sealed class ViiperNativeFeedbackRepeatTests
 
     private sealed class ReaderFixture : IDisposable
     {
-        private readonly ControlService previousHub = DS4Windows.Program.rootHub;
+        private readonly ControlService previousHub = FUT404DS.Program.rootHub;
         private readonly bool previousOutput = Global.EnableOutputDataToDS4[0];
         private readonly TriggerLabProfileSettings previousTriggerLab = Global.store.triggerLabSettings[0];
         private readonly AudioHapticsService audio = new();
@@ -634,7 +634,7 @@ public sealed class ViiperNativeFeedbackRepeatTests
             hub.DS4Controllers = new DS4Device[4];
             hub.DS4Controllers[0] = device;
             SetField(hub, "audioHapticsService", audio);
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Global.store.triggerLabSettings[0] = new TriggerLabProfileSettings();
             Output = new(OutContType.None, ViiperVirtualDeviceType.DualSense);
@@ -660,7 +660,7 @@ public sealed class ViiperNativeFeedbackRepeatTests
         public void Dispose()
         {
             SetField(Output, "connected", false);
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
             Global.EnableOutputDataToDS4[0] = previousOutput;
             Global.store.triggerLabSettings[0] = previousTriggerLab;
             audio.Dispose();

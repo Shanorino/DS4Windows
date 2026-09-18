@@ -4,11 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Optional NVIDIA Audio Effects denoiser. The proprietary runtime and
-    /// model are never bundled or downloaded by DS4Windows; an installed SDK
+    /// model are never bundled or downloaded by FUT404DS; an installed SDK
     /// is discovered at runtime and RNNoise remains the safe fallback.
     /// </summary>
     internal sealed class NvidiaAudioNoiseSuppressor : IDisposable

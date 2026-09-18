@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,7 +10,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 public enum Switch2ProProfileInputFailure : byte
 {
@@ -44,7 +44,7 @@ public readonly struct Switch2ProfileAxis : IEquatable<Switch2ProfileAxis>
     public short SignedValue { get; }
 
     /// <summary>
-    /// Explicit compatibility quantization for DS4Windows' existing 8-bit
+    /// Explicit compatibility quantization for FUT404DS' existing 8-bit
     /// mapping fields. Center is 128 and the endpoints are 0/255.
     /// </summary>
     public byte LegacyValue { get; }
@@ -62,7 +62,7 @@ public readonly struct Switch2ProfileAxis : IEquatable<Switch2ProfileAxis>
 
 /// <summary>
 /// Source-owned, high-resolution Switch 2 Pro input at the existing
-/// DS4Windows profile boundary. This is not a second mapping stack: callers may
+/// FUT404DS profile boundary. This is not a second mapping stack: callers may
 /// write the compatibility fields into the ordinary <see cref="DS4State"/>,
 /// while the exact source observation travels as metadata through the same
 /// mapping copies.
@@ -174,7 +174,7 @@ public readonly struct Switch2ProProfileInputFrame
     public bool CButton => (Buttons & Switch2ProButton.C) != 0;
 
     /// <summary>
-    /// Writes the controls that the legacy DS4Windows mapping state represents
+    /// Writes the controls that the legacy FUT404DS mapping state represents
     /// using the backwards-compatible Xbox/physical-position face layout.
     /// </summary>
     public bool TryWriteLegacyState(DS4State destination) =>
@@ -288,7 +288,7 @@ public readonly struct Switch2ProProfileInputFrame
 }
 
 /// <summary>
-/// Exact Common05 Pro projection into the DS4Windows profile boundary for the
+/// Exact Common05 Pro projection into the FUT404DS profile boundary for the
 /// independently pinned USB and BLE identities. Axis orientation follows the
 /// pinned SDL Switch 2 driver: X is not inverted and Y is inverted.
 /// Calibration is the generation-bound snapshot already selected by

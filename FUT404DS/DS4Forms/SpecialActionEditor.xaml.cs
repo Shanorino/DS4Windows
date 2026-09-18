@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using DS4WinWPF.DS4Forms.ViewModels;
-using DS4WinWPF.DS4Forms.ViewModels.SpecialActions;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using FUT404DSWPF.DS4Forms.ViewModels.SpecialActions;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for SpecialActionEditor.xaml
@@ -51,7 +51,7 @@ namespace DS4WinWPF.DS4Forms
         public event SaveHandler Saved;
 
         public SpecialActionEditor(int deviceNum, ProfileList profileList,
-            DS4Windows.SpecialAction specialAction = null)
+            FUT404DS.SpecialAction specialAction = null)
         {
             InitializeComponent();
 
@@ -219,7 +219,7 @@ namespace DS4WinWPF.DS4Forms
             gyroCalibrateTab.DataContext = null;
         }
 
-        private void LoadAction(DS4Windows.SpecialAction specialAction)
+        private void LoadAction(FUT404DS.SpecialAction specialAction)
         {
             specialActVM.LoadAction(specialAction);
             RestoreTriggerSelection(triggerPanel, triggerBoxes, specialActVM.ControlTriggerList,
@@ -229,31 +229,31 @@ namespace DS4WinWPF.DS4Forms
 
             switch (specialAction.typeID)
             {
-                case DS4Windows.SpecialAction.ActionTypeId.Macro:
+                case FUT404DS.SpecialAction.ActionTypeId.Macro:
                     macroActVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.Program:
+                case FUT404DS.SpecialAction.ActionTypeId.Program:
                     launchProgVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.Profile:
+                case FUT404DS.SpecialAction.ActionTypeId.Profile:
                     loadProfileVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.Key:
+                case FUT404DS.SpecialAction.ActionTypeId.Key:
                     pressKeyVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.DisconnectBT:
+                case FUT404DS.SpecialAction.ActionTypeId.DisconnectBT:
                     disconnectBtVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.BatteryCheck:
+                case FUT404DS.SpecialAction.ActionTypeId.BatteryCheck:
                     checkBatteryVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.MultiAction:
+                case FUT404DS.SpecialAction.ActionTypeId.MultiAction:
                     multiActButtonVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.SASteeringWheelEmulationCalibrate:
+                case FUT404DS.SpecialAction.ActionTypeId.SASteeringWheelEmulationCalibrate:
                     saSteeringWheelVM.LoadAction(specialAction);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.GyroCalibrate:
+                case FUT404DS.SpecialAction.ActionTypeId.GyroCalibrate:
                     calibrateGyroVM.LoadAction(specialAction);
                     break;
             }
@@ -283,8 +283,8 @@ namespace DS4WinWPF.DS4Forms
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.SpecialAction.ActionTypeId typeId = specialActVM.TypeAssoc[specialActVM.ActionTypeIndex];
-            DS4Windows.SpecialAction tempAct = new DS4Windows.SpecialAction("null", "null", "null", "null");
+            FUT404DS.SpecialAction.ActionTypeId typeId = specialActVM.TypeAssoc[specialActVM.ActionTypeIndex];
+            FUT404DS.SpecialAction tempAct = new FUT404DS.SpecialAction("null", "null", "null", "null");
             bool valid = specialActVM.IsValid(tempAct);
             if (valid)
             {
@@ -302,37 +302,37 @@ namespace DS4WinWPF.DS4Forms
                 bool editMode = specialActVM.EditMode;
                 if (editMode && specialActVM.SavedAction.name != specialActVM.ActionName)
                 {
-                    DS4Windows.Global.RemoveAction(specialActVM.SavedAction.name);
+                    FUT404DS.Global.RemoveAction(specialActVM.SavedAction.name);
                     editMode = false;
                 }
 
                 switch (typeId)
                 {
-                    case DS4Windows.SpecialAction.ActionTypeId.Macro:
+                    case FUT404DS.SpecialAction.ActionTypeId.Macro:
                         macroActVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.Program:
+                    case FUT404DS.SpecialAction.ActionTypeId.Program:
                         launchProgVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.Profile:
+                    case FUT404DS.SpecialAction.ActionTypeId.Profile:
                         loadProfileVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.Key:
+                    case FUT404DS.SpecialAction.ActionTypeId.Key:
                         pressKeyVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.DisconnectBT:
+                    case FUT404DS.SpecialAction.ActionTypeId.DisconnectBT:
                         disconnectBtVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.BatteryCheck:
+                    case FUT404DS.SpecialAction.ActionTypeId.BatteryCheck:
                         checkBatteryVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.MultiAction:
+                    case FUT404DS.SpecialAction.ActionTypeId.MultiAction:
                         multiActButtonVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.SASteeringWheelEmulationCalibrate:
+                    case FUT404DS.SpecialAction.ActionTypeId.SASteeringWheelEmulationCalibrate:
                         saSteeringWheelVM.SaveAction(tempAct, editMode);
                         break;
-                    case DS4Windows.SpecialAction.ActionTypeId.GyroCalibrate:
+                    case FUT404DS.SpecialAction.ActionTypeId.GyroCalibrate:
                         calibrateGyroVM.SaveAction(tempAct, editMode);
                         break;
                 }
@@ -341,37 +341,37 @@ namespace DS4WinWPF.DS4Forms
             }
         }
 
-        private bool CheckActionValid(DS4Windows.SpecialAction action,
-            DS4Windows.SpecialAction.ActionTypeId typeId)
+        private bool CheckActionValid(FUT404DS.SpecialAction action,
+            FUT404DS.SpecialAction.ActionTypeId typeId)
         {
             bool valid = false;
             switch (typeId)
             {
-                case DS4Windows.SpecialAction.ActionTypeId.Macro:
+                case FUT404DS.SpecialAction.ActionTypeId.Macro:
                     valid = macroActVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.Program:
+                case FUT404DS.SpecialAction.ActionTypeId.Program:
                     valid = launchProgVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.Profile:
+                case FUT404DS.SpecialAction.ActionTypeId.Profile:
                     valid = loadProfileVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.Key:
+                case FUT404DS.SpecialAction.ActionTypeId.Key:
                     valid = pressKeyVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.DisconnectBT:
+                case FUT404DS.SpecialAction.ActionTypeId.DisconnectBT:
                     valid = disconnectBtVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.BatteryCheck:
+                case FUT404DS.SpecialAction.ActionTypeId.BatteryCheck:
                     valid = checkBatteryVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.MultiAction:
+                case FUT404DS.SpecialAction.ActionTypeId.MultiAction:
                     valid = multiActButtonVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.SASteeringWheelEmulationCalibrate:
+                case FUT404DS.SpecialAction.ActionTypeId.SASteeringWheelEmulationCalibrate:
                     valid = saSteeringWheelVM.IsValid(action);
                     break;
-                case DS4Windows.SpecialAction.ActionTypeId.GyroCalibrate:
+                case FUT404DS.SpecialAction.ActionTypeId.GyroCalibrate:
                     valid = calibrateGyroVM.IsValid(action);
                     break;
             }
@@ -411,7 +411,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void RecordMacroBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.DS4ControlSettings settings = macroActVM.PrepareSettings();
+            FUT404DS.DS4ControlSettings settings = macroActVM.PrepareSettings();
             RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings);
             recordWin.Saved += (sender2, args) =>
             {
@@ -491,7 +491,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void MultiTapTrigBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.DS4ControlSettings settings = multiActButtonVM.PrepareTapSettings();
+            FUT404DS.DS4ControlSettings settings = multiActButtonVM.PrepareTapSettings();
             RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings, false);
             recordWin.Saved += (sender2, args) =>
             {
@@ -505,7 +505,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void MultiHoldTapTrigBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.DS4ControlSettings settings = multiActButtonVM.PrepareHoldSettings();
+            FUT404DS.DS4ControlSettings settings = multiActButtonVM.PrepareHoldSettings();
             RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings, false);
             recordWin.Saved += (sender2, args) =>
             {
@@ -519,7 +519,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void MultiDoubleTapTrigBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.DS4ControlSettings settings = multiActButtonVM.PrepareDoubleTapSettings();
+            FUT404DS.DS4ControlSettings settings = multiActButtonVM.PrepareDoubleTapSettings();
             RecordBoxWindow recordWin = new RecordBoxWindow(specialActVM.DeviceNum, settings, false);
             recordWin.Saved += (sender2, args) =>
             {
@@ -549,7 +549,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void PressKeySelectBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.DS4ControlSettings settings = pressKeyVM.PrepareSettings();
+            FUT404DS.DS4ControlSettings settings = pressKeyVM.PrepareSettings();
             BindingWindow window = new BindingWindow(specialActVM.DeviceNum, settings,
                 BindingWindow.ExposeMode.Keyboard);
             window.Owner = App.Current.MainWindow;

@@ -5,12 +5,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Forms.ViewModels;
 using IntegerUpDown = Xceed.Wpf.Toolkit.IntegerUpDown;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     public partial class TriggerLabControl : UserControl
     {

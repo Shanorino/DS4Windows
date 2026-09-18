@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DS4Windows.DS4Control;
+namespace FUT404DS.DS4Control;
 
 /// <summary>
 /// Binds a DSX packet to the exact devices present when that packet began.

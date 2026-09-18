@@ -1,8 +1,8 @@
-using DS4Windows;
+using FUT404DS;
 using System.Reflection;
 using System.Text.Json;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ViiperUsbipPortManagerTests

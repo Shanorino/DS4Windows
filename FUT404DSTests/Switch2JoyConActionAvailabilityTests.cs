@@ -1,7 +1,7 @@
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2JoyConActionAvailabilityTests
@@ -11,7 +11,7 @@ public sealed class Switch2JoyConActionAvailabilityTests
     {
         Assert.IsTrue(Switch2RuntimeInputDevice.TryCreateStandaloneJoyCon(
             Switch2ControllerModel.JoyCon2Left, 101, 102, out var runtime, out _));
-        var card = new CompositeDeviceModel(runtime, DS4Windows.Global.TEST_PROFILE_INDEX, null, null);
+        var card = new CompositeDeviceModel(runtime, FUT404DS.Global.TEST_PROFILE_INDEX, null, null);
         var candidate = new Switch2JoyConPairCandidate(10, Switch2ControllerModel.JoyCon2Left, 1);
         int changes = 0;
         card.JoyConLinkActionChanged += (_, _) => changes++;

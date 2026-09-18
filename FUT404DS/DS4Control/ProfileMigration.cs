@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class ProfileMigration
     {
@@ -283,7 +283,7 @@ namespace DS4Windows
             profileReader.MoveToContent();
 
             // Write replacement root element in XmlWriter
-            tempWriter.WriteStartElement("DS4Windows");
+            tempWriter.WriteStartElement("FUT404DS");
             tempWriter.WriteAttributeString("app_version", Global.exeversion);
             tempWriter.WriteAttributeString("config_version", "4");
 
@@ -420,7 +420,7 @@ namespace DS4Windows
             profileReader.MoveToContent();
 
             // Write replacement root element in XmlWriter
-            tempWriter.WriteStartElement("DS4Windows");
+            tempWriter.WriteStartElement("FUT404DS");
             tempWriter.WriteAttributeString("app_version", Global.exeversion);
             tempWriter.WriteAttributeString("config_version", "2");
 
@@ -501,7 +501,7 @@ namespace DS4Windows
             profileReader.MoveToContent();
 
             // Write replacement root element in XmlWriter
-            tempWriter.WriteStartElement("DS4Windows");
+            tempWriter.WriteStartElement("FUT404DS");
             tempWriter.WriteAttributeString("app_version", Global.exeversion);
             tempWriter.WriteAttributeString("config_version", "5");
 

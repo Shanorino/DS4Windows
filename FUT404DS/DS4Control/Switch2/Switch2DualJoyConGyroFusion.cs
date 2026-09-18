@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,13 +10,13 @@ the Free Software Foundation, either version 3 of the License, or
 The fusion policy in this file is adapted from the GPL-3.0 licensed
 Switch2Connect project, commit 4487322a306f04efa27682e3f3a508635a84fd98,
 src/virtual_controller.py (_fuse_djg_axis, _merge_djg_direct_motion, and
-gyro_fusion_callback). Coordinate decoding remains owned by DS4Windows.
+gyro_fusion_callback). Coordinate decoding remains owned by FUT404DS.
 */
 
 using System;
 using System.Numerics;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2JoyConSide : byte
 {

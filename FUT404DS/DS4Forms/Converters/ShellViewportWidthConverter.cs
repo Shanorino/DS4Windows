@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace DS4WinWPF.DS4Forms.Converters
+namespace FUT404DSWPF.DS4Forms.Converters
 {
     /// <summary>
     /// Converts the main window width into the usable shell content width.

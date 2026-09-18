@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,7 +10,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Declares how a four-actuator canonical frame is represented by the two
@@ -45,7 +45,7 @@ internal enum Switch2HdRumbleFeedbackFidelity : byte
 /// Per-profile tuning for Xbox impulse-trigger HD-rumble conversion.
 /// The closed ranges and dynamic/fixed frequency mapping are adapted from the
 /// GPL-3.0 Switch2Connect implementation at commit
-/// 61ac6642ce12fe7217e38a860b14863b18ca7e28. DS4Windows retains its existing
+/// 61ac6642ce12fe7217e38a860b14863b18ca7e28. FUT404DS retains its existing
 /// bounded amplitude basis and sole-writer lifecycle.
 /// </summary>
 internal readonly struct Switch2HdRumbleImpulseTuning :
@@ -113,7 +113,7 @@ internal readonly struct Switch2HdRumbleImpulseTuning :
 
 /// <summary>
 /// Per-profile body-rumble gain shared by canonical and source-preserved
-/// Switch 2 feedback. The 0..200 percent range is the existing DS4Windows
+/// Switch 2 feedback. The 0..200 percent range is the existing FUT404DS
 /// Rumble Boost contract, so profiles retain one strength setting rather than
 /// gaining a second controller-specific source of truth. Xbox impulse lanes
 /// remain independently tuned because Switch 2 has no trigger actuator and

@@ -5,7 +5,7 @@ using System.Linq;
 using NAudio.CoreAudioApi;
 using NAudio.CoreAudioApi.Interfaces;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     internal sealed class AppAudioSnapshot
     {

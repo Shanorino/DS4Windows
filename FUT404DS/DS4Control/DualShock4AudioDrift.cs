@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal enum DualShock4AudioDriftMode
     {
@@ -18,7 +18,7 @@ namespace DS4Windows
     internal static class DualShock4AudioDriftSettings
     {
         internal const string EnvironmentVariableName =
-            "DS4WINDOWS_DS4_AUDIO_DRIFT_MODE";
+            "FUT404DS_DS4_AUDIO_DRIFT_MODE";
         internal const double CorrectionGain = 1.0 / 2048.0;
         internal const double MaximumCorrection = 0.002;
         internal const double MaximumAsrcRatioDeviation = 0.008;

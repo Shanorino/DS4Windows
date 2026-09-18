@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
-using DS4Windows.InputDevices;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS.InputDevices;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     internal enum JoyConView { Pair, UprightLeft, UprightRight, SidewaysLeft, SidewaysRight }
 

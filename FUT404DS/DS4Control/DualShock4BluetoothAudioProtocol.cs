@@ -1,7 +1,7 @@
 using System;
 using SBC;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Packet framing shared by the original DualShock 4 Bluetooth speaker

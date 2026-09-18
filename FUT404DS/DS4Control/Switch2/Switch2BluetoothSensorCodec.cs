@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -10,7 +10,7 @@ SW2 startup feature selection and enableFeatures/write_command.
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2BluetoothSensorInitializationFailure : byte
 {

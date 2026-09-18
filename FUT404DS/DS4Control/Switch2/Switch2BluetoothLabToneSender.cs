@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Legacy fixed-command sender remains for existing clients. The encoder's
 // other partial contains no I/O and can be compiled into the external tool.

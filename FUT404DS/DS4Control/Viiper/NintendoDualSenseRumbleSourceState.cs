@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal readonly record struct NintendoDualSenseRumbleSource(
     bool CompatibilityAllowed, bool PcmAllowed, ushort BodyLow = 0, ushort BodyHigh = 0)

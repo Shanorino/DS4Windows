@@ -5,7 +5,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Xml.Linq;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class ToolTipThemeTests
@@ -132,9 +132,9 @@ public sealed class ToolTipThemeTests
     }
 
     private static ResourceDictionary LoadTheme(string name) => new() { Source = new Uri(ThemeUri(name), UriKind.Relative) };
-    private static string ThemeUri(string name) => $"/DS4Windows;component/DS4Forms/Themes/{name}.xaml";
+    private static string ThemeUri(string name) => $"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{name}.xaml";
     private static string SourcePath(string relative, [CallerFilePath] string source = "") =>
-        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(source)!, "..", "DS4Windows", relative));
+        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(source)!, "..", "FUT404DS", relative));
 
     private static void OnSta(Action action)
     {

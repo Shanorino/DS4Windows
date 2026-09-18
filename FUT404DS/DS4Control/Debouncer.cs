@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Control;
+namespace FUT404DSWPF.DS4Control;
 
 /// <summary>
 /// Per-controller button debouncing with setup-time typed field selection.

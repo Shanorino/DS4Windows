@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DS4Windows;
+using FUT404DS;
 using NAudio.CoreAudioApi;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     internal sealed class AudioEndpointSnapshot
     {

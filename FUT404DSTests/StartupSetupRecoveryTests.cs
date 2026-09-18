@@ -1,6 +1,6 @@
-using DS4Windows.Installation;
+using FUT404DS.Installation;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class StartupSetupRecoveryTests
@@ -11,9 +11,9 @@ public sealed class StartupSetupRecoveryTests
     [TestMethod]
     public void LegacyResumeCleanupRequiresActualTargetArgumentsAndWorkingDirectory()
     {
-        const string directory = @"C:\ProgramData\DS4Windows\Installer\resume";
-        string executable = Path.Combine(directory, "DS4Windows_Setup_x64.exe");
-        const string shortcut = @"C:\Users\Example\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\DS4Windows Setup Resume.lnk";
+        const string directory = @"C:\ProgramData\FUT404DS\Installer\resume";
+        string executable = Path.Combine(directory, "FUT404DS_Setup_x64.exe");
+        const string shortcut = @"C:\Users\Example\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\FUT404DS Setup Resume.lnk";
         Assert.IsTrue(StartupSetupRecovery.IsOwnedLegacyShortcut(shortcut, executable, "/repair", directory, executable));
         Assert.IsFalse(StartupSetupRecovery.IsOwnedLegacyShortcut(shortcut, @"C:\Other\app.exe", "/repair", directory, executable));
         Assert.IsFalse(StartupSetupRecovery.IsOwnedLegacyShortcut(shortcut, executable, "/uninstall", directory, executable));
@@ -21,7 +21,7 @@ public sealed class StartupSetupRecoveryTests
         Assert.IsFalse(StartupSetupRecovery.IsOwnedLegacyShortcut(shortcut, executable, "/repair", @"C:\Other", executable));
         Assert.IsFalse(StartupSetupRecovery.IsOwnedLegacyShortcut(shortcut.Replace("Startup", "Documents"), executable, "/repair", directory, executable));
         Assert.IsFalse(StartupSetupRecovery.IsOwnedLegacyShortcut(shortcut + ".other", executable, "/repair", directory, executable));
-        Assert.IsFalse(StartupSetupRecovery.IsOwnedLegacyShortcut("DS4Windows Setup Resume.lnk", executable, "/repair", directory, executable));
+        Assert.IsFalse(StartupSetupRecovery.IsOwnedLegacyShortcut("FUT404DS Setup Resume.lnk", executable, "/repair", directory, executable));
     }
 
     [DataTestMethod]
@@ -101,7 +101,7 @@ public sealed class StartupSetupRecoveryTests
         pending.Kind = kind;
         if (kind == "bundle") pending.BundleId = "{11111111-2222-3333-4444-555555555555}";
         string expected = StartupSetupRecovery.ExpectedExecutable(pending);
-        Assert.IsTrue(expected.StartsWith(Path.Combine(StartupSetupRecovery.NativeProgramFiles, "DS4Windows.Setup") + "\\",
+        Assert.IsTrue(expected.StartsWith(Path.Combine(StartupSetupRecovery.NativeProgramFiles, "FUT404DS.Setup") + "\\",
             StringComparison.OrdinalIgnoreCase));
         pending.Executable = Path.Combine(Path.GetTempPath(), "foreign.exe");
         Assert.ThrowsException<InvalidDataException>(() => StartupSetupRecovery.Validate(pending));

@@ -1,13 +1,13 @@
 # Isolated satellite-resource regression probe
 
-This child process reads actual DS4Windows UI resources and TaskScheduler
-satellites. It never invokes DS4Windows' entry point, creates an application or
+This child process reads actual FUT404DS UI resources and TaskScheduler
+satellites. It never invokes FUT404DS' entry point, creates an application or
 controller service, or contacts hardware. No running installation is modified.
 
 ```powershell
 dotnet build utils/SatelliteResourceProbe/SatelliteResourceProbe.csproj -c Release
-./utils/SatelliteResourceProbe/Run-Probe.ps1 -SourceBuild ./DS4Windows/bin/x64/Release/net8.0-windows10.0.19041.0
-./utils/SatelliteResourceProbe/Run-Probe.ps1 -SourceBuild ./DS4Windows/bin/x64/Release/net8.0-windows10.0.19041.0 -StandardLayout
+./utils/SatelliteResourceProbe/Run-Probe.ps1 -SourceBuild ./FUT404DS/bin/x64/Release/net8.0-windows10.0.19041.0
+./utils/SatelliteResourceProbe/Run-Probe.ps1 -SourceBuild ./FUT404DS/bin/x64/Release/net8.0-windows10.0.19041.0 -StandardLayout
 python utils/test-localization-package.py
 ```
 

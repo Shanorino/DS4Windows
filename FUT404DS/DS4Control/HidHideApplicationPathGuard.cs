@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 
-namespace DS4WinWPF.DS4Control
+namespace FUT404DSWPF.DS4Control
 {
     /// <summary>
     /// Inspects the named file itself, without activating or resolving an app

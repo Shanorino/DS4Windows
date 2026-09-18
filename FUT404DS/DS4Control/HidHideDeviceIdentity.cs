@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal readonly record struct HidHideDeviceNode(
         Guid ContainerId,

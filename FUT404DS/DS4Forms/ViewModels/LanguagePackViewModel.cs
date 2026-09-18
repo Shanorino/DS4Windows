@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class LanguagePackViewModel
     {

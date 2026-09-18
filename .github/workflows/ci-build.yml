@@ -32,7 +32,7 @@ jobs:
       - name: Run tests (x64)
         # Keep the complete suite, including profile/settings round trips, as
         # the release gate. Hardware-dependent tests retain explicit opt-in gates.
-        run: dotnet test .\DS4WindowsTests\DS4WindowsTests.csproj -c Release -p:Platform=x64 --verbosity normal
+        run: dotnet test .\FUT404DSTests\FUT404DSTests.csproj -c Release -p:Platform=x64 --verbosity normal
 
       - name: Test renamed executable setup process guards
         shell: powershell
@@ -89,7 +89,7 @@ jobs:
         shell: bash
         run: |
           VERSION="$(date +%Y.%m.%d)-ci-${GITHUB_SHA::7}"
-          PRODUCT_VERSION="$(python -c "import xml.etree.ElementTree as ET; print(ET.parse('DS4Windows/DS4WinWPF.csproj').find('.//AssemblyVersion').text)")"
+          PRODUCT_VERSION="$(python -c "import xml.etree.ElementTree as ET; print(ET.parse('FUT404DS/FUT404DSWPF.csproj').find('.//AssemblyVersion').text)")"
           BUNDLE_BASE="$(echo "$PRODUCT_VERSION" | awk -F. '{print $1"."$2"."$3}')"
           BUNDLE_VERSION="${BUNDLE_BASE}-ci.${GITHUB_RUN_NUMBER}"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
@@ -98,7 +98,7 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Build ${{ matrix.platform }}
-        run: dotnet publish .\DS4Windows\DS4WinWPF.csproj -c Release /p:platform=${{ matrix.platform }} -r win-${{ matrix.platform }} --self-contained true -o .\bin\${{ matrix.platform }}\Release\output
+        run: dotnet publish .\FUT404DS\FUT404DSWPF.csproj -c Release /p:platform=${{ matrix.platform }} -r win-${{ matrix.platform }} --self-contained true -o .\bin\${{ matrix.platform }}\Release\output
 
       - name: Package ${{ matrix.platform }}
         run: python .\utils\post-build.py .\bin\${{ matrix.platform }}\Release\output . ${{ env.VERSION }}
@@ -107,7 +107,7 @@ jobs:
         shell: pwsh
         run: |
           .\installer\build-installer.ps1 `
-            -PublishRoot ".\bin\${{ matrix.platform }}\Release\DS4Windows" `
+            -PublishRoot ".\bin\${{ matrix.platform }}\Release\FUT404DS" `
             -ProductVersion "${{ env.PRODUCT_VERSION }}" `
             -BundleVersion "${{ env.BUNDLE_VERSION }}" `
             -DisplayVersion "${{ env.VERSION }}" `
@@ -117,7 +117,7 @@ jobs:
       - name: Validate offline installer layout plan
         shell: pwsh
         run: |
-          $installer = ".\bin\${{ matrix.platform }}\Release\installer\DS4Windows_${{ env.VERSION }}_Setup_${{ matrix.platform }}.exe"
+          $installer = ".\bin\${{ matrix.platform }}\Release\installer\FUT404DS_${{ env.VERSION }}_Setup_${{ matrix.platform }}.exe"
           $layout = ".\bin\${{ matrix.platform }}\Release\installer-layout"
           $process = Start-Process -FilePath $installer `
             -ArgumentList "/layout `"$layout`" /quiet" `
@@ -132,9 +132,9 @@ jobs:
       - name: Exercise MSI install, repair, and uninstall lifecycle
         shell: pwsh
         run: |
-          $msi = (Resolve-Path ".\installer\DS4Windows.Package\bin\x64\Release\DS4Windows_${{ env.PRODUCT_VERSION }}_x64.msi").Path
+          $msi = (Resolve-Path ".\installer\FUT404DS.Package\bin\x64\Release\FUT404DS_${{ env.PRODUCT_VERSION }}_x64.msi").Path
           $msiexec = Join-Path $env:SystemRoot "System32\msiexec.exe"
-          $logRoot = Join-Path $env:RUNNER_TEMP "ds4windows-msi-lifecycle"
+          $logRoot = Join-Path $env:RUNNER_TEMP "fut404ds-msi-lifecycle"
           New-Item -ItemType Directory -Path $logRoot -Force | Out-Null
           function Invoke-Msi([string]$arguments, [string]$phase) {
             $process = Start-Process -FilePath $msiexec `
@@ -146,7 +146,7 @@ jobs:
           }
           try {
             Invoke-Msi "/i `"$msi`"" "install"
-            if (-not (Test-Path "$env:ProgramFiles\DS4Windows\DS4Windows.exe")) {
+            if (-not (Test-Path "$env:ProgramFiles\FUT404DS\FUT404DS.exe")) {
               throw "MSI install completed without its application keypath."
             }
             Invoke-Msi "/fa `"$msi`"" "repair"
@@ -154,9 +154,9 @@ jobs:
           finally {
             Invoke-Msi "/x `"$msi`"" "uninstall"
           }
-          if (Test-Path "HKLM:\SOFTWARE\DS4Windows") {
+          if (Test-Path "HKLM:\SOFTWARE\FUT404DS") {
             $installPath = Get-ItemPropertyValue `
-              -Path "HKLM:\SOFTWARE\DS4Windows" -Name InstallPath `
+              -Path "HKLM:\SOFTWARE\FUT404DS" -Name InstallPath `
               -ErrorAction SilentlyContinue
             if ($installPath) {
               throw "MSI uninstall left its machine registration behind."
@@ -166,7 +166,7 @@ jobs:
       - name: Upgrade from published RC4.5.5 and preserve profiles
         shell: pwsh
         run: |
-          $msi = (Resolve-Path ".\installer\DS4Windows.Package\bin\x64\Release\DS4Windows_${{ env.PRODUCT_VERSION }}_x64.msi").Path
+          $msi = (Resolve-Path ".\installer\FUT404DS.Package\bin\x64\Release\FUT404DS_${{ env.PRODUCT_VERSION }}_x64.msi").Path
           .\utils\test-msi-upgrade-metadata.ps1 -ExistingMsi $msi -ExpectedVersion "${{ env.PRODUCT_VERSION }}"
           .\utils\test-previous-msi-upgrade.ps1 -NewMsi $msi
 
@@ -174,34 +174,34 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: DS4Windows_Installer_Lifecycle_Evidence
+          name: FUT404DS_Installer_Lifecycle_Evidence
           path: |
-            ${{ runner.temp }}/ds4windows-msi-lifecycle/
-            ${{ runner.temp }}/ds4windows-previous-msi-upgrade-*/VERIFICATION.json
-            ${{ runner.temp }}/ds4windows-previous-msi-upgrade-*/*.log
-            ${{ runner.temp }}/ds4windows-previous-msi-upgrade-*/previous-extracted/extraction.json
+            ${{ runner.temp }}/fut404ds-msi-lifecycle/
+            ${{ runner.temp }}/fut404ds-previous-msi-upgrade-*/VERIFICATION.json
+            ${{ runner.temp }}/fut404ds-previous-msi-upgrade-*/*.log
+            ${{ runner.temp }}/fut404ds-previous-msi-upgrade-*/previous-extracted/extraction.json
           if-no-files-found: warn
 
       - name: Upload portable ZIP
         id: upload_portable
         uses: actions/upload-artifact@v4
         with:
-          name: DS4Windows_${{ env.VERSION }}_${{ matrix.platform }}_Portable
-          path: .\bin\${{ matrix.platform }}\Release\DS4Windows_${{ env.VERSION }}_${{ matrix.platform }}.zip
+          name: FUT404DS_${{ env.VERSION }}_${{ matrix.platform }}_Portable
+          path: .\bin\${{ matrix.platform }}\Release\FUT404DS_${{ env.VERSION }}_${{ matrix.platform }}.zip
           if-no-files-found: error
 
       - name: Upload standard installer EXE
         id: upload_installer
         uses: actions/upload-artifact@v4
         with:
-          name: DS4Windows_${{ env.VERSION }}_Setup_${{ matrix.platform }}
-          path: .\bin\${{ matrix.platform }}\Release\installer\DS4Windows_${{ env.VERSION }}_Setup_${{ matrix.platform }}.exe
+          name: FUT404DS_${{ env.VERSION }}_Setup_${{ matrix.platform }}
+          path: .\bin\${{ matrix.platform }}\Release\installer\FUT404DS_${{ env.VERSION }}_Setup_${{ matrix.platform }}.exe
           if-no-files-found: error
 
       - name: Publish artifact link to run summary
         shell: bash
         run: |
-          echo "### DS4Windows ${{ matrix.platform }} build" >> "$GITHUB_STEP_SUMMARY"
+          echo "### FUT404DS ${{ matrix.platform }} build" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "Version: \`${{ env.VERSION }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"

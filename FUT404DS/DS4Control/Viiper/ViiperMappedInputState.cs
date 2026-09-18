@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,10 +11,10 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Runtime.InteropServices;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
-    /// The fixed-layout state at the DS4Windows/VIIPER boundary. This is built
+    /// The fixed-layout state at the FUT404DS/VIIPER boundary. This is built
     /// after mapping and steering-wheel substitution. Transition detection and
     /// wire serialization therefore cannot observe different trigger values.
     /// </summary>

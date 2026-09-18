@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -25,10 +25,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class ControlServiceDeviceOptions
     {
@@ -52,8 +52,8 @@ namespace DS4Windows
 
         public ControlServiceDeviceOptions()
         {
-            // If enabled then DS4Windows shows additional log messages when a gamepad is connected (may be useful to diagnose connection problems).
-            // This option is not persistent (ie. not saved into config files), so if enabled then it is reset back to FALSE when DS4Windows is restarted.
+            // If enabled then FUT404DS shows additional log messages when a gamepad is connected (may be useful to diagnose connection problems).
+            // This option is not persistent (ie. not saved into config files), so if enabled then it is reset back to FALSE when FUT404DS is restarted.
             verboseLogMessages = false;
         }
     }

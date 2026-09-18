@@ -1,7 +1,7 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class DualSenseDsxOverlayTests

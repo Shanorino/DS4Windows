@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Transport-only contract shared with the external experiment generator. No
 // codec/framing switch belongs here. Payloads can only reach the dedicated

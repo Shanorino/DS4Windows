@@ -7,8 +7,8 @@ param(
     [string]$TargetDs4WindowsPath,
     [string]$PackageExtrasRoot,
     [int]$InstallerHostPid = 0,
-    # Backward-compatible name used by older DS4Windows packages. This now
-    # means "keep DS4Windows portable" only. The elevated VIIPER service is
+    # Backward-compatible name used by older FUT404DS packages. This now
+    # means "keep FUT404DS portable" only. The elevated VIIPER service is
     # always installed beneath Program Files.
     [switch]$PortableInstallation,
     [switch]$KeepDs4WindowsPortable,
@@ -18,7 +18,7 @@ param(
     [string]$CorrelationId
 )
 
-# DS4Windows normally streams this script from an embedded resource into the
+# FUT404DS normally streams this script from an embedded resource into the
 # absolute system PowerShell executable. Environment values carry the original
 # signed-in user and package paths without executing a mutable .ps1 file after
 # the UAC boundary. Direct/manual script execution keeps the normal parameters.
@@ -138,10 +138,10 @@ if (-not [IO.Path]::IsPathRooted($TargetLocalAppData) -or
 $script:TargetUserSid = $TargetUserSid
 $script:TargetUserName = $TargetUserName
 $script:TargetRunKeyPath = "Registry::HKEY_USERS\$TargetUserSid\Software\Microsoft\Windows\CurrentVersion\Run"
-$script:ManagedRoot = Join-Path $programFilesRoot "DS4Windows"
+$script:ManagedRoot = Join-Path $programFilesRoot "FUT404DS"
 $script:InstallDir = Join-Path $script:ManagedRoot "VIIPER"
 $script:Ds4WindowsInstallDir = $script:ManagedRoot
-$script:InstallerLogRoot = Join-Path $env:ProgramData "DS4Windows\Installer"
+$script:InstallerLogRoot = Join-Path $env:ProgramData "FUT404DS\Installer"
 # Keep diagnostics outside the transaction target so failures that occur
 # before Program Files/LocalAppData creation still leave a readable record.
 $script:LogPath = Join-Path $script:InstallerLogRoot `
@@ -150,14 +150,14 @@ $script:UsbipReplacementStatePath = Join-Path $script:InstallDir `
     "usbip-replacement-pending.json"
 $script:UsbipUninstallKeyName = `
     "{199505b0-b93d-4521-a8c7-897818e0205a}_is1"
-$script:InfrastructureRegistryPath = "HKLM:\SOFTWARE\DS4Windows"
+$script:InfrastructureRegistryPath = "HKLM:\SOFTWARE\FUT404DS"
 $script:InfrastructureVersion = "VIIPER-0.1.5-rc4.6+USBIP-0.9.7.7"
 $script:System32 = [Environment]::SystemDirectory
 $script:PnPUtilPath = Join-Path $script:System32 "pnputil.exe"
 $script:TaskKillPath = Join-Path $script:System32 "taskkill.exe"
 $script:IcaclsPath = Join-Path $script:System32 "icacls.exe"
 $script:TempDir = Join-Path ([IO.Path]::GetTempPath()) (
-    "DS4Windows-VIIPER-Setup-" + [Guid]::NewGuid().ToString("N"))
+    "FUT404DS-VIIPER-Setup-" + [Guid]::NewGuid().ToString("N"))
 
 function Write-SetupLog([string]$message, [ConsoleColor]$color =
         [ConsoleColor]::Gray) {
@@ -199,7 +199,7 @@ function Clear-InfrastructureReadiness {
         [Microsoft.Win32.RegistryView]::Registry64)
     try {
         $key = $baseKey.CreateSubKey(
-            "SOFTWARE\DS4Windows", $true)
+            "SOFTWARE\FUT404DS", $true)
         try {
             $key.DeleteValue("InfrastructureVersion", $false)
             $key.SetValue("InfrastructureState", "Installing",
@@ -224,7 +224,7 @@ function Commit-InfrastructureReadiness {
         [Microsoft.Win32.RegistryView]::Registry64)
     try {
         $key = $baseKey.CreateSubKey(
-            "SOFTWARE\DS4Windows", $true)
+            "SOFTWARE\FUT404DS", $true)
         try {
             # Publish Ready last. Readers can never observe Ready paired with
             # an old or missing version from this transaction.
@@ -270,7 +270,7 @@ function Set-InfrastructureState([string]$state) {
         [Microsoft.Win32.RegistryView]::Registry64)
     try {
         $key = $baseKey.CreateSubKey(
-            "SOFTWARE\DS4Windows", $true)
+            "SOFTWARE\FUT404DS", $true)
         try {
             $key.SetValue("InfrastructureState", $state,
                 [Microsoft.Win32.RegistryValueKind]::String)
@@ -302,7 +302,7 @@ function Update-StartupSetupRequest {
     $users = [Microsoft.Win32.RegistryKey]::OpenBaseKey(
         [Microsoft.Win32.RegistryHive]::Users, [Microsoft.Win32.RegistryView]::Registry64)
     try {
-        $key = $users.OpenSubKey("$($script:TargetUserSid)\Software\DS4Windows")
+        $key = $users.OpenSubKey("$($script:TargetUserSid)\Software\FUT404DS")
         try {
             $preference = if ($key) { $key.GetValue("RunAtStartupRequested") } else { $null }
             $resolved = Resolve-StartupSetupRequest $preference $script:UserStartupRequested $script:AlternateAdministrator
@@ -319,7 +319,7 @@ function Save-StartupSetupIntent([string]$reason) {
     $machine = [Microsoft.Win32.RegistryKey]::OpenBaseKey(
         [Microsoft.Win32.RegistryHive]::LocalMachine, [Microsoft.Win32.RegistryView]::Registry64)
     try {
-        $key = $machine.CreateSubKey("SOFTWARE\DS4Windows\StartupSetup\$($script:TargetUserSid)", $true)
+        $key = $machine.CreateSubKey("SOFTWARE\FUT404DS\StartupSetup\$($script:TargetUserSid)", $true)
         try {
             $key.SetValue("Requested", [int][bool]$script:UserStartupRequested,
                 [Microsoft.Win32.RegistryValueKind]::DWord)
@@ -819,7 +819,7 @@ function Disconnect-UsbipImports([string]$usbipPath) {
     })
     if ($foreign.Count -gt 0) {
         $ports = ($foreign | ForEach-Object { $_.Port }) -join ", "
-        throw "USBIP port(s) $ports are not exact DS4Windows-owned local " +
+        throw "USBIP port(s) $ports are not exact FUT404DS-owned local " +
             "VIIPER imports. Close the owning application or detach those " +
             "imports manually, then run Repair again. No imports were changed."
     }
@@ -827,7 +827,7 @@ function Disconnect-UsbipImports([string]$usbipPath) {
     foreach ($block in $owned) {
         $port = $block.Port
         Write-SetupLog (
-            "Detaching exact DS4Windows-owned local VIIPER import on port " +
+            "Detaching exact FUT404DS-owned local VIIPER import on port " +
             "$port."
         ) Yellow
         $previousErrorActionPreference = $ErrorActionPreference
@@ -842,7 +842,7 @@ function Disconnect-UsbipImports([string]$usbipPath) {
         if ($detachExitCode -ne 0) {
             $detail = ($detachOutput | ForEach-Object { [string]$_ }) -join `
                 [Environment]::NewLine
-            throw "Could not detach DS4Windows-owned USBIP port $port " +
+            throw "Could not detach FUT404DS-owned USBIP port $port " +
                 "(exit=$detachExitCode): $detail. No driver transition was started."
         }
     }
@@ -863,7 +863,7 @@ function Disconnect-UsbipImports([string]$usbipPath) {
         if ($remainingOwned.Count -eq 0) {
             if ($owned.Count -gt 0) {
                 Write-SetupLog (
-                    "Confirmed all exact DS4Windows-owned USBIP imports " +
+                    "Confirmed all exact FUT404DS-owned USBIP imports " +
                     "are detached."
                 ) Green
             }
@@ -874,7 +874,7 @@ function Disconnect-UsbipImports([string]$usbipPath) {
     }
 
     $ports = ($remainingOwned | ForEach-Object { $_.Port }) -join ", "
-    throw "DS4Windows-owned USBIP port(s) $ports did not detach within " +
+    throw "FUT404DS-owned USBIP port(s) $ports did not detach within " +
         "the convergence window. No driver transition was started."
 }
 
@@ -1060,7 +1060,7 @@ function Assert-ViiperFileSha256([string]$path, [string]$expectedHash) {
 function Read-PackagedSha256([string]$manifestPath,
         [string]$expectedFileName) {
     if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-        throw "The offline DS4Windows package is incomplete: missing " +
+        throw "The offline FUT404DS package is incomplete: missing " +
             "$(Split-Path -Leaf $manifestPath)."
     }
 
@@ -1159,7 +1159,7 @@ function Get-Ds4WindowsProcessesForSetup {
     return @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
         Where-Object {
             $_.ProcessId -ne $script:InstallerHostPid -and (
-                $_.Name -ieq "DS4Windows.exe" -or
+                $_.Name -ieq "FUT404DS.exe" -or
                 ($expectedAlias -and
                     $_.Name -ieq [IO.Path]::GetFileName($expectedAlias) -and
                     (-not $_.ExecutablePath -or [string]::Equals(
@@ -1174,14 +1174,14 @@ function Stop-Ds4WindowsProcesses([string]$operation) {
 
     $unverified = @($processes | Where-Object {
         -not (Test-RecognizedProductExecutable `
-            ([string]$_.ExecutablePath) "DS4Windows")
+            ([string]$_.ExecutablePath) "FUT404DS")
     })
     if ($unverified.Count -gt 0) {
         $details = ($unverified | ForEach-Object {
             "PID=$($_.ProcessId) path=$($_.ExecutablePath)"
         }) -join "; "
         Write-SetupLog (
-            "Refusing to terminate an unverified DS4Windows setup candidate: " +
+            "Refusing to terminate an unverified FUT404DS setup candidate: " +
             "$details. Close it manually before setup."
         ) Red
         return $false
@@ -1196,14 +1196,14 @@ function Stop-Ds4WindowsProcesses([string]$operation) {
     }
     if (-not $restartPath) {
         $bundledPath = Join-Path `
-            (Split-Path -Parent $script:PackageExtrasRoot) "DS4Windows.exe"
+            (Split-Path -Parent $script:PackageExtrasRoot) "FUT404DS.exe"
         if (Test-Path -LiteralPath $bundledPath) {
             $restartPath = $bundledPath
         }
     }
     $script:Ds4WindowsRestartPath = $restartPath
 
-    Write-SetupLog "Stopping DS4Windows output owners for $operation..." Yellow
+    Write-SetupLog "Stopping FUT404DS output owners for $operation..." Yellow
     foreach ($entry in $processes) {
         try {
             $process = Get-Process -Id $entry.ProcessId -ErrorAction Stop
@@ -1224,7 +1224,7 @@ function Stop-Ds4WindowsProcesses([string]$operation) {
     if ($remaining.Count -eq 0) { return $true }
 
     Write-SetupLog (
-        "DS4Windows could not be stopped safely for $operation. " +
+        "FUT404DS could not be stopped safely for $operation. " +
         "Close it manually and run Install / Repair again."
     ) Red
     return $false
@@ -1263,7 +1263,7 @@ function Install-ViiperAtomically([string]$candidatePath,
     Copy-Item -LiteralPath $candidatePath -Destination $newPath -Force
 
     # An explicit repair/update may replace a running backend. Stop only the
-    # VIIPER process and leave DS4Windows and every physical Bluetooth device
+    # VIIPER process and leave FUT404DS and every physical Bluetooth device
     # alone.
     $stopped = Stop-ViiperProcesses "backend replacement"
     if (-not $stopped) {
@@ -1319,11 +1319,11 @@ function Test-RecognizedProductExecutable([string]$path,
     try {
         $version = [Diagnostics.FileVersionInfo]::GetVersionInfo(
             [IO.Path]::GetFullPath($path))
-        if ([string]::Equals($expectedProduct, "DS4Windows",
+        if ([string]::Equals($expectedProduct, "FUT404DS",
                 [StringComparison]::OrdinalIgnoreCase)) {
-            return [string]::Equals($version.ProductName, "DS4Windows",
+            return [string]::Equals($version.ProductName, "FUT404DS",
                        [StringComparison]::OrdinalIgnoreCase) -or
-                [string]::Equals($version.FileDescription, "DS4Windows",
+                [string]::Equals($version.FileDescription, "FUT404DS",
                     [StringComparison]::OrdinalIgnoreCase)
         }
         return [string]::Equals($version.ProductName, "VIIPER",
@@ -1400,14 +1400,14 @@ function Test-KnownPortableViiperPath([string]$path) {
 
 function Remove-ForeignViiperInstallations {
     # There is one elevated backend owner: Program Files. An older
-    # LocalAppData copy is foreign too, even when DS4Windows itself remains
+    # LocalAppData copy is foreign too, even when FUT404DS itself remains
     # portable.
     $foreign = @(Get-ForeignViiperProcesses)
     if ($foreign.Count -eq 0) { return }
 
     Write-SetupLog (
         "Detected running VIIPER process(es) outside the managed install " +
-        "path '$script:InstallDir'. DS4Windows will never use them."
+        "path '$script:InstallDir'. FUT404DS will never use them."
     ) Yellow
     foreach ($process in $foreign) {
         $displayPath = if ($process.ExecutablePath) {
@@ -1595,12 +1595,12 @@ function Stop-InstallerHostForStandardMigration {
             -not $actualPath -or
             -not [string]::Equals($actualPath, $expectedPath,
                 [StringComparison]::OrdinalIgnoreCase) -or
-            -not (Test-RecognizedProductExecutable $actualPath "DS4Windows")) {
+            -not (Test-RecognizedProductExecutable $actualPath "FUT404DS")) {
         throw "Refusing to terminate an unverified installer-host process."
     }
 
     Write-SetupLog (
-        "Closing the old portable DS4Windows installer host before cleanup: " +
+        "Closing the old portable FUT404DS installer host before cleanup: " +
         "PID $script:InstallerHostPid"
     ) Yellow
     Stop-Process -Id $script:InstallerHostPid -Force -ErrorAction Stop
@@ -1611,7 +1611,7 @@ function Stop-InstallerHostForStandardMigration {
         }
         Start-Sleep -Milliseconds 100
     }
-    throw "The old portable DS4Windows installer host did not exit."
+    throw "The old portable FUT404DS installer host did not exit."
 }
 
 function Remove-PortableDs4WindowsPackageForStandardMode {
@@ -1627,11 +1627,11 @@ function Remove-PortableDs4WindowsPackageForStandardMode {
     }
 
     $portableDirectory = Assert-SafeManagedDirectory $portableDirectory `
-        "portable DS4Windows package" -RequireExisting
+        "portable FUT404DS package" -RequireExisting
     $manifestPath = Join-Path $portableDirectory `
-        ".ds4windows-managed-files.txt"
+        ".fut404ds-managed-files.txt"
     if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
-        throw "The old portable DS4Windows package has no managed-file " +
+        throw "The old portable FUT404DS package has no managed-file " +
             "manifest, so setup will not guess which files are safe to remove."
     }
 
@@ -1644,12 +1644,12 @@ function Remove-PortableDs4WindowsPackageForStandardMode {
         $relative = ([string]$entry).Trim().Replace('/', '\')
         if (-not (Test-SafePackageRelativePath $relative) -or
                 -not $managedFiles.Add($relative)) {
-            throw "The old portable DS4Windows manifest contains an unsafe " +
+            throw "The old portable FUT404DS manifest contains an unsafe " +
                 "or duplicate path: '$entry'."
         }
     }
-    if (-not $managedFiles.Contains("DS4Windows.exe")) {
-        throw "The old portable package manifest does not own DS4Windows.exe."
+    if (-not $managedFiles.Contains("FUT404DS.exe")) {
+        throw "The old portable package manifest does not own FUT404DS.exe."
     }
 
     foreach ($relative in $managedFiles) {
@@ -1658,7 +1658,7 @@ function Remove-PortableDs4WindowsPackageForStandardMode {
         if (-not $path.StartsWith($portablePrefix,
                 [StringComparison]::OrdinalIgnoreCase)) {
             throw "Refusing to remove a managed file outside the portable " +
-                "DS4Windows folder: $relative"
+                "FUT404DS folder: $relative"
         }
 
         $parentDirectory = [IO.Path]::GetFullPath(
@@ -1668,7 +1668,7 @@ function Remove-PortableDs4WindowsPackageForStandardMode {
             if (-not ($parentDirectory + '\').StartsWith($portablePrefix,
                     [StringComparison]::OrdinalIgnoreCase)) {
                 throw "Refusing to clean a package directory outside the " +
-                    "portable DS4Windows folder: $parentDirectory"
+                    "portable FUT404DS folder: $parentDirectory"
             }
             [void]$managedDirectories.Add($parentDirectory)
             $parentDirectory = [IO.Path]::GetFullPath(
@@ -1686,8 +1686,8 @@ function Remove-PortableDs4WindowsPackageForStandardMode {
     }
     Remove-Item -LiteralPath $manifestPath -Force -ErrorAction Stop
 
-    if (Test-Path -LiteralPath (Join-Path $portableDirectory "DS4Windows.exe")) {
-        throw "The old portable DS4Windows executable could not be removed."
+    if (Test-Path -LiteralPath (Join-Path $portableDirectory "FUT404DS.exe")) {
+        throw "The old portable FUT404DS executable could not be removed."
     }
 
     $directories = @($managedDirectories | Sort-Object Length -Descending)
@@ -1703,12 +1703,12 @@ function Remove-PortableDs4WindowsPackageForStandardMode {
                 -ErrorAction Stop).Count -eq 0) {
         Remove-Item -LiteralPath $portableDirectory -Force -ErrorAction Stop
         Write-SetupLog (
-            "Removed the old portable DS4Windows folder: $portableDirectory"
+            "Removed the old portable FUT404DS folder: $portableDirectory"
         ) Green
     }
     else {
         Write-SetupLog (
-            "Removed the old portable DS4Windows executable and package " +
+            "Removed the old portable FUT404DS executable and package " +
             "files. Preserved non-package user files in: $portableDirectory"
         ) Yellow
     }
@@ -1865,7 +1865,7 @@ function Convert-AccountToSid([string]$identity) {
 function Assert-ManagedStartupTaskName([string]$taskName) {
     $allowed = [string]::Equals($taskName, "RunVIIPER",
             [StringComparison]::Ordinal) -or
-        [string]::Equals($taskName, "RunDS4Windows",
+        [string]::Equals($taskName, "RunFUT404DS",
             [StringComparison]::Ordinal)
     if (-not $allowed) {
         throw "Refusing an unmanaged root scheduled-task name: '$taskName'."
@@ -2032,14 +2032,14 @@ function Get-StartupTaskVerificationDetails($task, [string]$executablePath,
 function Test-ManagedStartupTaskMarker($registered) {
     return $registered -and [string]::Equals(
         [string]$registered.Description,
-        "DS4Windows managed startup task v1",
+        "FUT404DS managed startup task v1",
         [StringComparison]::Ordinal)
 }
 
 function Test-LegacyManagedStartupTask($registered, [string]$taskName) {
     Assert-ManagedStartupTaskName $taskName
     try {
-        # Pre-marker DS4Windows releases did not set Description. Any other
+        # Pre-marker FUT404DS releases did not set Description. Any other
         # description belongs to a different owner and is never migrated.
         if (-not $registered -or -not [string]::IsNullOrWhiteSpace(
                 [string]$registered.Description) -or
@@ -2055,7 +2055,7 @@ function Test-LegacyManagedStartupTask($registered, [string]$taskName) {
         $isViiper = [string]::Equals($taskName, "RunVIIPER",
             [StringComparison]::Ordinal)
         $expectedFileName = if ($isViiper) { "viiper.exe" } else {
-            "DS4Windows.exe"
+            "FUT404DS.exe"
         }
         $expectedArguments = if ($isViiper) {
             # Pre-authority releases used exactly "server". Recognize that
@@ -2065,7 +2065,7 @@ function Test-LegacyManagedStartupTask($registered, [string]$taskName) {
                     [StringComparison]::Ordinal)) { "server" }
             else { $script:ViiperServerArguments }
         } else { "-m" }
-        $expectedProduct = if ($isViiper) { "VIIPER" } else { "DS4Windows" }
+        $expectedProduct = if ($isViiper) { "VIIPER" } else { "FUT404DS" }
 
         if (-not [string]::Equals(
                 [IO.Path]::GetFileName($executablePath), $expectedFileName,
@@ -2104,7 +2104,7 @@ function Test-ManagedStartupTaskOwnership($registered, [string]$taskName,
         $isViiperRequest = [string]::Equals($taskName, "RunVIIPER",
             [StringComparison]::Ordinal)
         $expectedRequestFile = if ($isViiperRequest) { "viiper.exe" } else {
-            "DS4Windows.exe"
+            "FUT404DS.exe"
         }
         $expectedRequestArguments = if ($isViiperRequest) {
             $script:ViiperServerArguments
@@ -2133,7 +2133,7 @@ function Test-ManagedStartupTaskOwnership($registered, [string]$taskName,
     catch { return $false }
     # Deliberate one-time migration for pre-marker releases: accept only the
     # tightly recognized previous contract. It may point at an older portable
-    # DS4Windows copy, which preserves documented retargeting. VIIPER must be
+    # FUT404DS copy, which preserves documented retargeting. VIIPER must be
     # canonical or the exact hash-pinned historical portable package.
     return Test-LegacyManagedStartupTask $registered $taskName
 }
@@ -2251,14 +2251,14 @@ function Remove-ManagedStartupTaskPair([string]$viiperPath,
     $ds4WindowsDirectory = Split-Path -Parent $ds4WindowsPath
     # Validate the entire ownership set before deleting either fixed name.
     # This prevents a foreign second-name collision from causing a partial
-    # deletion of the first DS4Windows-owned task.
+    # deletion of the first FUT404DS-owned task.
     [void](Assert-StartupTaskMutationAllowed "RunVIIPER" $viiperPath `
         $script:ViiperServerArguments $viiperDirectory)
-    [void](Assert-StartupTaskMutationAllowed "RunDS4Windows" `
+    [void](Assert-StartupTaskMutationAllowed "RunFUT404DS" `
         $ds4WindowsPath "-m" $ds4WindowsDirectory)
     [void](Remove-ManagedStartupTask "RunVIIPER" $viiperPath `
         $script:ViiperServerArguments $viiperDirectory)
-    [void](Remove-ManagedStartupTask "RunDS4Windows" $ds4WindowsPath `
+    [void](Remove-ManagedStartupTask "RunFUT404DS" $ds4WindowsPath `
         "-m" $ds4WindowsDirectory)
 }
 
@@ -2307,9 +2307,9 @@ function New-HighestLogonTaskXml([string]$executablePath,
     $registrationInfo = Add-ScheduledTaskXmlElement $document $task `
         "RegistrationInfo"
     [void](Add-ScheduledTaskXmlElement $document $registrationInfo `
-        "Author" "DS4Windows")
+        "Author" "FUT404DS")
     [void](Add-ScheduledTaskXmlElement $document $registrationInfo `
-        "Description" "DS4Windows managed startup task v1")
+        "Description" "FUT404DS managed startup task v1")
 
     $triggers = Add-ScheduledTaskXmlElement $document $task "Triggers"
     $logonTrigger = Add-ScheduledTaskXmlElement $document $triggers `
@@ -2470,19 +2470,19 @@ function Register-ViiperRunTask([string]$viiperPath, [string]$taskName,
 
 function Register-Ds4WindowsRunTask([string]$ds4WindowsPath,
         [switch]$ReclaimExisting) {
-    return Register-HighestLogonTask "RunDS4Windows" $ds4WindowsPath "-m" `
+    return Register-HighestLogonTask "RunFUT404DS" $ds4WindowsPath "-m" `
         (Split-Path -Parent $ds4WindowsPath) -ReclaimExisting:$ReclaimExisting
 }
 
 function Register-ManagedStartupTaskPair([string]$viiperPath,
         [string]$ds4WindowsPath) {
-    # These two original names are reserved for DS4Windows setup. Explicit
+    # These two original names are reserved for FUT404DS setup. Explicit
     # installer reclamation backs up both definitions before any replacement;
     # ordinary runtime/remove/disable paths still require verified ownership.
     $viiperBefore = Assert-StartupTaskMutationAllowed "RunVIIPER" `
         $viiperPath $script:ViiperServerArguments `
         (Split-Path -Parent $viiperPath) -ReclaimExisting
-    [void](Assert-StartupTaskMutationAllowed "RunDS4Windows" `
+    [void](Assert-StartupTaskMutationAllowed "RunFUT404DS" `
         $ds4WindowsPath "-m" (Split-Path -Parent $ds4WindowsPath) -ReclaimExisting)
 
     if (-not (Register-ViiperRunTask $viiperPath "RunVIIPER" -ReclaimExisting)) {
@@ -2490,7 +2490,7 @@ function Register-ManagedStartupTaskPair([string]$viiperPath,
     }
     try {
         if (-not (Register-Ds4WindowsRunTask $ds4WindowsPath -ReclaimExisting)) {
-            throw "Could not register the elevated RunDS4Windows startup task."
+            throw "Could not register the elevated RunFUT404DS startup task."
         }
     }
     catch {
@@ -2514,7 +2514,7 @@ function Suspend-StartupTasksUntilInfrastructureReady(
     $contracts = @(
         @("RunVIIPER", $viiperPath, $script:ViiperServerArguments,
             (Split-Path -Parent $viiperPath)),
-        @("RunDS4Windows", $ds4WindowsPath, "-m",
+        @("RunFUT404DS", $ds4WindowsPath, "-m",
             (Split-Path -Parent $ds4WindowsPath))
     )
 
@@ -2559,7 +2559,7 @@ function Set-InfrastructureStartupFailClosed(
     $contracts = @(
         @("RunVIIPER", $viiperPath, $script:ViiperServerArguments,
             (Split-Path -Parent $viiperPath)),
-        @("RunDS4Windows", $ds4WindowsPath, "-m",
+        @("RunFUT404DS", $ds4WindowsPath, "-m",
             (Split-Path -Parent $ds4WindowsPath))
     )
 
@@ -2654,7 +2654,7 @@ function Configure-StartupTasksForSetup([string]$viiperPath,
     try {
         if ($script:RunAtStartupEnabled) {
             [void](Register-ManagedStartupTaskPair $viiperPath $ds4WindowsPath)
-            Write-SetupLog "Registered and verified elevated RunVIIPER and RunDS4Windows startup tasks." Green
+            Write-SetupLog "Registered and verified elevated RunVIIPER and RunFUT404DS startup tasks." Green
         }
         else {
             Remove-ManagedStartupTaskPair $viiperPath $ds4WindowsPath
@@ -2678,7 +2678,7 @@ function Confirm-StartupTasksForSetup([string]$viiperPath,
         if ($script:RunAtStartupEnabled) {
             foreach ($contract in @(
                     @("RunVIIPER", $viiperPath, $script:ViiperServerArguments),
-                    @("RunDS4Windows", $ds4WindowsPath, "-m"))) {
+                    @("RunFUT404DS", $ds4WindowsPath, "-m"))) {
                 $task = Get-RootScheduledTask $contract[0]
                 if (-not (Test-ManagedStartupTaskMarker $task) -or
                         -not (Test-HighestLogonTaskDefinition $task $contract[1] `
@@ -2692,7 +2692,7 @@ function Confirm-StartupTasksForSetup([string]$viiperPath,
         }
         else {
             if ((Get-RootScheduledTask "RunVIIPER") -or
-                    (Get-RootScheduledTask "RunDS4Windows")) {
+                    (Get-RootScheduledTask "RunFUT404DS")) {
                 throw "A startup task remains while Run at Startup is disabled."
             }
         }
@@ -2720,17 +2720,17 @@ function Start-Ds4WindowsAfterSetup([string]$viiperPath,
         [string]$ds4WindowsPath) {
     if ($script:RunAtStartupEnabled) {
         try {
-            $task = Get-RootScheduledTask "RunDS4Windows"
+            $task = Get-RootScheduledTask "RunFUT404DS"
             if (-not (Test-ManagedStartupTaskMarker $task) -or
                     -not (Test-HighestLogonTaskDefinition $task $ds4WindowsPath `
                         "-m" (Split-Path -Parent $ds4WindowsPath))) {
-                throw "RunDS4Windows is not a verified managed startup task."
+                throw "RunFUT404DS is not a verified managed startup task."
             }
-            Start-ScheduledTask -TaskPath "\" -TaskName "RunDS4Windows" -ErrorAction Stop
+            Start-ScheduledTask -TaskPath "\" -TaskName "RunFUT404DS" -ErrorAction Stop
             return
         }
         catch {
-            Enter-StartupTaskFallback "starting DS4Windows" $_.Exception.Message `
+            Enter-StartupTaskFallback "starting FUT404DS" $_.Exception.Message `
                 $viiperPath $ds4WindowsPath
         }
     }
@@ -2821,9 +2821,9 @@ function Assert-SafeManagedDirectory([string]$directory, [string]$label,
 function Install-Ds4WindowsPackage([string]$sourceDirectory,
         [string]$destinationDirectory) {
     $source = Assert-SafeManagedDirectory $sourceDirectory `
-        "DS4Windows source package" -RequireExisting
+        "FUT404DS source package" -RequireExisting
     $destination = Assert-SafeManagedDirectory $destinationDirectory `
-        "managed DS4Windows installation"
+        "managed FUT404DS installation"
     $sourcePrefix = $source.TrimEnd('\') + '\'
     $destinationPrefix = $destination.TrimEnd('\') + '\'
     if (-not [string]::Equals($source, $destination,
@@ -2832,13 +2832,13 @@ function Install-Ds4WindowsPackage([string]$sourceDirectory,
                 [StringComparison]::OrdinalIgnoreCase) -or
             $destinationPrefix.StartsWith($sourcePrefix,
                 [StringComparison]::OrdinalIgnoreCase))) {
-        throw "The DS4Windows source and managed destination may not contain one another."
+        throw "The FUT404DS source and managed destination may not contain one another."
     }
 
-    $manifestName = ".ds4windows-managed-files.txt"
+    $manifestName = ".fut404ds-managed-files.txt"
     $sourceManifest = Join-Path $source $manifestName
     if (-not (Test-Path -LiteralPath $sourceManifest -PathType Leaf)) {
-        throw "The DS4Windows package manifest is missing. Extract and run the complete release ZIP instead of a raw build folder."
+        throw "The FUT404DS package manifest is missing. Extract and run the complete release ZIP instead of a raw build folder."
     }
 
     $managedFiles = [Collections.Generic.HashSet[string]]::new(
@@ -2847,10 +2847,10 @@ function Install-Ds4WindowsPackage([string]$sourceDirectory,
     foreach ($entry in Get-Content -LiteralPath $sourceManifest) {
         $relative = ([string]$entry).Trim().Replace('/', '\')
         if (-not (Test-SafePackageRelativePath $relative)) {
-            throw "The DS4Windows package manifest contains an unsafe path: '$entry'."
+            throw "The FUT404DS package manifest contains an unsafe path: '$entry'."
         }
         if (-not $managedFiles.Add($relative)) {
-            throw "The DS4Windows package manifest contains a duplicate path: '$relative'."
+            throw "The FUT404DS package manifest contains a duplicate path: '$relative'."
         }
 
         $sourcePath = [IO.Path]::GetFullPath((Join-Path $source $relative))
@@ -2861,7 +2861,7 @@ function Install-Ds4WindowsPackage([string]$sourceDirectory,
                 -not $destinationPath.StartsWith($destinationPrefix,
                 [StringComparison]::OrdinalIgnoreCase) -or
                 -not (Test-Path -LiteralPath $sourcePath -PathType Leaf)) {
-            throw "The DS4Windows package manifest does not resolve to a packaged file: '$relative'."
+            throw "The FUT404DS package manifest does not resolve to a packaged file: '$relative'."
         }
         $copyPlan.Add([pscustomobject]@{
             Relative = $relative
@@ -2870,7 +2870,7 @@ function Install-Ds4WindowsPackage([string]$sourceDirectory,
         })
     }
     if ($copyPlan.Count -eq 0) {
-        throw "The DS4Windows package manifest is empty."
+        throw "The FUT404DS package manifest is empty."
     }
 
     if (-not [string]::Equals($source, $destination,
@@ -2900,12 +2900,12 @@ function Install-Ds4WindowsPackage([string]$sourceDirectory,
         foreach ($file in $copyPlan) {
             $parent = Split-Path -Parent $file.Destination
             New-Item -ItemType Directory -Path $parent -Force | Out-Null
-            # An in-app repair is hosted by the installed DS4Windows process.
+            # An in-app repair is hosted by the installed FUT404DS process.
             # Its executable and managed DLLs are therefore legitimately open
             # while this verified snapshot is promoted. Never overwrite a
             # byte-identical destination: doing so is unnecessary and fails
             # on Windows for loaded assemblies. Changed package files are
-            # still replaced normally after all other DS4Windows processes
+            # still replaced normally after all other FUT404DS processes
             # have been quiesced.
             if (Test-Path -LiteralPath $file.Destination -PathType Leaf) {
                 $sourceInfo = Get-Item -LiteralPath $file.Source -Force
@@ -2943,11 +2943,11 @@ function Install-Ds4WindowsPackage([string]$sourceDirectory,
         }
     }
 
-    $installedExecutable = Join-Path $destination "DS4Windows.exe"
+    $installedExecutable = Join-Path $destination "FUT404DS.exe"
     if (-not (Test-Path -LiteralPath $installedExecutable -PathType Leaf)) {
-        throw "The managed DS4Windows installation is missing DS4Windows.exe."
+        throw "The managed FUT404DS installation is missing FUT404DS.exe."
     }
-    Write-SetupLog "DS4Windows installed to $destination" Green
+    Write-SetupLog "FUT404DS installed to $destination" Green
     return $installedExecutable
 }
 
@@ -3020,7 +3020,7 @@ try {
     $script:InstallerLogRoot = Assert-SafeManagedDirectory `
         $script:InstallerLogRoot "installer log directory" -RequireExisting
     if (-not (Test-Administrator)) {
-        throw "Administrator permission is required. Launch setup from DS4Windows so Windows can request it automatically."
+        throw "Administrator permission is required. Launch setup from FUT404DS so Windows can request it automatically."
     }
     $elevatedIdentity = [Security.Principal.WindowsIdentity]::GetCurrent()
     Update-StartupSetupRequest
@@ -3036,16 +3036,16 @@ try {
             "Setup was elevated with alternate administrator credentials. " +
             "Installation will continue safely, but startup tasks for " +
             "$script:TargetUserName will be deferred until that user launches " +
-            "DS4Windows and grants elevation."
+            "FUT404DS and grants elevation."
         ) Yellow
     }
 
     if (-not $SetupMutexAlreadyHeld) {
         try {
             $script:SetupMutex = [Threading.Mutex]::new(
-                $false, "Global\DS4Windows-VIIPER-Setup")
+                $false, "Global\FUT404DS-VIIPER-Setup")
             if (-not $script:SetupMutex.WaitOne(0)) {
-                throw "Another DS4Windows VIIPER setup is already running."
+                throw "Another FUT404DS VIIPER setup is already running."
             }
             $script:SetupMutexOwned = $true
         }
@@ -3062,13 +3062,13 @@ try {
     }
 
     Write-Host ""
-    Write-Host "DS4Windows VIIPER virtual controller setup" `
+    Write-Host "FUT404DS VIIPER virtual controller setup" `
         -ForegroundColor Green
     $installationMode = if ($script:KeepDs4WindowsPortable) {
-        "Portable app: keep DS4Windows in place; install VIIPER safely in Program Files."
+        "Portable app: keep FUT404DS in place; install VIIPER safely in Program Files."
     }
     else {
-        "Standard: install DS4Windows and VIIPER in Program Files."
+        "Standard: install FUT404DS and VIIPER in Program Files."
     }
     Write-Host $installationMode -ForegroundColor Cyan
     Write-Host "Planned order:" -ForegroundColor Cyan
@@ -3105,11 +3105,11 @@ try {
         "VIIPER installation"
     if (-not $script:KeepDs4WindowsPortable) {
         $script:Ds4WindowsInstallDir = Assert-SafeManagedDirectory `
-            $script:Ds4WindowsInstallDir "managed DS4Windows installation"
+            $script:Ds4WindowsInstallDir "managed FUT404DS installation"
         New-Item -ItemType Directory -Path $script:Ds4WindowsInstallDir `
             -Force | Out-Null
         Protect-ElevatedTaskTargetDirectory $script:Ds4WindowsInstallDir `
-            "DS4Windows"
+            "FUT404DS"
     }
     New-Item -ItemType Directory -Path $script:InstallDir -Force | Out-Null
     Protect-ElevatedTaskTargetDirectory $script:InstallDir "VIIPER"
@@ -3135,7 +3135,7 @@ try {
     $candidatePath = Join-Path $script:TempDir "viiper.exe"
     if (-not (Test-Path -LiteralPath $script:BundledViiperPath `
             -PathType Leaf)) {
-        throw "The offline DS4Windows package is incomplete: missing " +
+        throw "The offline FUT404DS package is incomplete: missing " +
             "$(Split-Path -Leaf $script:BundledViiperPath)."
     }
     $bundledViiperSha256 = Read-PackagedSha256 `
@@ -3147,7 +3147,7 @@ try {
         -Destination $candidatePath -Force
     Assert-ViiperFileSha256 $candidatePath $bundledViiperSha256
     if (-not (Stop-Ds4WindowsProcesses "VIIPER backend replacement")) {
-        throw "Unable to quiesce DS4Windows before replacing VIIPER."
+        throw "Unable to quiesce FUT404DS before replacing VIIPER."
     }
     if (-not (Stop-ViiperProcesses "VIIPER backend replacement")) {
         throw "Unable to stop the existing VIIPER backend before replacement."
@@ -3159,7 +3159,7 @@ try {
 
     if (-not $script:Ds4WindowsRestartPath) {
         $bundledDs4Windows = Join-Path `
-            (Split-Path -Parent $script:PackageExtrasRoot) "DS4Windows.exe"
+            (Split-Path -Parent $script:PackageExtrasRoot) "FUT404DS.exe"
         if (Test-Path -LiteralPath $bundledDs4Windows -PathType Leaf) {
             $script:Ds4WindowsRestartPath = $bundledDs4Windows
         }
@@ -3167,14 +3167,14 @@ try {
     if (-not $script:Ds4WindowsRestartPath -or
             -not (Test-Path -LiteralPath $script:Ds4WindowsRestartPath `
                 -PathType Leaf)) {
-        throw "DS4Windows.exe could not be located for the elevated startup task."
+        throw "FUT404DS.exe could not be located for the elevated startup task."
     }
     # A Burn/MSI install has already atomically placed and verified the managed
     # application payload. The legacy in-app installer still promotes its
     # protected package snapshot itself, so retain that verification there.
     if ($script:InstallerMode) {
         $expectedManagedPath = Join-Path $script:Ds4WindowsInstallDir `
-            "DS4Windows.exe"
+            "FUT404DS.exe"
         $resolvedRestartPath = [IO.Path]::GetFullPath(
             $script:Ds4WindowsRestartPath)
         $resolvedManagedPath = [IO.Path]::GetFullPath($expectedManagedPath)
@@ -3183,12 +3183,12 @@ try {
                 [StringComparison]::OrdinalIgnoreCase) -or
                 -not (Test-Path -LiteralPath $resolvedManagedPath `
                     -PathType Leaf)) {
-            throw "The Windows Installer managed DS4Windows payload is " +
+            throw "The Windows Installer managed FUT404DS payload is " +
                 "missing or outside the protected Program Files location."
         }
         $script:Ds4WindowsRestartPath = $resolvedManagedPath
         Write-SetupLog (
-            "Windows Installer managed DS4Windows copy and startup target: " +
+            "Windows Installer managed FUT404DS copy and startup target: " +
             $script:Ds4WindowsRestartPath
         ) Green
     }
@@ -3198,9 +3198,9 @@ try {
         $sourceDs4WindowsDirectory = [IO.Path]::GetFullPath(
             (Split-Path -Parent $script:PackageExtrasRoot)).TrimEnd('\', '/')
         $sourceDs4WindowsPath = Join-Path $sourceDs4WindowsDirectory `
-            "DS4Windows.exe"
+            "FUT404DS.exe"
         if (-not (Test-Path -LiteralPath $sourceDs4WindowsPath -PathType Leaf)) {
-            throw "The protected DS4Windows package snapshot is incomplete."
+            throw "The protected FUT404DS package snapshot is incomplete."
         }
         $taskTargetHash = (Get-FileHash -LiteralPath `
             $script:Ds4WindowsRestartPath -Algorithm SHA256).Hash
@@ -3208,16 +3208,16 @@ try {
             $sourceDs4WindowsPath -Algorithm SHA256).Hash
         if (-not [string]::Equals($taskTargetHash, $sourceTargetHash,
                 [StringComparison]::OrdinalIgnoreCase)) {
-            throw "The currently running DS4Windows executable changed " +
+            throw "The currently running FUT404DS executable changed " +
                 "while setup was starting. Close it, extract a complete " +
                 "release ZIP, and run Install / Repair again."
         }
 
     if ($script:KeepDs4WindowsPortable) {
         # Keep the exact package executable that initiated setup. No
-        # DS4Windows files are copied into Program Files in portable mode.
+        # FUT404DS files are copied into Program Files in portable mode.
         Write-SetupLog (
-            "Portable DS4Windows retained; elevated startup target: " +
+            "Portable FUT404DS retained; elevated startup target: " +
             $script:Ds4WindowsRestartPath
         ) Yellow
     }
@@ -3227,19 +3227,19 @@ try {
         # Standard Install / Repair promotes the verified managed copy.
         $script:Ds4WindowsRestartPath = $managedDs4WindowsPath
         Write-SetupLog (
-            "Managed DS4Windows copy and elevated startup target: " +
+            "Managed FUT404DS copy and elevated startup target: " +
             $script:Ds4WindowsRestartPath
         ) Green
     }
     }
 
     # VIIPER is always an elevated Program Files component. Lock its task
-    # target regardless of where the unprivileged DS4Windows UI lives.
+    # target regardless of where the unprivileged FUT404DS UI lives.
     Protect-ElevatedTaskTargetFile $viiperPath "VIIPER"
     if (-not $script:KeepDs4WindowsPortable) {
         # Program Files inheritance protects the managed app package tree.
         Protect-ElevatedTaskTargetFile $script:Ds4WindowsRestartPath `
-            "DS4Windows"
+            "FUT404DS"
     }
 
     # Record requested startup before suspending it. New tasks are registered
@@ -3346,7 +3346,7 @@ try {
         }
 
         if (-not (Stop-Ds4WindowsProcesses "usbip-win2 driver upgrade")) {
-            throw "Unable to quiesce DS4Windows before the usbip-win2 driver upgrade."
+            throw "Unable to quiesce FUT404DS before the usbip-win2 driver upgrade."
         }
         if (-not (Stop-ViiperProcesses "usbip-win2 driver upgrade")) {
             throw "Unable to quiesce VIIPER before the usbip-win2 driver upgrade. " +
@@ -3381,7 +3381,7 @@ try {
                     $script:BundledUsbipInstallerPath -PathType Leaf)) {
                 $missingUsbipName = Split-Path -Leaf `
                     $script:BundledUsbipInstallerPath
-                throw "The offline DS4Windows package is incomplete: " +
+                throw "The offline FUT404DS package is incomplete: " +
                     "missing $missingUsbipName."
             }
             Write-SetupLog (
@@ -3487,7 +3487,7 @@ try {
             }
             Write-SetupLog (
                 "Run at Startup remains disabled. Restart Windows, then " +
-                "launch DS4Windows manually to finish readiness checks."
+                "launch FUT404DS manually to finish readiness checks."
             ) Yellow
         }
     }
@@ -3521,7 +3521,7 @@ try {
             $script:RebootRecommended) {
         "Setup complete, but not Ready. Restart Windows before using a virtual controller; run Repair if the usbip ABI probe still fails."
     } else {
-        "Setup complete. VIIPER is ready for DS4Windows."
+        "Setup complete. VIIPER is ready for FUT404DS."
     }
     if ($script:UsbipRuntimeReady -and -not $script:RebootRecommended) {
         # Startup can be canceled while the local API readiness probe is in
@@ -3534,7 +3534,7 @@ try {
         Save-StartupSetupIntent $startupReason
         Write-SetupLog $finish Green
         if ($script:Ds4WindowsRestartPath -and -not $script:InstallerMode) {
-            Write-SetupLog "SUCCESSFUL: restarting DS4Windows in 2 seconds." Green
+            Write-SetupLog "SUCCESSFUL: restarting FUT404DS in 2 seconds." Green
             Start-Sleep -Seconds 2
             if (-not $script:KeepDs4WindowsPortable) {
                 Stop-InstallerHostForStandardMigration

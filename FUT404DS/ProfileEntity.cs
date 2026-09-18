@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     public class ProfileEntity
     {
@@ -47,7 +47,7 @@ namespace DS4WinWPF
         {
             if (!string.IsNullOrWhiteSpace(name))
             {
-                string filepath = DS4Windows.Global.appdatapath + @"\Profiles\" + name + ".xml";
+                string filepath = FUT404DS.Global.appdatapath + @"\Profiles\" + name + ".xml";
                 if (File.Exists(filepath))
                 {
                     File.Delete(filepath);
@@ -60,8 +60,8 @@ namespace DS4WinWPF
         {
             if (!string.IsNullOrWhiteSpace(name))
             {
-                DS4Windows.Global.SaveProfile(deviceNum, name);
-                DS4Windows.Global.CacheExtraProfileInfo(deviceNum);
+                FUT404DS.Global.SaveProfile(deviceNum, name);
+                FUT404DS.Global.CacheExtraProfileInfo(deviceNum);
             }
         }
 
@@ -72,10 +72,10 @@ namespace DS4WinWPF
 
         public void RenameProfile(string newProfileName)
         {
-            string oldFilePath = Path.Combine(DS4Windows.Global.appdatapath,
+            string oldFilePath = Path.Combine(FUT404DS.Global.appdatapath,
                 "Profiles", $"{name}.xml");
 
-            string newFilePath = Path.Combine(DS4Windows.Global.appdatapath,
+            string newFilePath = Path.Combine(FUT404DS.Global.appdatapath,
                 "Profiles", $"{newProfileName}.xml");
 
             if (File.Exists(oldFilePath) && !File.Exists(newFilePath))

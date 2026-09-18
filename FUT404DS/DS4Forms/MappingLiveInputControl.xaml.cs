@@ -2,10 +2,10 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WinWPF.DS4Forms;
+namespace FUT404DSWPF.DS4Forms;
 
 public partial class MappingLiveInputControl : UserControl
 {

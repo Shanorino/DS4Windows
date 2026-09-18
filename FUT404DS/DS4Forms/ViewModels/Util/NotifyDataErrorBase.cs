@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace DS4WinWPF.DS4Forms.ViewModels.Util
+namespace FUT404DSWPF.DS4Forms.ViewModels.Util
 {
     public abstract class NotifyDataErrorBase : INotifyDataErrorInfo
     {
@@ -43,7 +43,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels.Util
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
-        public abstract bool IsValid(DS4Windows.SpecialAction action);
+        public abstract bool IsValid(FUT404DS.SpecialAction action);
         public abstract void ClearOldErrors();
     }
 }

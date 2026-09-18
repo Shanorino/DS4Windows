@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4Windows.DS4Control;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.DS4Control;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]

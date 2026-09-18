@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Identifies the virtual controller contract that authored feedback.

@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.DS4Control
+namespace FUT404DS.DS4Control
 {
     /// <summary>
     /// Adds two bounded HID movements without discarding counts. Their sum fits

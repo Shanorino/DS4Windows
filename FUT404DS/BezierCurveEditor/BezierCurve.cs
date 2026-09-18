@@ -1,4 +1,4 @@
-﻿/* MIT License
+/* MIT License
  *
  * KeySpline - use bezier curve for transition easing function
  * Copyright (c) 2012 Gaetan Renaudeau <renaudeau.gaetan@gmail.com> (GRE)
@@ -18,7 +18,7 @@
 /*
 * This file contains the original bezier curve code (see comments above) and calculations ported as C# code. The original code was in JavaScript.
 *
-* This file has few customizations and optimizations for the needs of DS4Windows application (see https://github.com/Ryochan7/DS4Windows).
+* This file has few customizations and optimizations for the needs of FUT404DS application (see https://github.com/Ryochan7/FUT404DS).
 * MIT License. Permission is hereby granted, free of charge, to any person to do whatever they want with this C# ported version of BezierCurve calculation code 
 * as long this part of the code is open sourced and usage is in compliance with the above shown original license, also.
 * 
@@ -35,7 +35,7 @@ using System;
 using System.Globalization;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class BezierCurve
     {
@@ -85,7 +85,7 @@ namespace DS4Windows
             }
         }
 
-        // Custom definition set by DS4Windows options screens. This string is not validated (ie. the value is as user entered it and could be an invalid curve definition). This value is saved in a profile XML file.
+        // Custom definition set by FUT404DS options screens. This string is not validated (ie. the value is as user entered it and could be an invalid curve definition). This value is saved in a profile XML file.
         public string CustomDefinition { get; set; }
         public override string ToString() { return this.CustomDefinition; }
 

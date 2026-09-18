@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     internal static class ControllerArtwork
     {
@@ -15,11 +15,11 @@ namespace DS4WinWPF.DS4Forms
         private static ImageSource Create(string fileName)
         {
             // Without the application pack scheme, a getter invoked directly
-            // (outside XAML's base-URI context) resolves this as C:\DS4Windows;...
+            // (outside XAML's base-URI context) resolves this as C:\FUT404DS;...
             var bitmap = new BitmapImage();
             bitmap.BeginInit();
             bitmap.UriSource = new Uri(
-                $"pack://application:,,,/DS4Windows;component/Resources/{fileName}",
+                $"{FUT404DS.Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/{fileName}",
                 UriKind.Absolute);
             bitmap.CacheOption = BitmapCacheOption.OnLoad;
             bitmap.EndInit();

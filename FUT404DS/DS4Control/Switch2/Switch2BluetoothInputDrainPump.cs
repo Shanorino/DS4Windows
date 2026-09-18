@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,7 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Threading;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2BluetoothInputDrainPumpState : byte
 {
@@ -145,9 +145,9 @@ internal sealed class Switch2BluetoothInputDrainPump
         worker = new Thread(Run)
         {
             IsBackground = true,
-            Name = "DS4Windows Switch 2 Bluetooth input",
+            Name = "FUT404DS Switch 2 Bluetooth input",
             // Match every established physical controller reader in
-            // DS4Windows. This worker is completion-driven and blocks on the
+            // FUT404DS. This worker is completion-driven and blocks on the
             // owner monitor, so the priority applies only while a received
             // report is being decoded and published; it creates no polling or
             // synthetic report cadence.

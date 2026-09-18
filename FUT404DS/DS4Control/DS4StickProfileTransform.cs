@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023 Travis Nickles
 Copyright (C) 2026 hbashton
 
@@ -9,7 +9,7 @@ remain authoritative for byte-based controllers.
 */
 using System;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal static class DS4StickProfileTransform
 {

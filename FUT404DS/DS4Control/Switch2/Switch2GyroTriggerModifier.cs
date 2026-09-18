@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,12 +10,12 @@ the Free Software Foundation, either version 3 of the License, or
 The press/release freeze, release latch, subtractive deadzone, and dampening
 policy is adapted from the GPL-3.0 Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/controller.py. It presents a
-modifier to DS4Windows' existing gyro outputs and does not own a mapper.
+modifier to FUT404DS' existing gyro outputs and does not own a mapper.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal readonly struct Switch2GyroTriggerSourceIdentity :
     IEquatable<Switch2GyroTriggerSourceIdentity>

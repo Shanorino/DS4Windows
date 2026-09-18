@@ -4,13 +4,13 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace DS4Windows.Installation;
+namespace FUT404DS.Installation;
 
 // Setup may repair the two reserved names, but launch and uninstall must
 // still verify their contents: a failed repair is not permission to run them.
 internal static class InstallerStartupTaskPolicy
 {
-    internal const string ManagedDescription = "DS4Windows managed startup task v1";
+    internal const string ManagedDescription = "FUT404DS managed startup task v1";
     internal const string ViiperArguments = "server --usb.retained-import-authority-id=4923336367393615921";
 
     internal static bool HasCurrentWarning(string correlationId, string warningCorrelationId, string warning) =>

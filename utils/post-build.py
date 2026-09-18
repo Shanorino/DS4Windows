@@ -1,4 +1,4 @@
-﻿import os
+import os
 from pathlib import Path
 import sys
 import shutil
@@ -32,7 +32,7 @@ if not target_dir.is_dir() or is_reparse_point(target_dir):
 
 # These belong to the portable archive only. The unchanged publish tree is
 # also recursively harvested into the MSI, which uses its managed backend.
-portable_files = ("viiper.exe", "viiper.exe.sha256", "DS4Windows.portable")
+portable_files = ("viiper.exe", "viiper.exe.sha256", "FUT404DS.portable")
 portable_names = {name.casefold() for name in portable_files}
 package_entries = list(target_dir.rglob("*"))
 reparse_entry = next(
@@ -57,11 +57,11 @@ if len({entry.as_posix().casefold() for entry in relative_entries}) != len(relat
     raise SystemExit("Published package contains case-insensitive duplicate paths.")
 
 
-# A published DS4Windows build is an offline installer. Fail package
+# A published FUT404DS build is an offline installer. Fail package
 # composition if any required runtime or installer payload is absent instead
 # of producing an archive that later needs a network recovery path.
 required_offline_files = (
-    "DS4Windows.exe",
+    "FUT404DS.exe",
     "BouncyCastle.Cryptography.dll",
     "Resources/BouncyCastle.NOTICE.txt",
     "Resources/DsxTriggerEffects.NOTICE.txt",
@@ -89,7 +89,7 @@ missing_offline_files = [
 if missing_offline_files:
     missing = ", ".join(missing_offline_files)
     raise FileNotFoundError(
-        f"Cannot compose the offline DS4Windows package; missing: {missing}"
+        f"Cannot compose the offline FUT404DS package; missing: {missing}"
     )
 
 
@@ -118,13 +118,13 @@ viiper_hash_path.write_text(
 # packages. The numeric Windows file version cannot distinguish an RC from a
 # stable build, so Settings and the updater use this marker to include the
 # installed prerelease notes without exposing prereleases to stable users.
-release_marker = target_dir / "DS4Windows.release"
+release_marker = target_dir / "FUT404DS.release"
 release_marker.write_text(version.strip() + "\n", encoding="utf-8")
 
 # Record every file owned by this package. DS4Updater uses this manifest on the
 # next update to remove package files that no longer ship, without touching
 # profiles, settings, plugins, or other user-created content.
-manifest_name = ".ds4windows-managed-files.txt"
+manifest_name = ".fut404ds-managed-files.txt"
 manifest_path = target_dir / manifest_name
 package_entries = list(target_dir.rglob("*"))
 reparse_entry = next(
@@ -145,8 +145,8 @@ if len({path.casefold() for path in managed_files}) != len(managed_files):
 manifest_path.write_text("\n".join(managed_files) + "\n", encoding="utf-8")
 
 
-# rename target dir (net8.0-windows) to DS4Windows
-renamed_dir = target_dir.parent / "DS4Windows"
+# rename target dir (net8.0-windows) to FUT404DS
+renamed_dir = target_dir.parent / "FUT404DS"
 if renamed_dir.exists():
     if is_reparse_point(renamed_dir):
         raise SystemExit(f"Refusing to replace reparse-point output: {renamed_dir}")
@@ -165,9 +165,9 @@ os.rename(target_dir, renamed_dir)
 
 # create a zip
 arch = target_dir.parents[1].name
-zip_name = f"DS4Windows_{version}_{arch}"
+zip_name = f"FUT404DS_{version}_{arch}"
 target_zip_path = target_dir.parent / f"{zip_name}.zip"
-# Archive only the newly composed DS4Windows directory. Using the whole
+# Archive only the newly composed FUT404DS directory. Using the whole
 # Release directory could recursively include an older ZIP from a prior local
 # build and silently double the artifact size. Stream the same pinned broker
 # as a root alias without placing it in the MSI's source tree. Override only
@@ -181,14 +181,14 @@ with tempfile.NamedTemporaryFile(
 try:
     with zipfile.ZipFile(temporary_zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
         for relative in managed_files:
-            archive.write(renamed_dir / relative, f"DS4Windows/{relative}")
-        archive.writestr(f"DS4Windows/{manifest_name}", portable_manifest.encode("utf-8"))
-        archive.write(renamed_dir / "extras" / viiper_name, "DS4Windows/viiper.exe")
+            archive.write(renamed_dir / relative, f"FUT404DS/{relative}")
+        archive.writestr(f"FUT404DS/{manifest_name}", portable_manifest.encode("utf-8"))
+        archive.write(renamed_dir / "extras" / viiper_name, "FUT404DS/viiper.exe")
         archive.writestr(
-            "DS4Windows/viiper.exe.sha256",
+            "FUT404DS/viiper.exe.sha256",
             f"{viiper_hasher.hexdigest()} *viiper.exe\n".encode("ascii"),
         )
-        archive.writestr("DS4Windows/DS4Windows.portable", b"DS4Windows portable package v1\n")
+        archive.writestr("FUT404DS/FUT404DS.portable", b"FUT404DS portable package v1\n")
     os.replace(temporary_zip_path, target_zip_path)
 finally:
     temporary_zip_path.unlink(missing_ok=True)

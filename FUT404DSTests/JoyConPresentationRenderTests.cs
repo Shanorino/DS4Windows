@@ -5,10 +5,10 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class JoyConPresentationRenderTests
@@ -200,7 +200,7 @@ public sealed class JoyConPresentationRenderTests
         XDocument document = null;
         for (var root = new DirectoryInfo(AppContext.BaseDirectory); root != null; root = root.Parent)
         {
-            string path = Path.Combine(root.FullName, "DS4Windows", "DS4Forms", file);
+            string path = Path.Combine(root.FullName, "FUT404DS", "DS4Forms", file);
             if (!File.Exists(path)) continue;
             document = XDocument.Load(path);
             break;

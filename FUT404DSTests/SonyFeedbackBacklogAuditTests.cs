@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 /// <summary>
 /// Bounded, offline audit of Sony feedback ownership. The USB writer is replaced

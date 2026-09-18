@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -16,12 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using DS4Windows.DS4Control;
-using DS4Windows.InputDevices;
-using DS4Windows.StickModifiers;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS.DS4Control;
+using FUT404DS.InputDevices;
+using FUT404DS.StickModifiers;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 using Sensorit.Base;
 using System;
 using System.Collections.Generic;
@@ -42,16 +42,16 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4WinWPF;
-using DS4WinWPF.ApiDTO;
+using FUT404DSWPF;
+using FUT404DSWPF.ApiDTO;
 using WpfScreenHelper;
-using static DS4Windows.Mouse;
-using static DS4Windows.Util;
-using LightbarMacro = DS4WinWPF.DS4Forms.ViewModels.LightbarMacro;
+using static FUT404DS.Mouse;
+using static FUT404DS.Util;
+using LightbarMacro = FUT404DSWPF.DS4Forms.ViewModels.LightbarMacro;
 using Switch2CemuhookYawPolicy =
-    DS4Windows.Switch2.Switch2CemuhookYawSensitivity;
+    FUT404DS.Switch2.Switch2CemuhookYawSensitivity;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     [Flags]
     public enum DS4KeyType : byte { None = 0, ScanCode = 1, Toggle = 2, Unbound = 4, Macro = 8, HoldMacro = 16, RepeatMacro = 32 }; // Increment by exponents of 2*, starting at 2^0
@@ -665,7 +665,7 @@ namespace DS4Windows
         public static BackingStore store => m_Config;
         protected static Int32 m_IdleTimeout = 600000;
 
-        // Need to perform extra steps to check if DS4Windows is installed in a junction
+        // Need to perform extra steps to check if FUT404DS is installed in a junction
         // directory (done with Scoop). Use real path when available
         public static string exelocation = new Func<string>(() =>
         {
@@ -722,8 +722,8 @@ namespace DS4Windows
         public static string appdatapath;
         public static bool firstRun = false;
         public static bool multisavespots = false;
-        public static string appDataPpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\DS4Windows";
-        public static string localAppDataPpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "DS4Windows");
+        public static string appDataPpath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\FUT404DS";
+        public static string localAppDataPpath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FUT404DS");
         public static bool runHotPlug = false;
         public static string[] tempprofilename = new string[TEST_PROFILE_ITEM_COUNT] { string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public static bool[] useTempProfile = new bool[TEST_PROFILE_ITEM_COUNT] { false, false, false, false, false, false, false, false, false };
@@ -734,17 +734,17 @@ namespace DS4Windows
         public static bool[] linkedProfileCheck = new bool[MAX_DS4_CONTROLLER_COUNT] { false, false, false, false, false, false, false, false };
         public static bool[] touchpadActive = new bool[TEST_PROFILE_ITEM_COUNT] { true, true, true, true, true, true, true, true, true };
         // Used to hold device type desired from Profile Editor
-        public static OutContType[] outDevTypeTemp = new OutContType[TEST_PROFILE_ITEM_COUNT] { DS4Windows.OutContType.ViiperX360, DS4Windows.OutContType.ViiperX360,
-            DS4Windows.OutContType.ViiperX360, DS4Windows.OutContType.ViiperX360,
-            DS4Windows.OutContType.ViiperX360, DS4Windows.OutContType.ViiperX360,
-            DS4Windows.OutContType.ViiperX360, DS4Windows.OutContType.ViiperX360,
-            DS4Windows.OutContType.ViiperX360};
+        public static OutContType[] outDevTypeTemp = new OutContType[TEST_PROFILE_ITEM_COUNT] { FUT404DS.OutContType.ViiperX360, FUT404DS.OutContType.ViiperX360,
+            FUT404DS.OutContType.ViiperX360, FUT404DS.OutContType.ViiperX360,
+            FUT404DS.OutContType.ViiperX360, FUT404DS.OutContType.ViiperX360,
+            FUT404DS.OutContType.ViiperX360, FUT404DS.OutContType.ViiperX360,
+            FUT404DS.OutContType.ViiperX360};
         // Used to hold the currently active controller output type in use for a slot
-        public static OutContType[] activeOutDevType = new OutContType[TEST_PROFILE_ITEM_COUNT] { DS4Windows.OutContType.None, DS4Windows.OutContType.None,
-            DS4Windows.OutContType.None, DS4Windows.OutContType.None,
-            DS4Windows.OutContType.None, DS4Windows.OutContType.None,
-            DS4Windows.OutContType.None, DS4Windows.OutContType.None,
-            DS4Windows.OutContType.None};
+        public static OutContType[] activeOutDevType = new OutContType[TEST_PROFILE_ITEM_COUNT] { FUT404DS.OutContType.None, FUT404DS.OutContType.None,
+            FUT404DS.OutContType.None, FUT404DS.OutContType.None,
+            FUT404DS.OutContType.None, FUT404DS.OutContType.None,
+            FUT404DS.OutContType.None, FUT404DS.OutContType.None,
+            FUT404DS.OutContType.None};
 
         public static bool hidHideInstalled = IsHidHideInstalled();
 
@@ -765,11 +765,14 @@ namespace DS4Windows
 
         public const int CONFIG_VERSION = 5;
         public const int APP_CONFIG_VERSION = 2;
-        public const string ASSEMBLY_RESOURCE_PREFIX = "pack://application:,,,/DS4Windows;";
-        public const string RESOURCES_PREFIX = "/DS4Windows;component/Resources";
+        public static string ASSEMBLY_RESOURCE_PREFIX =>
+            $"pack://application:,,,/{typeof(Global).Assembly.GetName().Name};";
+        public static string RESOURCES_PREFIX =>
+            $"/{typeof(Global).Assembly.GetName().Name};component/Resources";
         // Need to add additional probing path in code starting with .NET 6.
         public const string PROBING_PATH = "Lang";
-        public const string LANGUAGE_ASSEMBLY_NAME = "DS4Windows.resources.dll";
+        public static string LANGUAGE_ASSEMBLY_NAME =>
+            $"{typeof(Global).Assembly.GetName().Name}.resources.dll";
         public const string CUSTOM_EXE_CONFIG_FILENAME = "custom_exe_name.txt";
         public const string XML_EXTENSION = ".xml";
 
@@ -1015,19 +1018,19 @@ namespace DS4Windows
         {
             conType = conType.Normalize();
             string result = string.Empty;
-            if (conType == DS4Windows.OutContType.X360 ||
-                conType == DS4Windows.OutContType.ViiperX360 ||
-                conType == DS4Windows.OutContType.ViiperXboxOne)
+            if (conType == FUT404DS.OutContType.X360 ||
+                conType == FUT404DS.OutContType.ViiperX360 ||
+                conType == FUT404DS.OutContType.ViiperXboxOne)
             {
                 xboxDefaultNames.TryGetValue(key, out result);
             }
-            else if (conType == DS4Windows.OutContType.ViiperSwitch2Pro)
+            else if (conType == FUT404DS.OutContType.ViiperSwitch2Pro)
             {
                 switchDefaultNames.TryGetValue(key, out result);
             }
-            else if (conType == DS4Windows.OutContType.ViiperDS4 ||
-                conType == DS4Windows.OutContType.ViiperDualSense ||
-                conType == DS4Windows.OutContType.ViiperDualSenseEdge)
+            else if (conType == FUT404DS.OutContType.ViiperDS4 ||
+                conType == FUT404DS.OutContType.ViiperDualSense ||
+                conType == FUT404DS.OutContType.ViiperDualSenseEdge)
             {
                 ds4DefaultNames.TryGetValue(key, out result);
             }
@@ -1632,7 +1635,8 @@ namespace DS4Windows
                     if (Path.GetExtension(s) == ".xml")
                     {
                         xDoc.Load(s);
-                        XmlNode el = xDoc.SelectSingleNode("DS4Windows/ProfileActions");
+                        XmlElement root = xDoc.DocumentElement;
+                        XmlNode el = root?.SelectSingleNode("ProfileActions");
                         if (el != null)
                         {
                             if (string.IsNullOrEmpty(el.InnerText))
@@ -1642,7 +1646,7 @@ namespace DS4Windows
                         }
                         else
                         {
-                            XmlNode Node = xDoc.SelectSingleNode("DS4Windows");
+                            XmlNode Node = root;
                             el = xDoc.CreateElement("ProfileActions");
                             el.InnerText = "Disconnect Controller";
                             Node.AppendChild(el);
@@ -2169,7 +2173,7 @@ namespace DS4Windows
         }
 
         /// <summary>
-        /// Fake name used for user copy of DS4Windows.exe
+        /// Fake name used for user copy of FUT404DS.exe
         /// </summary>
         public static string FakeExeName
         {
@@ -4008,8 +4012,8 @@ namespace DS4Windows
 
     public class Changelog
     {
-        public const string GITHUB_RELEASES_API_URI = "https://api.github.com/repos/hbashton/DS4Windows/releases";
-        public const string GITHUB_LATEST_RELEASE_API_URI = "https://api.github.com/repos/hbashton/DS4Windows/releases/latest";
+        public const string GITHUB_RELEASES_API_URI = "https://api.github.com/repos/hbashton/FUT404DS/releases";
+        public const string GITHUB_LATEST_RELEASE_API_URI = "https://api.github.com/repos/hbashton/FUT404DS/releases/latest";
 
         private static bool? _newerVersionAvailable = null;
         private static Version _latestVersion;
@@ -5587,8 +5591,8 @@ namespace DS4Windows
 
                 // Write header explicitly
                 //xmlWriter.WriteStartDocument();
-                xmlWriter.WriteComment(string.Format(" DS4Windows Configuration Data. {0} ", DateTime.Now));
-                xmlWriter.WriteComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+                xmlWriter.WriteComment(string.Format(" FUT404DS Configuration Data. {0} ", DateTime.Now));
+                xmlWriter.WriteComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
                 xmlWriter.WriteWhitespace("\r\n");
                 xmlWriter.WriteWhitespace("\r\n");
 
@@ -5636,23 +5640,24 @@ namespace DS4Windows
             try
             {
                 XmlNode tmpNode;
-                XmlNode xmlControls = m_Xdoc.SelectSingleNode("/DS4Windows/Control");
-                XmlNode xmlShiftControls = m_Xdoc.SelectSingleNode("/DS4Windows/ShiftControl");
+                XmlElement profileRoot = m_Xdoc.DocumentElement;
+                XmlNode xmlControls = profileRoot?.SelectSingleNode("Control");
+                XmlNode xmlShiftControls = profileRoot?.SelectSingleNode("ShiftControl");
                 m_Xdoc.RemoveAll();
 
                 tmpNode = m_Xdoc.CreateXmlDeclaration("1.0", "utf-8", string.Empty);
                 m_Xdoc.AppendChild(tmpNode);
 
-                tmpNode = m_Xdoc.CreateComment(string.Format(" DS4Windows Configuration Data. {0} ", DateTime.Now));
+                tmpNode = m_Xdoc.CreateComment(string.Format(" FUT404DS Configuration Data. {0} ", DateTime.Now));
                 m_Xdoc.AppendChild(tmpNode);
 
-                tmpNode = m_Xdoc.CreateComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+                tmpNode = m_Xdoc.CreateComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
                 m_Xdoc.AppendChild(tmpNode);
 
                 tmpNode = m_Xdoc.CreateWhitespace("\r\n");
                 m_Xdoc.AppendChild(tmpNode);
 
-                XmlElement rootElement = m_Xdoc.CreateElement("DS4Windows", null);
+                XmlElement rootElement = m_Xdoc.CreateElement("FUT404DS", null);
                 rootElement.SetAttribute("app_version", Global.exeversion);
                 rootElement.SetAttribute("config_version", Global.CONFIG_VERSION.ToString());
 
@@ -6740,7 +6745,7 @@ namespace DS4Windows
             Dictionary<DS4Controls, X360Controls> shiftCustomMapButtons = new Dictionary<DS4Controls, X360Controls>();
             Dictionary<DS4Controls, String> shiftCustomMapMacros = new Dictionary<DS4Controls, String>();
             Dictionary<DS4Controls, String> shiftCustomMapExtras = new Dictionary<DS4Controls, String>();
-            string rootname = "DS4Windows";
+                string rootname = "FUT404DS";
             bool missingSetting = false;
             bool migratePerformed = false;
             string profilepath;
@@ -6774,11 +6779,10 @@ namespace DS4Windows
                     Loaded = false;
                 }
 
-                if (m_Xdoc.SelectSingleNode(rootname) == null)
-                {
-                    rootname = "DS4Windows";
+                if (m_Xdoc.DocumentElement != null)
+                    rootname = m_Xdoc.DocumentElement.Name;
+                else
                     missingSetting = true;
-                }
 
                 if (device < Global.MAX_DS4_CONTROLLER_COUNT)
                 {
@@ -8555,7 +8559,7 @@ namespace DS4Windows
                             Item = xmlDSAudioGroupElement.SelectSingleNode("SpeakerCompression");
                             byte.TryParse(Item.InnerText, out byte temp);
                             dualSenseSpeakerCompression[device] = Math.Min(temp,
-                                (byte)DS4Windows.DualSenseSpeakerCompression.Strong);
+                                (byte)FUT404DS.DualSenseSpeakerCompression.Strong);
                         }
                         catch { missingSetting = true; }
 
@@ -9806,7 +9810,7 @@ namespace DS4Windows
                 // Write header explicitly
                 xmlWriter.WriteStartDocument();
                 xmlWriter.WriteComment(string.Format(" Profile Configuration Data. {0} ", DateTime.Now));
-                xmlWriter.WriteComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+                xmlWriter.WriteComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
                 xmlWriter.WriteWhitespace("\r\n");
                 xmlWriter.WriteWhitespace("\r\n");
 
@@ -9866,7 +9870,7 @@ namespace DS4Windows
             Node = m_Xdoc.CreateComment(String.Format(" Profile Configuration Data. {0} ", DateTime.Now));
             m_Xdoc.AppendChild(Node);
 
-            Node = m_Xdoc.CreateComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+            Node = m_Xdoc.CreateComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
             m_Xdoc.AppendChild(Node);
 
             Node = m_Xdoc.CreateWhitespace("\r\n");
@@ -10241,7 +10245,7 @@ namespace DS4Windows
             catch (XmlException)
             {
                 // XML file has become corrupt. Start from scratch
-                AppLogger.LogToGui(DS4WinWPF.Properties.Resources.XMLActionsCorrupt, true);
+                AppLogger.LogToGui(FUT404DSWPF.Properties.Resources.XMLActionsCorrupt, true);
                 m_Xdoc.RemoveAll();
                 PrepareActionsXml(m_Xdoc);
             }

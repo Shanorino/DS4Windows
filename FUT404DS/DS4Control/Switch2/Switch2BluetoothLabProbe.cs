@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Optional surface on the EXACT service already owned by the input lease.
 // No second BluetoothLEDevice/service open, arbitrary UUID, command or CCCD API.
@@ -43,11 +43,11 @@ internal sealed class Switch2BluetoothLabProbe
     private bool audioSetupAcknowledged;
 
     internal static bool IsEnabled => PortableLabContext.IsActive &&
-        Environment.GetEnvironmentVariable("DS4WINDOWS_SWITCH2_AUDIO_PROBE") == "1";
+        Environment.GetEnvironmentVariable("FUT404DS_SWITCH2_AUDIO_PROBE") == "1";
 
     internal static bool IsInputGapEnabled => ShouldEnableInputGapProbe(
         PortableLabContext.IsActive,
-        Environment.GetEnvironmentVariable("DS4WINDOWS_SWITCH2_INPUT_GAP_PROBE"));
+        Environment.GetEnvironmentVariable("FUT404DS_SWITCH2_INPUT_GAP_PROBE"));
 
     internal static bool ShouldEnableInputGapProbe(bool portableLab, string value) =>
         portableLab && value == "1";

@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Report-driven, one-shot calibration. RWC is counts per degree, exactly

@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Bounded, nonwaiting ownership of UDP send arguments and their bytes. Each

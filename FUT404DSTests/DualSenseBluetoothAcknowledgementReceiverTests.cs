@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
-using DS4Windows.InputDevices;
-using DS4WindowsTests;
+using FUT404DS.InputDevices;
+using FUT404DSTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 [DoNotParallelize]
@@ -282,7 +282,7 @@ public sealed class DualSenseBluetoothAcknowledgementReceiverTests
         {
             completions = new(StateLock, 8);
             realtime = DualSenseRealtimeHapticsSharedRing.CreateOwner(
-                "DS4Windows.Tests.AckReceiver." + Guid.NewGuid().ToString("N"), 8);
+                "FUT404DS.Tests.AckReceiver." + Guid.NewGuid().ToString("N"), 8);
             Set(Pacer, "stateLock", StateLock);
             Set(Pacer, "nativeCommandCredits", Credits);
             Set(Pacer, "outstandingReports", Media);

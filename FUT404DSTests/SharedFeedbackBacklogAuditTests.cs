@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using DS4Windows;
+using FUT404DS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Hardware-free audit of complete actuator-state paths. These are deliberately
 // not assertions that validity-masked native DualSense commands may coalesce.

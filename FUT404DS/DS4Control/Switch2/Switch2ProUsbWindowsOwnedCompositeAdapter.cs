@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Dormant Windows acquisition boundary for one full-duplex Switch 2 Pro USB

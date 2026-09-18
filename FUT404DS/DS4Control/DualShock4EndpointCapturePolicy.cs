@@ -2,7 +2,7 @@ using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Endpoint compatibility depends on the Windows audio driver, not the

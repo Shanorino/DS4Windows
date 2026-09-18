@@ -348,9 +348,9 @@ Changes to this option takes effect at the gamepad connection time.</value>
     <value>Custom Exe Name</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Some games implement a block that causes DS4 input to be ignored if a game detects either DS4Windows.exe or InputMapper.exe running at the time. A workaround to the block is to rename DS4Windows.exe so the check in the game fails. Specifying a custom exe name here allows DS4Updater to automatically update a custom copy of DS4Windows to the desired file name. Make sure to omit the extension.
+    <value>Some games implement a block that causes DS4 input to be ignored if a game detects either FUT404DS.exe or InputMapper.exe running at the time. A workaround to the block is to rename FUT404DS.exe so the check in the game fails. Specifying a custom exe name here allows DS4Updater to automatically update a custom copy of FUT404DS to the desired file name. Make sure to omit the extension.
 
-Example: whyme_DS4Windows</value>
+Example: whyme_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>XInputChecker</value>
@@ -443,7 +443,7 @@ Example: whyme_DS4Windows</value>
     <value>Data integrity checks failed for wireless device. Closing device.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>.NET 5 Runtime was not detected on your system. Please download and install .NET 5 Runtime to ensure compatibility with future DS4Windows builds. You will be redirected to the .NET 5 Runtime download page upon closing this window.</value>
+    <value>.NET 5 Runtime was not detected on your system. Please download and install .NET 5 Runtime to ensure compatibility with future FUT404DS builds. You will be redirected to the .NET 5 Runtime download page upon closing this window.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Please update .NET Runtime</value>

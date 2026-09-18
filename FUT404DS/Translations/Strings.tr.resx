@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>Güncellemeleri Kontrol Et</value>
   </data>
   <data name="CheckUpdateStartup" xml:space="preserve">
-    <value>DS4Windows Açıldığında Güncellemeleri Kontrol Et</value>
+    <value>FUT404DS Açıldığında Güncellemeleri Kontrol Et</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Temizle</value>
@@ -348,9 +348,9 @@ Bu seçenekteki değişiklikler denetleyici bağlandığında geçerli olur.</va
     <value>Özel Exe Adı</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Bazı oyunlar, DS4Windows.exe veya InputMapper.exe'nin çalıştığını algıladıklarında DS4 girdisini yok sayar. DS4Windows.exe'yi yeniden adlandırarak oyunun yaptığı engelleme aşılabilir. Özel bir exe adı belirlemek DS4Updater'ın DS4Windows'un istenen isimli özel bir kopyasını güncellemesini sağlar. Uzantıyı atladığınızdan emin olun.
+    <value>Bazı oyunlar, FUT404DS.exe veya InputMapper.exe'nin çalıştığını algıladıklarında DS4 girdisini yok sayar. FUT404DS.exe'yi yeniden adlandırarak oyunun yaptığı engelleme aşılabilir. Özel bir exe adı belirlemek DS4Updater'ın FUT404DS'un istenen isimli özel bir kopyasını güncellemesini sağlar. Uzantıyı atladığınızdan emin olun.
 
-Örnek: whyme_DS4Windows</value>
+Örnek: whyme_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>XInput Testi</value>
@@ -437,13 +437,13 @@ Bu seçenekteki değişiklikler denetleyici bağlandığında geçerli olur.</va
     <value>Gerçek Dünya Kalibrasyonu</value>
   </data>
   <data name="ViGEmPluginFailure" xml:space="preserve">
-    <value>ViGEm Cihaz Eklentisi Başarısız Oldu. Hata Kodu {0}. Muhtemelen dahili ViGEmBus sorunu. Bağlantı kapatılıyor. Eğer sorun devam ediyorsa, lütfen DS4Windows'u kapatın ve Windows'u yeninden başlatın.</value>
+    <value>ViGEm Cihaz Eklentisi Başarısız Oldu. Hata Kodu {0}. Muhtemelen dahili ViGEmBus sorunu. Bağlantı kapatılıyor. Eğer sorun devam ediyorsa, lütfen FUT404DS'u kapatın ve Windows'u yeninden başlatın.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Kablosuz cihaz için Veri bütünlüğü kontrolleri başarısız oldu. Cihaz Kapatılıyor.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>Sisteminizde .NET 5 Runtime tespit edilemedi. Gelecek DS4Windows derlemeleri ile uyum sağlamak için lütfen .NET 5 Runtime indirin ve yükleyin. Bu pencereyi kapattıktan sonra .NET 5 Runtime indirme sayfasına yönlendireleceksiniz.</value>
+    <value>Sisteminizde .NET 5 Runtime tespit edilemedi. Gelecek FUT404DS derlemeleri ile uyum sağlamak için lütfen .NET 5 Runtime indirin ve yükleyin. Bu pencereyi kapattıktan sonra .NET 5 Runtime indirme sayfasına yönlendireleceksiniz.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Lütfen .NET Runtime'ı güncelleyin</value>
@@ -497,7 +497,7 @@ Bu seçenekteki değişiklikler denetleyici bağlandığında geçerli olur.</va
     <value>Bazı durumlarda, analog çubuk çıktısının maksimum çıktı değerini limitlemek kullanışlı olabilir. Maksimum Çıktı analog çubuğun final çıktı değerini kısıtlayabilmeyi sağlar.</value>
   </data>
   <data name="AntiDeadzoneTooltip" xml:space="preserve">
-    <value>Anti-ölü bölge, bir ekseni kullanırken, o eksinin atanmış ölü bölgesini aştıktan sonra üretilen minimum çıkış değerini ayarlamak için kullanılır. Bu özellik, bir ekseni bir video oyunundaki atanmış ölü bölge değeri ile daha iyi eşleştirmeye yardımcı olmak amacıyla tasarlanmıştır. Örneğin, bir video oyununda XInput LS (Sol Joystick) için tipik atanmış ölü bölge değeri yaklaşık 8000 (yüzde 25) olabilir. Bir anti-ölü bölge atanmamışsa, bir eksinin DS4Windows ile atanmış ölü bölgenin yanı sıra oyunun atanmış eksil ölü bölgesini geçmesi gerekir.</value>
+    <value>Anti-ölü bölge, bir ekseni kullanırken, o eksinin atanmış ölü bölgesini aştıktan sonra üretilen minimum çıkış değerini ayarlamak için kullanılır. Bu özellik, bir ekseni bir video oyunundaki atanmış ölü bölge değeri ile daha iyi eşleştirmeye yardımcı olmak amacıyla tasarlanmıştır. Örneğin, bir video oyununda XInput LS (Sol Joystick) için tipik atanmış ölü bölge değeri yaklaşık 8000 (yüzde 25) olabilir. Bir anti-ölü bölge atanmamışsa, bir eksinin FUT404DS ile atanmış ölü bölgenin yanı sıra oyunun atanmış eksil ölü bölgesini geçmesi gerekir.</value>
   </data>
   <data name="StickInputCurveTooltip" xml:space="preserve">
     <value>ESKİ VE KULLANILMAYAN AYAR. Ölü bölge bilgisi uygulanmadan önce ham giriş koordinatlarına dayalı bir eğri uygulama girişimidir. Karmaşıktır.</value>
@@ -572,7 +572,7 @@ Döndürme ayarı, analog bir çubuğu hareket ettirirken parmağınız hafifçe
 
 - Devre Dışı: Titreşim, denetleyici tarafından tanımlanan güç seviyesine göre yerel olarak yeniden ölçeklendirilecektir (daha iyi kalite)
 
-- Etkin: Hem DS4Windows genel titreşim yeniden ölçekleme hem de DualSense'in yerel kontrolü etkin olacaktır</value>
+- Etkin: Hem FUT404DS genel titreşim yeniden ölçekleme hem de DualSense'in yerel kontrolü etkin olacaktır</value>
   </data>
   <data name="DualSRumbleModes_Tip" xml:space="preserve">
     <value>Doğru Mod (tavsiye edilir):
@@ -655,8 +655,8 @@ Devre Dışı:
   <data name="SwipeTouchpadToSwitchProfiles" xml:space="preserve">
     <value>Profil Değiştirmek için Dokunmatik Pedi Kaydır</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>DS4Windows'u Geçici Olarak Kapat</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>FUT404DS'u Geçici Olarak Kapat</value>
   </data>
   <data name="Unplug" xml:space="preserve">
     <value>Sök</value>
@@ -746,7 +746,7 @@ Devre Dışı:
     <value>DS3 Denetleyici Desteği</value>
   </data>
   <data name="FirstLaunch.DeviceIntroText" xml:space="preserve">
-    <value>Diğer eşleyicilerin (örneğin Steam Input gibi) varsayılan olarak birden fazla cihaz türünü desteklemesinden dolayı, DS4Windows yalnızca varsayılan olarak DS4 denetleyicilerinden okuma desteği sağlar. Diğer desteklenen cihaz türleri için burada eşleyici desteğini belirtebilirsiniz. DS4Windows'ı aynı anda çalıştıran diğer olası eşleyicileri kullanırken dikkatli olun.</value>
+    <value>Diğer eşleyicilerin (örneğin Steam Input gibi) varsayılan olarak birden fazla cihaz türünü desteklemesinden dolayı, FUT404DS yalnızca varsayılan olarak DS4 denetleyicilerinden okuma desteği sağlar. Diğer desteklenen cihaz türleri için burada eşleyici desteğini belirtebilirsiniz. FUT404DS'ı aynı anda çalıştıran diğer olası eşleyicileri kullanırken dikkatli olun.</value>
   </data>
   <data name="FirstLaunch.DS3EnableCkbLabel" xml:space="preserve">
     <value>DS3 Cihaz Desteği</value>

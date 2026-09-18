@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     public enum ViiperSetupPromptDecision
     {
@@ -63,20 +63,20 @@ namespace DS4WinWPF.DS4Forms
                     : "VIIPER verification failed";
                 summaryText.Text = usbipReplacementRequired
                     ? currentStatus
-                    : "The installed VIIPER does not match this DS4Windows package.";
+                    : "The installed VIIPER does not match this FUT404DS package.";
                 requirementsHeadingText.Text = "Verified update required";
                 requirementsText.Text = usbipReplacementRequired
                     ? "• Install and verify bundled VIIPER 0.1.5-rc4.6\n" +
                       "• Safely remove the unsupported USB-IP package\n" +
                       "• Restart, then finish installing USB-IP 0.9.7.7"
                     : "• Install the exact bundled VIIPER build\n" +
-                      "• Choose managed or portable DS4Windows\n" +
+                      "• Choose managed or portable FUT404DS\n" +
                       "• The unverified backend will not be started";
                 installButton.Content = usbipReplacementRequired
                     ? "Repair VIIPER + USB-IP"
                     : "Install standard";
                 installPortableButton.Content =
-                    "Keep DS4Windows portable";
+                    "Keep FUT404DS portable";
                 existingViiperPanel.Visibility = Visibility.Collapsed;
                 suppressPromptCheck.Visibility = Visibility.Collapsed;
                 notNowButton.Content = "Continue without virtual output";
@@ -86,13 +86,13 @@ namespace DS4WinWPF.DS4Forms
             {
                 headingText.Text = "VIIPER setup required";
                 summaryText.Text = currentStatus;
-                requirementsHeadingText.Text = "Required before DS4Windows can run";
+                requirementsHeadingText.Text = "Required before FUT404DS can run";
                 requirementsText.Text =
                     "• Install the bundled VIIPER 0.1.5-rc4.6 build\n" +
                     "• Install and verify USB-IP 0.9.7.7\n" +
-                    "• Start DS4Windows only after the runtime probe passes";
+                    "• Start FUT404DS only after the runtime probe passes";
                 installButton.Content = "Install / Repair";
-                installPortableButton.Content = "Keep DS4Windows portable";
+                installPortableButton.Content = "Keep FUT404DS portable";
                 suppressPromptCheck.Visibility = Visibility.Collapsed;
                 notNowButton.Content = "Continue without virtual output";
                 closeButton.ToolTip = "Continue without virtual output";

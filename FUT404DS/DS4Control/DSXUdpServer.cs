@@ -7,10 +7,10 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using NLog;
 
-namespace DS4Windows.DS4Control
+namespace FUT404DS.DS4Control
 {
     // Wire contract: Paliverse/DSX @ 1614f003d7f00fa501e789c16eacb219993c1c16,
     // Mod System (DSX v3)/Mod System (DSX v3.1+)/DSX_UDP_Example/{Resources,Program}.cs.
@@ -303,7 +303,7 @@ namespace DS4Windows.DS4Control
         {
             var result = new DSXStatusResponse
             {
-                Status = "DS4Windows DSX UDP Server Running",
+                Status = "FUT404DS DSX UDP Server Running",
                 TimeReceived = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture),
             };
             var seen = new HashSet<int>();

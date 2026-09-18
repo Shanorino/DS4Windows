@@ -124,9 +124,9 @@ function Select-TaskXmlNodes([Xml.XmlDocument]$document, [string]$xpath) {
 
 $script:TargetUserSid =
     [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
-$viiperPath = "C:\Program Files\DS4Windows & Test\VIIPER\viiper.exe"
+$viiperPath = "C:\Program Files\FUT404DS & Test\VIIPER\viiper.exe"
 $arguments = "server --label '<&>'"
-$workingDirectory = "C:\Program Files\DS4Windows & Test\VIIPER"
+$workingDirectory = "C:\Program Files\FUT404DS & Test\VIIPER"
 
 $taskXmlText = New-HighestLogonTaskXml $viiperPath $arguments `
     $workingDirectory
@@ -141,7 +141,7 @@ Assert-Equal $taskXml.DocumentElement.GetAttribute("version") "1.2" `
     "The task schema version changed."
 Assert-Equal (Select-TaskXmlNode $taskXml `
     "/t:Task/t:RegistrationInfo/t:Description").InnerText `
-    "DS4Windows managed startup task v1" `
+    "FUT404DS managed startup task v1" `
     "The durable startup-task ownership marker changed."
 $logonTriggers = @(Select-TaskXmlNodes $taskXml `
     "/t:Task/t:Triggers/t:LogonTrigger")
@@ -228,7 +228,7 @@ $script:FakeUserPreference = $null
 $script:AlternateAdministrator = $false
 $script:StartupTaskFallbackActive = $false
 $script:StartupTaskWarning = ""
-$script:InfrastructureRegistryPath = "HKLM:\SOFTWARE\DS4Windows"
+$script:InfrastructureRegistryPath = "HKLM:\SOFTWARE\FUT404DS"
 $script:CorrelationId = "test-startup-correlation"
 $script:RegistrationMutation = $null
 $script:EnumerationMutation = $null
@@ -430,7 +430,7 @@ function Enable-ScheduledTask {
 function Set-ItemProperty {
     [CmdletBinding()]
     param([string]$LiteralPath, [string]$Name, [string]$Value, [string]$Type)
-    Assert-Equal $LiteralPath "HKLM:\SOFTWARE\DS4Windows" "Warning persistence escaped its key."
+    Assert-Equal $LiteralPath "HKLM:\SOFTWARE\FUT404DS" "Warning persistence escaped its key."
     if ($Name -notin @("StartupTaskWarning", "StartupTaskWarningCorrelationId")) {
         throw "Unexpected registry mutation: $Name"
     }
@@ -516,7 +516,7 @@ function Export-ScheduledTask {
     param($InputObject)
     $script:TaskEvents += "export:$($InputObject.TaskName)"
     return $InputObject.OriginalXml.Replace(
-        "DS4Windows managed startup task v1", [string]$InputObject.Description)
+        "FUT404DS managed startup task v1", [string]$InputObject.Description)
 }
 
 function Write-StartupTaskBackup([string]$taskName, [string]$taskXml) {
@@ -548,12 +548,12 @@ function Write-SetupLog([string]$message, $color) {
     $script:SetupLogs += $message
 }
 
-$ds4Path = "C:\Program Files\DS4Windows & Test\DS4Windows.exe"
-$oldPortableDs4Path = "C:\Old Portable Copy\DS4Windows.exe"
+$ds4Path = "C:\Program Files\FUT404DS & Test\FUT404DS.exe"
+$oldPortableDs4Path = "C:\Old Portable Copy\FUT404DS.exe"
 $oldPortableDs4Directory = Split-Path -Parent $oldPortableDs4Path
 
 function New-LegacyDs4ScheduledTask {
-    $task = New-FakeScheduledTask "\" "RunDS4Windows" `
+    $task = New-FakeScheduledTask "\" "RunFUT404DS" `
         (New-HighestLogonTaskXml $oldPortableDs4Path "-m" `
             $oldPortableDs4Directory)
     $task.Description = ""
@@ -596,10 +596,10 @@ if (-not $invalidNameRejected -or $script:RegisterCalls -ne 1) {
 Reset-FakeTaskState
 $script:RecognizedProductPaths = @($oldPortableDs4Path)
 $script:FakeTasks = @(New-LegacyDs4ScheduledTask)
-$legacyRetargeted = Register-HighestLogonTask "RunDS4Windows" $ds4Path `
+$legacyRetargeted = Register-HighestLogonTask "RunFUT404DS" $ds4Path `
     "-m" (Split-Path -Parent $ds4Path)
 if (-not $legacyRetargeted) {
-    throw "Verified legacy portable RunDS4Windows task was not retargeted."
+    throw "Verified legacy portable RunFUT404DS task was not retargeted."
 }
 Assert-Equal $script:RegisterCalls 1 `
     "Legacy portable retarget did not register exactly once."
@@ -612,7 +612,7 @@ Assert-Equal $script:FakeTasks.Count 1 `
 Assert-Equal $script:FakeTasks[0].Actions[0].Execute $ds4Path `
     "Legacy portable task did not move to the requested executable."
 Assert-Equal $script:FakeTasks[0].Description `
-    "DS4Windows managed startup task v1" `
+    "FUT404DS managed startup task v1" `
     "Legacy portable task did not receive the ownership marker."
 
 # Every semantic legacy field is conjunctive. Near-miss tasks remain foreign
@@ -662,7 +662,7 @@ foreach ($nearMiss in $legacyNearMisses) {
     $script:FakeTasks = @($candidate)
     $rejected = $false
     try {
-        [void](Register-HighestLogonTask "RunDS4Windows" $ds4Path `
+        [void](Register-HighestLogonTask "RunFUT404DS" $ds4Path `
             "-m" (Split-Path -Parent $ds4Path))
     }
     catch { $rejected = $_.Exception.Message -match "foreign root task" }
@@ -742,7 +742,7 @@ if (-not (Register-HighestLogonTask "RunVIIPER" $viiperPath `
 Assert-Equal $script:FakeTasks[0].Actions[0].Execute $viiperPath `
     "Recovered portable VIIPER startup did not use the managed executable."
 Assert-Equal $script:FakeTasks[0].Description `
-    "DS4Windows managed startup task v1" `
+    "FUT404DS managed startup task v1" `
     "Recovered portable VIIPER startup lost its ownership marker."
 Assert-Equal $script:TaskBackups.Count 1 `
     "Portable migration did not preserve exactly one original definition."
@@ -957,7 +957,7 @@ Assert-Equal $script:FakeTasks.Count 1 "Foreign collision was not preserved."
 Reset-FakeTaskState
 $ownedViiper = New-FakeScheduledTask "\" "RunVIIPER" `
     (New-HighestLogonTaskXml $viiperPath "server" $workingDirectory)
-$foreignDs4 = New-ForeignScheduledTask "RunDS4Windows"
+$foreignDs4 = New-ForeignScheduledTask "RunFUT404DS"
 $script:FakeTasks = @($ownedViiper, $foreignDs4)
 $pairRemovalRejected = $false
 try { Remove-ManagedStartupTaskPair $viiperPath $ds4Path }
@@ -973,15 +973,15 @@ Assert-Equal $script:FakeTasks.Count 2 `
 # Setup explicitly reclaims only the two original reserved names. The complete
 # old definitions are backed up before either member of the pair is changed.
 Reset-FakeTaskState
-$script:FakeTasks = @((New-ForeignScheduledTask "RunVIIPER"), (New-ForeignScheduledTask "RunDS4Windows"))
+$script:FakeTasks = @((New-ForeignScheduledTask "RunVIIPER"), (New-ForeignScheduledTask "RunFUT404DS"))
 if (-not (Register-ManagedStartupTaskPair $viiperPath $ds4Path)) {
     throw "The installer could not recover the two reserved task names."
 }
 Assert-Equal $script:RegisterCalls 2 "Reserved-name recovery did not register exactly twice."
 Assert-Equal $script:RegisterForceNames.Count 2 "Existing definitions were not replaced in place."
 Assert-Equal $script:TaskBackups.Count 2 "Both old definitions were not backed up."
-Assert-Equal ($script:RegisterNames -join ',') "RunVIIPER,RunDS4Windows" "Setup changed task names."
-foreach ($name in @("RunVIIPER", "RunDS4Windows")) {
+Assert-Equal ($script:RegisterNames -join ',') "RunVIIPER,RunFUT404DS" "Setup changed task names."
+foreach ($name in @("RunVIIPER", "RunFUT404DS")) {
     $backupIndex = [Array]::IndexOf([string[]]$script:TaskEvents, "backup:$name")
     $firstRegistration = [Array]::IndexOf([string[]]$script:TaskEvents, "register:RunVIIPER")
     if ($backupIndex -lt 0 -or $backupIndex -gt $firstRegistration) {
@@ -994,12 +994,12 @@ Assert-Equal $script:UnregisterCalls 0 `
 # A genuine second-task provider failure rolls back only RunVIIPER created by
 # this pair transaction; no unowned task is touched.
 Reset-FakeTaskState
-$script:RegisterFailureNames = @("RunDS4Windows")
+$script:RegisterFailureNames = @("RunFUT404DS")
 $partialFailureObserved = $false
 try { [void](Register-ManagedStartupTaskPair $viiperPath $ds4Path) }
 catch {
     $partialFailureObserved = $_.Exception.Message -match `
-        "Could not register the elevated RunDS4Windows"
+        "Could not register the elevated RunFUT404DS"
 }
 if (-not $partialFailureObserved) {
     throw "Simulated second-task registration failure was not propagated."
@@ -1027,7 +1027,7 @@ if ($markerTask.Settings.Enabled) {
 Reset-FakeTaskState
 $script:FakeTasks = @(
     (New-ForeignScheduledTask "RunVIIPER"),
-    (New-ForeignScheduledTask "RunDS4Windows")
+    (New-ForeignScheduledTask "RunFUT404DS")
 )
 Set-InfrastructureStartupFailClosed $viiperPath $ds4Path
 Assert-Equal $script:DisableCalls 0 `
@@ -1064,7 +1064,7 @@ Reset-FakeTaskState
 $script:InstallDir = $workingDirectory
 $script:Ds4WindowsRestartPath = $ds4Path
 $script:TargetRunKeyPath = "HKCU:\Fixture\Run"
-$script:FakeTasks = @((New-ForeignScheduledTask "RunVIIPER"), (New-ForeignScheduledTask "RunDS4Windows"))
+$script:FakeTasks = @((New-ForeignScheduledTask "RunVIIPER"), (New-ForeignScheduledTask "RunFUT404DS"))
 Disable-ViiperStartup
 Assert-Equal $script:StartupTaskFallbackActive $false "Strict pre-cleanup prevented authorized setup recovery."
 Configure-StartupTasksForSetup $viiperPath $ds4Path
@@ -1132,7 +1132,7 @@ Assert-Equal $markedTask.Settings.Enabled $true "Failed marked-task backup chang
 # The definition can change after pair preflight but before registration.
 # The immediate pre-write reread must archive that updated definition too.
 Reset-FakeTaskState
-$script:FakeTasks = @((New-ForeignScheduledTask "RunVIIPER"), (New-ForeignScheduledTask "RunDS4Windows"))
+$script:FakeTasks = @((New-ForeignScheduledTask "RunVIIPER"), (New-ForeignScheduledTask "RunFUT404DS"))
 $script:EnumerationMutation = {
     param($count)
     if ($count -eq 4) { $script:FakeTasks[0].Description = "Changed immediately before overwrite" }
@@ -1156,7 +1156,7 @@ Assert-Equal ($script:RegisterForceNames -join ',') "RunVIIPER" "A racing task r
 foreach ($failure in @("provider unavailable", "registration denied", "startup-disabled cleanup")) {
     Reset-FakeTaskState
     if ($failure -eq "provider unavailable") { $script:EnumerationFailure = $true }
-    if ($failure -eq "registration denied") { $script:RegisterFailureNames = @("RunDS4Windows") }
+    if ($failure -eq "registration denied") { $script:RegisterFailureNames = @("RunFUT404DS") }
     if ($failure -eq "startup-disabled cleanup") {
         $script:RequestedRunAtStartupEnabled = $false
         $script:FakeTasks = @(New-ForeignScheduledTask "RunVIIPER")
@@ -1310,7 +1310,7 @@ foreach ($ready in @($false, $true)) {
     Assert-Equal $script:RegisterCalls $(if ($ready) { 2 } else { 0 }) "ABI gate registered tasks at the wrong time."
 }
 
-if ($backendText.Contains('DS4Windows.RunVIIPER') -or $backendText.Contains('DS4Windows.RunDS4Windows')) {
+if ($backendText.Contains('FUT404DS.RunVIIPER') -or $backendText.Contains('FUT404DS.RunFUT404DS')) {
     throw "Setup introduced alternate task names."
 }
 $outerFailure = $backendText.Substring($backendText.LastIndexOf('catch {', $backendText.IndexOf('if ($script:UserCanceled)')))

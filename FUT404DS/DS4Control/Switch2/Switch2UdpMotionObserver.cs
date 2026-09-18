@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>Optional post-mapper observer, not another raw event subscription.</summary>
 internal sealed class Switch2UdpMotionObserver

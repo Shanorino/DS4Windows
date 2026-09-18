@@ -1,8 +1,8 @@
 using System.Buffers.Binary;
 using System.Security.Cryptography;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2RawStickCalibrationFileStoreTests
@@ -139,7 +139,7 @@ public sealed class Switch2RawStickCalibrationFileStoreTests
 
     private sealed class Fixture : IDisposable
     {
-        internal readonly string Root = Path.Combine(Path.GetTempPath(), "DS4Windows-StickCalibration-" + Guid.NewGuid().ToString("N"));
+        internal readonly string Root = Path.Combine(Path.GetTempPath(), "FUT404DS-StickCalibration-" + Guid.NewGuid().ToString("N"));
         internal string Directory => Path.Combine(Root, "StickCalibration");
         internal readonly Switch2RawStickCalibrationFileStore Store;
         internal Fixture() => Assert.IsTrue(Switch2RawStickCalibrationFileStore.TryOpen(Root, out Store));

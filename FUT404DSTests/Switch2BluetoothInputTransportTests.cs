@@ -1,8 +1,8 @@
 using System.Buffers.Binary;
 using System.Reflection;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2BluetoothInputTransportTests

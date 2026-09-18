@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,12 +10,12 @@ the Free Software Foundation, either version 3 of the License, or
 The IR threshold and velocity policy consumed here is adapted from the
 GPL-3.0 licensed Switch2Connect project, commit
 4487322a306f04efa27682e3f3a508635a84fd98. This file integrates that policy
-with DS4Windows' existing profile mouse path and lifecycle generations.
+with FUT404DS' existing profile mouse path and lifecycle generations.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal struct Switch2IrMouseProfileLaneState
 {
@@ -45,7 +45,7 @@ internal struct Switch2IrMouseProfileSideLaneState
 
 /// <summary>
 /// Profile-scoped bridge from the fixed-size Joy-Con 2 source sidecar to the
-/// existing DS4Windows mouse accumulator. It performs no OS injection and
+/// existing FUT404DS mouse accumulator. It performs no OS injection and
 /// allocates nothing on the report path. Pair, device, transport, timestamp,
 /// and configuration fences prevent state from crossing a reconnect, re-pair,
 /// clock regression, or side-selection change.

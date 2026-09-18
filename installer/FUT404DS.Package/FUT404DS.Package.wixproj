@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Platform>x64</Platform>
     <OutputType>Package</OutputType>
-    <OutputName>DS4Windows_$(ProductVersion)_x64</OutputName>
+    <OutputName>FUT404DS_$(ProductVersion)_x64</OutputName>
     <ProductVersion Condition="'$(ProductVersion)' == ''">5.0.8.0</ProductVersion>
     <PublishRoot Condition="'$(PublishRoot)' == ''">$(MSBuildThisFileDirectory)..\..\bin\x64\Release\output</PublishRoot>
     <DefineConstants>ProductVersion=$(ProductVersion);PublishRoot=$(PublishRoot)</DefineConstants>

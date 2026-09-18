@@ -1,7 +1,7 @@
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class DualSenseControllerMediaBufferServoTests

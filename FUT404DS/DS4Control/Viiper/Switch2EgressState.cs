@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,10 +11,10 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Buffers.Binary;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
-    /// Immutable, value-owned Switch 2 Pro state at the DS4Windows/VIIPER
+    /// Immutable, value-owned Switch 2 Pro state at the FUT404DS/VIIPER
     /// boundary. VIIPER owns the HID report counter and motion timestamp at
     /// actual endpoint presentation; neither is frozen in this 24-byte state.
     /// </summary>

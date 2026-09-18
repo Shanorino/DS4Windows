@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,13 +10,13 @@ the Free Software Foundation, either version 3 of the License, or
 The edge-freeze, release-latch, and dampening policy in this file is adapted
 from the GPL-3.0 licensed Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/controller.py and
-src/config.py. It is integrated here as a profile policy over DS4Windows'
+src/config.py. It is integrated here as a profile policy over FUT404DS'
 existing SixAxis path; it does not own another mapper or output loop.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal readonly struct Switch2IrGyroTuning :
     IEquatable<Switch2IrGyroTuning>
@@ -309,7 +309,7 @@ internal struct Switch2IrGyroMotionModifierState
 /// projection. An optical sensor becomes eligible only when that exact source
 /// is present in the active legacy gyro-trigger list. Button edges are observed
 /// across both halves of a joined pair, matching Switch2Connect's merged-pair
-/// behavior while retaining DS4Windows' one canonical mapping pipeline.
+/// behavior while retaining FUT404DS' one canonical mapping pipeline.
 /// </summary>
 internal static class Switch2IrGyroMotionModifier
 {

@@ -1,9 +1,9 @@
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
-using QueryStatus = DS4Windows.Switch2.Switch2BluetoothWindowsGattQueryStatus;
-using ServiceQuery = DS4Windows.Switch2.Switch2BluetoothWindowsGattQuery<DS4Windows.Switch2.ISwitch2BluetoothWindowsGattService>;
+using QueryStatus = FUT404DS.Switch2.Switch2BluetoothWindowsGattQueryStatus;
+using ServiceQuery = FUT404DS.Switch2.Switch2BluetoothWindowsGattQuery<FUT404DS.Switch2.ISwitch2BluetoothWindowsGattService>;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class Switch2BluetoothServiceDiscoveryTests

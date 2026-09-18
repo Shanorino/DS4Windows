@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -26,10 +26,10 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     public enum AutoProfileDeviceOption
     {
@@ -170,7 +170,7 @@ namespace DS4WinWPF
         private bool turnoff;
         private AutoProfileDeviceOption deviceOption = AutoProfileDeviceOption.Any;
         private bool applyToAllControllers;
-        private string[] profileNames = new string[DS4Windows.Global.MAX_DS4_CONTROLLER_COUNT] { string.Empty, string.Empty,
+        private string[] profileNames = new string[FUT404DS.Global.MAX_DS4_CONTROLLER_COUNT] { string.Empty, string.Empty,
             string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty };
         public const string NONE_STRING = "(none)";
 
@@ -253,7 +253,7 @@ namespace DS4WinWPF
 
         private static string[] NormalizeProfileNames(string[] source)
         {
-            string[] result = new string[DS4Windows.Global.MAX_DS4_CONTROLLER_COUNT];
+            string[] result = new string[FUT404DS.Global.MAX_DS4_CONTROLLER_COUNT];
             for (int i = 0; i < result.Length; i++)
             {
                 result[i] = i < (source?.Length ?? 0) ?
@@ -268,24 +268,24 @@ namespace DS4WinWPF
             return profileName ?? string.Empty;
         }
 
-        public bool IsDeviceMatch(DS4Windows.InputDevices.InputDeviceType deviceType)
+        public bool IsDeviceMatch(FUT404DS.InputDevices.InputDeviceType deviceType)
         {
             switch (deviceOption)
             {
                 case AutoProfileDeviceOption.Any:
                     return true;
                 case AutoProfileDeviceOption.DualSense:
-                    return deviceType == DS4Windows.InputDevices.InputDeviceType.DualSense;
+                    return deviceType == FUT404DS.InputDevices.InputDeviceType.DualSense;
                 case AutoProfileDeviceOption.DS4:
-                    return deviceType == DS4Windows.InputDevices.InputDeviceType.DS4;
+                    return deviceType == FUT404DS.InputDevices.InputDeviceType.DS4;
                 case AutoProfileDeviceOption.DS3:
-                    return deviceType == DS4Windows.InputDevices.InputDeviceType.DS3;
+                    return deviceType == FUT404DS.InputDevices.InputDeviceType.DS3;
                 case AutoProfileDeviceOption.SwitchPro:
-                    return deviceType == DS4Windows.InputDevices.InputDeviceType.SwitchPro;
+                    return deviceType == FUT404DS.InputDevices.InputDeviceType.SwitchPro;
                 case AutoProfileDeviceOption.JoyCons:
-                    return deviceType == DS4Windows.InputDevices.InputDeviceType.JoyConL ||
-                        deviceType == DS4Windows.InputDevices.InputDeviceType.JoyConR ||
-                        deviceType == DS4Windows.InputDevices.InputDeviceType.JoyConGrip;
+                    return deviceType == FUT404DS.InputDevices.InputDeviceType.JoyConL ||
+                        deviceType == FUT404DS.InputDevices.InputDeviceType.JoyConR ||
+                        deviceType == FUT404DS.InputDevices.InputDeviceType.JoyConGrip;
                 default:
                     return false;
             }

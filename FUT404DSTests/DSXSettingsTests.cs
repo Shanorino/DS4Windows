@@ -1,9 +1,9 @@
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]

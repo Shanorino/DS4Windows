@@ -1,7 +1,7 @@
-using DS4WinWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class PowerLifecyclePolicyTests

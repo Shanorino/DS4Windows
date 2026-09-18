@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class ReleaseSigningPolicyTests
@@ -89,7 +89,7 @@ public sealed class ReleaseSigningPolicyTests
         string source = Workflow();
         string records = Between(source, "    - name: Prepare verified release records", "    - name: Verify and publish exact release assets");
         StringAssert.Contains(records, "if ($sourceCommit -cne $tagCommit)");
-        StringAssert.Contains(records, "git archive --format=zip --prefix=DS4Windows/");
+        StringAssert.Contains(records, "git archive --format=zip --prefix=FUT404DS/");
         StringAssert.Contains(records, "$brokerTagCommit.Trim() -cne $brokerCommit");
         StringAssert.Contains(records, "Hash -cne $brokerSourceHash");
         StringAssert.Contains(records, "Hash -cne $brokerHash");

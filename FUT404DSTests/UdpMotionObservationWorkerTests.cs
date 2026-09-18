@@ -1,8 +1,8 @@
 using System.Collections.Concurrent;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Synthetic owned states and ephemeral loopback sessions only. No controller,
 // Bluetooth, installed application, external listener or configured DSU port.

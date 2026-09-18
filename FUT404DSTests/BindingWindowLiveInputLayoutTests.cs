@@ -4,10 +4,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DS4Windows;
-using DS4WinWPF.DS4Forms;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Production markup and pure presentation policy only: no visible window,
 // controller, profile save, or live observation is started by these tests.
@@ -211,7 +211,7 @@ public sealed class BindingWindowLiveInputLayoutTests
                 application.Resources.MergedDictionaries.Clear();
                 var colors = new ResourceDictionary();
                 application.Resources.MergedDictionaries.Add(colors);
-                colors.Source = new Uri($"/DS4Windows;component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative);
+                colors.Source = new Uri($"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative);
                 foreach (bool narrow in new[] { false, true })
                 {
                     foreach (bool show in new[] { false, true })
@@ -322,7 +322,7 @@ public sealed class BindingWindowLiveInputLayoutTests
         document.Descendants().Single(element => (string)element.Attribute(Xaml + "Name") == name);
 
     private static string SourcePath(string file, [CallerFilePath] string caller = "") =>
-        Path.Combine(Path.GetDirectoryName(caller)!, "..", "DS4Windows", "DS4Forms", file);
+        Path.Combine(Path.GetDirectoryName(caller)!, "..", "FUT404DS", "DS4Forms", file);
 
     private static string Between(string source, string start, string end)
     {

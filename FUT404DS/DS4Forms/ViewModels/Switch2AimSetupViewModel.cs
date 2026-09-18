@@ -1,8 +1,8 @@
 using System;
 using System.ComponentModel;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     // A friendly editor for the existing gyro fields, not a second aiming mode.
     public sealed class Switch2AimSetupViewModel : INotifyPropertyChanged

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package
-      Name="DS4Windows"
-      Manufacturer="DS4Windows"
+      Name="FUT404DS"
+      Manufacturer="FUT404DS"
       Version="$(var.ProductVersion)"
       UpgradeCode="65E808E3-D35A-4825-AE11-8D9415F16446"
       Scope="perMachine"
       InstallerVersion="500"
       Compressed="yes">
-    <SummaryInformation Description="DS4Windows controller configuration and VIIPER frontend" />
-    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of DS4Windows is already installed." />
+    <SummaryInformation Description="FUT404DS controller configuration and VIIPER frontend" />
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version of FUT404DS is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
-    <Icon Id="DS4WindowsIcon" SourceFile="$(var.PublishRoot)\DS4Windows.exe" />
-    <Property Id="ARPPRODUCTICON" Value="DS4WindowsIcon" />
-    <Property Id="ARPHELPLINK" Value="https://github.com/hbashton/DS4Windows" />
-    <Property Id="ARPURLINFOABOUT" Value="https://github.com/hbashton/DS4Windows" />
+    <Icon Id="FUT404DSIcon" SourceFile="$(var.PublishRoot)\FUT404DS.exe" />
+    <Property Id="ARPPRODUCTICON" Value="FUT404DSIcon" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/hbashton/FUT404DS" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/hbashton/FUT404DS" />
 
     <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="INSTALLFOLDER" Name="DS4Windows" />
+      <Directory Id="INSTALLFOLDER" Name="FUT404DS" />
     </StandardDirectory>
 
     <Component Id="ManagedInstallRegistration" Directory="INSTALLFOLDER" Guid="7BB57999-6B69-4A38-B0E3-B5AD0E25E35C">
-      <RegistryValue Root="HKLM" Key="Software\DS4Windows" Name="InstallPath" Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
-      <RegistryValue Root="HKLM" Key="Software\DS4Windows" Name="Version" Value="[ProductVersion]" Type="string" />
+      <RegistryValue Root="HKLM" Key="Software\FUT404DS" Name="InstallPath" Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
+      <RegistryValue Root="HKLM" Key="Software\FUT404DS" Name="Version" Value="[ProductVersion]" Type="string" />
     </Component>
 
-    <Feature Id="MainFeature" Title="DS4Windows" Level="1">
+    <Feature Id="MainFeature" Title="FUT404DS" Level="1">
       <ComponentGroupRef Id="PublishedFiles" />
       <ComponentRef Id="ManagedInstallRegistration" />
     </Feature>

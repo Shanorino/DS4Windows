@@ -2,9 +2,9 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows.DS4Control;
+using FUT404DS.DS4Control;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal enum GuardedProfileSwitchStatus
 {

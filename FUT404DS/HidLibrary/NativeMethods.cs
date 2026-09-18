@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using Microsoft.Win32.SafeHandles; 
 
-namespace DS4Windows
+namespace FUT404DS
 {
     [SuppressUnmanagedCodeSecurity]
     internal static class NativeMethods

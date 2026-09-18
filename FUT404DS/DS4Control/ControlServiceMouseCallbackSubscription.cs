@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Owns exactly one physical-source to logical-Mouse callback lifetime. Event

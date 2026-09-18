@@ -2,9 +2,9 @@ using System.Buffers.Binary;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class Xbox360EgressFoundationTests

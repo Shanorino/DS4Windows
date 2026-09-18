@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Pure deadline advancement for the physical DualShock 4 audio report

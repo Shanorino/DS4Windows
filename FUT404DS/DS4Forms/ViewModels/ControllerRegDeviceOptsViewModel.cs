@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,14 +21,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels.Util;
-using LEDBarMode = DS4Windows.DualSenseControllerOptions.LEDBarMode;
-using MuteLEDMode = DS4Windows.DualSenseControllerOptions.MuteLEDMode;
-using LinkMode = DS4Windows.JoyConDeviceOptions.LinkMode;
-using JoinedGyroProvider = DS4Windows.JoyConDeviceOptions.JoinedGyroProvider;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels.Util;
+using LEDBarMode = FUT404DS.DualSenseControllerOptions.LEDBarMode;
+using MuteLEDMode = FUT404DS.DualSenseControllerOptions.MuteLEDMode;
+using LinkMode = FUT404DS.JoyConDeviceOptions.LinkMode;
+using JoinedGyroProvider = FUT404DS.JoyConDeviceOptions.JoinedGyroProvider;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class ControllerRegDeviceOptsViewModel
     {
@@ -160,20 +160,20 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             int result = 0;
             switch (currentStore.DeviceType)
             {
-                case DS4Windows.InputDevices.InputDeviceType.DS3:
+                case FUT404DS.InputDevices.InputDeviceType.DS3:
                     result = 0;
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.DS4:
+                case FUT404DS.InputDevices.InputDeviceType.DS4:
                     result = 1;
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.DualSense:
+                case FUT404DS.InputDevices.InputDeviceType.DualSense:
                     result = 2;
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.SwitchPro:
+                case FUT404DS.InputDevices.InputDeviceType.SwitchPro:
                     result = 3;
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.JoyConL:
-                case DS4Windows.InputDevices.InputDeviceType.JoyConR:
+                case FUT404DS.InputDevices.InputDeviceType.JoyConL:
+                case FUT404DS.InputDevices.InputDeviceType.JoyConR:
                     result = 4;
                     break;
                 default:
@@ -196,20 +196,20 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
             switch (currentStore.DeviceType)
             {
-                case DS4Windows.InputDevices.InputDeviceType.DS3:
+                case FUT404DS.InputDevices.InputDeviceType.DS3:
                     // Does not have device specific options
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.DS4:
+                case FUT404DS.InputDevices.InputDeviceType.DS4:
                     dataContextObject = new DS4ControllerOptionsWrapper(CurrentDS4Options, serviceDeviceOpts.DS4DeviceOpts);
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.DualSense:
+                case FUT404DS.InputDevices.InputDeviceType.DualSense:
                     dataContextObject = new DualSenseControllerOptionsWrapper(CurrentDSOptions, serviceDeviceOpts.DualSenseOpts);
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.SwitchPro:
+                case FUT404DS.InputDevices.InputDeviceType.SwitchPro:
                     dataContextObject = new SwitchProControllerOptionsWrapper(CurrentSwitchProOptions, serviceDeviceOpts.SwitchProDeviceOpts);
                     break;
-                case DS4Windows.InputDevices.InputDeviceType.JoyConL:
-                case DS4Windows.InputDevices.InputDeviceType.JoyConR:
+                case FUT404DS.InputDevices.InputDeviceType.JoyConL:
+                case FUT404DS.InputDevices.InputDeviceType.JoyConR:
                     dataContextObject = new JoyConControllerOptionsWrapper(CurrentJoyConOptions, serviceDeviceOpts.JoyConDeviceOpts);
                     break;
                 default:

@@ -1,8 +1,8 @@
 using System.Threading;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 [DoNotParallelize]
@@ -756,7 +756,7 @@ public sealed class Switch2ControlServiceReversibleProfileStagingTests
         var lease = new Switch2ControlServiceSlotLease(new object(), token);
         return new Fixture(table, registration.Device, token, rollbackClaim,
             lease, lifecycleGate, controllers, touchPads, manager, profile,
-            host, global::DS4WindowsTests.Switch2RuntimeInputDeviceTests.CreateProFrame(
+            host, global::FUT404DSTests.Switch2RuntimeInputDeviceTests.CreateProFrame(
                 deviceGeneration, transportGeneration, 0, timestamp: 100_000));
     }
 

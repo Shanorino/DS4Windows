@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Control.DTOXml
+namespace FUT404DSWPF.DS4Control.DTOXml
 {
     [XmlRoot("Profile")]
     public class AppSettingsDTO : IDTO<BackingStore>
@@ -50,7 +50,7 @@ namespace DS4WinWPF.DS4Control.DTOXml
         //{
         //    get
         //    {
-        //        return tempDoc.CreateComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+        //        return tempDoc.CreateComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
         //    }
         //    set { }
         //}
@@ -1075,7 +1075,7 @@ namespace DS4WinWPF.DS4Control.DTOXml
 
             // Malformed or remote bindings must not silently open a listener.
             // Keep old profiles usable with safe, disabled connection defaults.
-            bool validDsxEndpoint = DS4Windows.DS4Control.DSXUdpServer.TryValidateEndpoint(
+            bool validDsxEndpoint = FUT404DS.DS4Control.DSXUdpServer.TryValidateEndpoint(
                 DSXUDPServerPort, DSXUDPServerListenAddress, out var dsxAddress, out _);
             destination.useDSXUDPServ = UseDSXUDPServer && validDsxEndpoint;
             destination.dsxUdpServPort = validDsxEndpoint ? DSXUDPServerPort : BackingStore.DEFAULT_DSX_UDP_SERV_PORT;

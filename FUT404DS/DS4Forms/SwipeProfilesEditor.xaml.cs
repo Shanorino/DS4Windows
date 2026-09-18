@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Dialog that lets the user choose which profiles the two-finger touchpad

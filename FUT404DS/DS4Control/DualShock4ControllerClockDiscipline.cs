@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Estimates the physical DualShock 4 clock rate relative to host

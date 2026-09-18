@@ -1,6 +1,6 @@
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Cold profile work captures identity before preparation, then reacquires

@@ -10,7 +10,7 @@ using System.Security.Principal;
 using System.Text.Json;
 using System.Threading;
 
-namespace DS4Windows.Installation;
+namespace FUT404DS.Installation;
 
 internal readonly record struct StartupSetupState(bool Requested,
     string DeferredReason, string BootSessionId);
@@ -19,8 +19,8 @@ internal readonly record struct StartupSetupState(bool Requested,
 // original tasks without recording an opt-out on the user's behalf.
 internal static class StartupSetupStore
 {
-    internal const string MachinePath = @"SOFTWARE\DS4Windows\StartupSetup";
-    internal const string UserPath = @"Software\DS4Windows";
+    internal const string MachinePath = @"SOFTWARE\FUT404DS\StartupSetup";
+    internal const string UserPath = @"Software\FUT404DS";
 
     internal static StartupSetupState? Read(string sid)
     {
@@ -88,7 +88,7 @@ internal sealed class StartupSetupResume
 internal static class StartupSetupRecovery
 {
     internal const string ResumeArgument = "--resume-startup-setup";
-    internal const string ShortcutName = "DS4Windows Setup Resume.lnk";
+    internal const string ShortcutName = "FUT404DS Setup Resume.lnk";
 
     internal static string BootSessionId()
     {
@@ -129,10 +129,10 @@ internal static class StartupSetupRecovery
 
     internal static string ExpectedExecutable(StartupSetupResume pending) => pending.Kind switch
     {
-        "bundle" => Path.Combine(NativeProgramFiles, "DS4Windows.Setup", pending.SnapshotId,
-            "bundle", "DS4Windows_Setup_x64.exe"),
-        "embedded" => Path.Combine(NativeProgramFiles, "DS4Windows.Setup", pending.SnapshotId,
-            "package", "DS4Windows.exe"),
+        "bundle" => Path.Combine(NativeProgramFiles, "FUT404DS.Setup", pending.SnapshotId,
+            "bundle", "FUT404DS_Setup_x64.exe"),
+        "embedded" => Path.Combine(NativeProgramFiles, "FUT404DS.Setup", pending.SnapshotId,
+            "package", "FUT404DS.exe"),
         _ => throw new InvalidDataException("The setup resume kind is invalid."),
     };
 
@@ -212,7 +212,7 @@ internal static class StartupSetupRecovery
                 shortcut.TargetPath = pending.Executable;
                 shortcut.Arguments = Arguments(pending);
                 shortcut.WorkingDirectory = Path.GetDirectoryName(pending.Executable);
-                shortcut.Description = "DS4Windows verified setup resume v1";
+                shortcut.Description = "FUT404DS verified setup resume v1";
                 shortcut.Save();
                 if (!IsOwnedShortcut(shortcut, pending))
                     throw new IOException("Windows did not save the verified setup resume shortcut.");
@@ -301,7 +301,7 @@ internal static class StartupSetupRecovery
     internal static bool TryClaim(string id, string executable, out StartupSetupResume pending, string bundleId = null)
     {
         string sid = WindowsIdentity.GetCurrent().User?.Value;
-        using var mutex = new Mutex(false, @"Global\DS4Windows-SetupResume-" + sid);
+        using var mutex = new Mutex(false, @"Global\FUT404DS-SetupResume-" + sid);
         bool ownsMutex;
         try { ownsMutex = mutex.WaitOne(0); }
         catch (AbandonedMutexException) { ownsMutex = true; }
@@ -394,7 +394,7 @@ internal static class StartupSetupRecovery
         StartupSetupStore.ValidateSid(sid);
         string programFiles = NativeProgramFiles;
         RequireProtectedPath(programFiles, programFiles);
-        string root = Path.Combine(programFiles, "DS4Windows.Setup");
+        string root = Path.Combine(programFiles, "FUT404DS.Setup");
         if (!Directory.Exists(root))
         {
             if (File.Exists(root)) throw new IOException("The protected setup directory is a file.");

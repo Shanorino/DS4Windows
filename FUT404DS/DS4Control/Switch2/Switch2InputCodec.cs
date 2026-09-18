@@ -1,7 +1,7 @@
 using System;
 using System.Buffers.Binary;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Strict, allocation-free parsing for the currently evidenced Switch 2 input

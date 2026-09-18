@@ -2,16 +2,16 @@ using System;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 public class ViiperStartupTaskTests
 {
-    private const string Canonical = @"C:\Program Files\DS4Windows\VIIPER\viiper.exe";
+    private const string Canonical = @"C:\Program Files\FUT404DS\VIIPER\viiper.exe";
     private const string Legacy = @"C:\Users\Tester\AppData\Local\VIIPER\viiper.exe";
     private const string Portable = @"C:\Users\Tester\Desktop\RC452\viiper.exe";
     private const string Sid = "S-1-5-21-100-200-300-1001";
-    private const string Marker = "DS4Windows managed startup task v1";
+    private const string Marker = "FUT404DS managed startup task v1";
 
     [TestMethod]
     public void RegistrationWritesTheInstallerOwnershipMarkerAndHighPriority()
@@ -37,7 +37,7 @@ public class ViiperStartupTaskTests
         bool expectedWrite)
     {
         var store = new MemoryStore();
-        var state = new DS4WinWPF.StartupRegistrationState(false, actualEnabled,
+        var state = new FUT404DSWPF.StartupRegistrationState(false, actualEnabled,
             requested, deferredReason, readError);
 
         bool registered = ViiperStartupTaskPolicy.Register(Canonical, Sid,
@@ -54,7 +54,7 @@ public class ViiperStartupTaskTests
     public void PreferenceOrDeferralChangedDuringTaskInspectionPreventsRegistration(
         bool deferred)
     {
-        var state = new DS4WinWPF.StartupRegistrationState(false, true, true);
+        var state = new FUT404DSWPF.StartupRegistrationState(false, true, true);
         var original = ManagedTask() with { Priority = ProcessPriorityClass.BelowNormal };
         var store = new MemoryStore
         {

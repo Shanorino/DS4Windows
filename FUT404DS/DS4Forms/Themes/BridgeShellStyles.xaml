@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!--
-        DS4Windows application shell.
+        FUT404DS application shell.
 
         This dictionary only owns layout and component geometry. Theme colors live in
         DefaultTheme.xaml and DarkTheme.xaml so the existing runtime theme switch keeps
@@ -456,7 +456,7 @@
                                                        HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </Border>
                                         <StackPanel VerticalAlignment="Center">
-                                            <TextBlock Text="DS4Windows" FontSize="17" FontWeight="SemiBold"
+                                            <TextBlock Text="FUT404DS" FontSize="17" FontWeight="SemiBold"
                                                        Foreground="{DynamicResource ForegroundColor}" />
                                             <TextBlock Text="Controller companion" FontSize="10"
                                                        Foreground="{DynamicResource MutedForegroundColor}" />

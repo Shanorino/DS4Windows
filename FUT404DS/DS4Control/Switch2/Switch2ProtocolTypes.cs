@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Controller models whose packet layouts are sufficiently evidenced for the

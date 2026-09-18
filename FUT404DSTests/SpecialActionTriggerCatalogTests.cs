@@ -5,12 +5,12 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF;
-using DS4WinWPF.DS4Forms;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF;
+using FUT404DSWPF.DS4Forms;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -97,7 +97,7 @@ public sealed class SpecialActionTriggerCatalogTests
         OnSta(() =>
         {
             stage = "preparing isolated action storage";
-            string directory = Path.Combine(Path.GetTempPath(), "DS4Windows-special-action-" + Guid.NewGuid().ToString("N"));
+            string directory = Path.Combine(Path.GetTempPath(), "FUT404DS-special-action-" + Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(directory);
             string previousPath = Global.store.m_Actions;
             var previousActions = Global.GetActions().ToArray();
@@ -252,7 +252,7 @@ public sealed class SpecialActionTriggerCatalogTests
                 new SpecialAction("Extra buttons", "Switch 2 C", "Key", "65", extras: "Press\nCapture"));
             editor.Resources.MergedDictionaries.Add(new ResourceDictionary
             {
-                Source = new Uri($"/DS4Windows;component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
+                Source = new Uri($"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
             });
             editor.Background = (Brush)editor.FindResource("BackgroundColor");
             editor.Measure(new Size(width, 700));

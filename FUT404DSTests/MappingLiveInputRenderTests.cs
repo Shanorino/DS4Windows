@@ -3,11 +3,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Forms;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Forms;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class MappingLiveInputRenderTests
@@ -57,7 +57,7 @@ public sealed class MappingLiveInputRenderTests
             var control = new MappingLiveInputControl();
             control.Resources.MergedDictionaries.Add(new ResourceDictionary
             {
-                Source = new Uri($"/DS4Windows;component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
+                Source = new Uri($"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
             });
             control.RenderSnapshot(new DS4State
             {

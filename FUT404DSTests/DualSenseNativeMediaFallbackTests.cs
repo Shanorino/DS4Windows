@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -73,7 +73,7 @@ public class DualSenseNativeMediaFallbackTests
     private static void WithNativeTarget(ConnectionType connection, bool sidecar,
         Action<ViiperOutDevice, RecordingDualSense> action)
     {
-        ControlService previousHub = DS4Windows.Program.rootHub;
+        ControlService previousHub = FUT404DS.Program.rootHub;
         bool previousOutputEnabled = Global.EnableOutputDataToDS4[0];
         using AudioHapticsService audio = new(); // No capture is started.
         try
@@ -99,7 +99,7 @@ public class DualSenseNativeMediaFallbackTests
             hub.DS4Controllers = new DS4Device[4];
             hub.DS4Controllers[0] = device;
             SetField(typeof(ControlService), hub, "audioHapticsService", audio);
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
 
             var output = new ViiperOutDevice(OutContType.None, ViiperVirtualDeviceType.DualSense);
@@ -112,7 +112,7 @@ public class DualSenseNativeMediaFallbackTests
         }
         finally
         {
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
             Global.EnableOutputDataToDS4[0] = previousOutputEnabled;
         }
     }

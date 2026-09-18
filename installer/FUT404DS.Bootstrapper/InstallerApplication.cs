@@ -12,11 +12,11 @@ using System.Windows.Interop;
 using System.Windows.Threading;
 using WixToolset.BootstrapperApplicationApi;
 
-namespace DS4Windows.Bootstrapper
+namespace FUT404DS.Bootstrapper
 {
     internal sealed class InstallerApplication : BootstrapperApplication
     {
-        private const string ManagedBundleTag = "DS4WindowsManagedV2";
+        private const string ManagedBundleTag = "FUT404DSManagedV2";
         private readonly Dictionary<string, PackageState> packageStates = new Dictionary<string, PackageState>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, int> installerBusyRetries = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private readonly HashSet<string> managedRelatedBundles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -190,7 +190,7 @@ namespace DS4Windows.Bootstrapper
             try
             {
                 bundleMutex = new Mutex(false,
-                    @"Global\DS4Windows-Installer-Transaction");
+                    @"Global\FUT404DS-Installer-Transaction");
                 try
                 {
                     bundleMutexOwned = bundleMutex.WaitOne(waitMilliseconds);
@@ -220,7 +220,7 @@ namespace DS4Windows.Bootstrapper
         {
             if (TryAcquireBundleMutex(waitMilliseconds)) return true;
             ShowFailure(1618,
-                "Another DS4Windows installation or repair is already running. Close it, then choose Retry.");
+                "Another FUT404DS installation or repair is already running. Close it, then choose Retry.");
             return false;
         }
 
@@ -264,7 +264,7 @@ namespace DS4Windows.Bootstrapper
         {
             var path = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                "DS4Windows", "DS4Windows.exe");
+                "FUT404DS", "FUT404DS.exe");
             // Setup can reclaim its reserved name, but an unsuccessful repair
             // never authorizes launching an unverified task from that name.
             if (TryRunInstalledDs4Task(path)) return;
@@ -281,7 +281,7 @@ namespace DS4Windows.Bootstrapper
                 catch (Exception ex)
                 {
                     engine.Log(LogLevel.Error,
-                        "Could not launch DS4Windows: " + ex.Message);
+                        "Could not launch FUT404DS: " + ex.Message);
                 }
             }
         }
@@ -298,7 +298,7 @@ namespace DS4Windows.Bootstrapper
                 service = Activator.CreateInstance(type);
                 ((dynamic)service).Connect();
                 folder = ((dynamic)service).GetFolder(@"\");
-                task = ((dynamic)folder).GetTask("RunDS4Windows");
+                task = ((dynamic)folder).GetTask("RunFUT404DS");
                 string xml = ((dynamic)task).Xml;
                 if (!Installation.InstallerStartupTaskPolicy.IsManaged(xml,
                         executable, "-m", sid, requireEnabled: true)) return false;
@@ -332,7 +332,7 @@ namespace DS4Windows.Bootstrapper
             var elapsed = Stopwatch.StartNew();
             do
             {
-                foreach (var process in Process.GetProcessesByName("DS4Windows"))
+                foreach (var process in Process.GetProcessesByName("FUT404DS"))
                 {
                     using (process)
                     {
@@ -382,7 +382,7 @@ namespace DS4Windows.Bootstrapper
             try { log = engine.GetVariableString("WixBundleLog"); } catch { }
             var actionLog = InstallerActionLogPath;
             var helperLog = SetupActionsLogPath;
-            return "DS4Windows Setup\r\n" +
+            return "FUT404DS Setup\r\n" +
                    "Action: " + plannedAction + "\r\n" +
                    "Registered: " + registrationType + "\r\n" +
                    "Infrastructure healthy: " + infrastructureHealthy + "\r\n" +
@@ -508,7 +508,7 @@ namespace DS4Windows.Bootstrapper
             if (IsInstallerBusyStatus(e.Status))
             {
                 // Related bundles are non-vital cleanup owned by Burn, not
-                // packages in this bundle's chain. Legacy DS4Windows bundles
+                // packages in this bundle's chain. Legacy FUT404DS bundles
                 // can return ERROR_INSTALL_ALREADY_RUNNING while their child
                 // elevated engine is still winding down. Retrying the same
                 // stale bundle only repeats the collision and presents a
@@ -549,7 +549,7 @@ namespace DS4Windows.Bootstrapper
 
                 lastError = "Another Windows installation is still active. " +
                     "Let it finish, close any stale installer windows, then " +
-                    "choose Retry. DS4Windows did not wait indefinitely or " +
+                    "choose Retry. FUT404DS did not wait indefinitely or " +
                     "change the existing installation.";
             }
             else if (e.Status >= 0)
@@ -594,7 +594,7 @@ namespace DS4Windows.Bootstrapper
                 !string.IsNullOrWhiteSpace(newerRelatedBundleVersion))
             {
                 ShowFailure(1638,
-                    "A newer DS4Windows installer (" +
+                    "A newer FUT404DS installer (" +
                     newerRelatedBundleVersion +
                     ") is already installed. This older package will not " +
                     "remove or replace it.");
@@ -604,7 +604,7 @@ namespace DS4Windows.Bootstrapper
             infrastructureHealthy = InfrastructureProbe.IsHealthy();
 
             // Burn removes related bundles after it executes this bundle's
-            // package chain. Older DS4Windows bundles own older infrastructure
+            // package chain. Older FUT404DS bundles own older infrastructure
             // helpers, so installing VIIPER before those bundles are removed
             // lets their uninstall overwrite or delete the new helper. Finish
             // the app upgrade first, then run one isolated infrastructure
@@ -621,7 +621,7 @@ namespace DS4Windows.Bootstrapper
             {
                 mode = InstallerMode.Uninstall;
             }
-            else if (registrationType == RegistrationType.None && packageStates.TryGetValue("DS4WindowsMsi", out var msiState) && msiState == PackageState.Present)
+            else if (registrationType == RegistrationType.None && packageStates.TryGetValue("FUT404DSMsi", out var msiState) && msiState == PackageState.Present)
             {
                 mode = InstallerMode.Update;
             }
@@ -786,7 +786,7 @@ namespace DS4Windows.Bootstrapper
                 if (infrastructureRecoveryPass)
                 {
                     ShowFailure(1,
-                        "DS4Windows installed, but VIIPER/USB-IP did not pass " +
+                        "FUT404DS installed, but VIIPER/USB-IP did not pass " +
                         "the final post-upgrade health check.");
                     return;
                 }
@@ -833,7 +833,7 @@ namespace DS4Windows.Bootstrapper
                 using (var machine = Microsoft.Win32.RegistryKey.OpenBaseKey(
                            Microsoft.Win32.RegistryHive.LocalMachine,
                            Microsoft.Win32.RegistryView.Registry64))
-                using (var key = machine.OpenSubKey(@"SOFTWARE\DS4Windows"))
+                using (var key = machine.OpenSubKey(@"SOFTWARE\FUT404DS"))
                 {
                     return Installation.InstallerStartupTaskPolicy.HasCurrentWarning(
                         engine.GetVariableString("SetupCorrelationId"),
@@ -885,11 +885,11 @@ namespace DS4Windows.Bootstrapper
 
         private static string InstallerActionLogPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-            "DS4Windows", "Installer", "infrastructure-actions.log");
+            "FUT404DS", "Installer", "infrastructure-actions.log");
 
         private static string SetupActionsLogPath => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-            "DS4Windows", "Installer", "setup-actions.log");
+            "FUT404DS", "Installer", "setup-actions.log");
 
         private string InfrastructureFailureSummary()
         {
@@ -912,7 +912,7 @@ namespace DS4Windows.Bootstrapper
             // the last generic marker discards the failure immediately before
             // it. A retry also reuses the bundle correlation ID, so select its
             // latest actual START, never an earlier attempt's diagnostic.
-            const string invocationMarker = "=== DS4Windows setup invocation ";
+            const string invocationMarker = "=== FUT404DS setup invocation ";
             var startMarker = invocationMarker + parsedId.ToString("N") +
                 " started ===";
             var start = helperTail.LastIndexOf(startMarker,
@@ -940,7 +940,7 @@ namespace DS4Windows.Bootstrapper
             // messages, executable arguments, and user paths stay in the log.
             if (failure != null)
             {
-                foreach (var taskName in new[] { "RunVIIPER", "RunDS4Windows" })
+                foreach (var taskName in new[] { "RunVIIPER", "RunFUT404DS" })
                 {
                     if (failure.IndexOf("Refusing to overwrite, disable, or remove foreign root task '" + taskName + "'.",
                             StringComparison.OrdinalIgnoreCase) >= 0 ||
@@ -951,7 +951,7 @@ namespace DS4Windows.Bootstrapper
                             StringComparison.OrdinalIgnoreCase))
                     {
                         return "Setup could not verify the existing Windows startup task '" +
-                            taskName + "' as belonging to DS4Windows. The task was preserved.\r\n" +
+                            taskName + "' as belonging to FUT404DS. The task was preserved.\r\n" +
                             "Open Log includes the diagnostic details.";
                     }
                 }

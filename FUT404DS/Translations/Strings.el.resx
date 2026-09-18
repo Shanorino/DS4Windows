@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>Έλεγχός για Ενημερώσεις Τώρα</value>
   </data>
   <data name="CheckUpdateStartup" xml:space="preserve">
-    <value>Έλεγχος για ενημερώσεις κατά την εκκίνηση του DS4Windows</value>
+    <value>Έλεγχος για ενημερώσεις κατά την εκκίνηση του FUT404DS</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Εκκαθάριση</value>
@@ -348,9 +348,9 @@
     <value>Προσαρμοσμένο όνομα Exe</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Κάποια παιχνίδια εφαρμόζουν κώδικα που αγνοούν την είσοδο του DS4 αν το παιχνίδι ανιχνεύσει το DS4Windows.exe ή το InputMapper.exe να τρέχει. Μια παράκμψη για τον κώδικα είναι  η μετονομασία του DS4Windows.exe ώστε ο έλεγχος να αποτυγχάνει. Πιο συγκεκριμένα ένα προσαρμοσμένο exe επιτρέπει στον DS4Updater να ενημερώνει αυτόματα ένα προσαρμοσμένο αντίγραφο του DS4Windows με το επιθυμητό όνομα αρχείου. Σιγουρευτείτε να παραλείψετε την επέκταση.
+    <value>Κάποια παιχνίδια εφαρμόζουν κώδικα που αγνοούν την είσοδο του DS4 αν το παιχνίδι ανιχνεύσει το FUT404DS.exe ή το InputMapper.exe να τρέχει. Μια παράκμψη για τον κώδικα είναι  η μετονομασία του FUT404DS.exe ώστε ο έλεγχος να αποτυγχάνει. Πιο συγκεκριμένα ένα προσαρμοσμένο exe επιτρέπει στον DS4Updater να ενημερώνει αυτόματα ένα προσαρμοσμένο αντίγραφο του FUT404DS με το επιθυμητό όνομα αρχείου. Σιγουρευτείτε να παραλείψετε την επέκταση.
 
-Example: whyme_DS4Windows</value>
+Example: whyme_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>XInputChecker</value>
@@ -437,13 +437,13 @@ Example: whyme_DS4Windows</value>
     <value>Βαθμονόμηση Πραγματικού Κόσμου</value>
   </data>
   <data name="ViGEmPluginFailure" xml:space="preserve">
-    <value>Το Πρόσθετο Συσκευής ViGEm Απέτυχε. Μάλλον εσωτερικό πρόβλημα του ViGEmBus. Τερματισμός σύνδεσης. Αν το πρόβλημα παραμένει, παρακαλώ κλείστε το DS4Windows και επανεκκινήστε τα Windows.</value>
+    <value>Το Πρόσθετο Συσκευής ViGEm Απέτυχε. Μάλλον εσωτερικό πρόβλημα του ViGEmBus. Τερματισμός σύνδεσης. Αν το πρόβλημα παραμένει, παρακαλώ κλείστε το FUT404DS και επανεκκινήστε τα Windows.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Ο έλεγχος Ακεραιότητας Δεδομένων απέτυχε για ασύρματη συσκευή. Τερματισμός συσκευής.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value> Το .NET 5 Runtime δε βρέθηκε στο σύστημά σας.  Παρακαλώ κατεβάστε και εγκαταστήστε το .NET 5 Runtime για να διασφαλίσετε την συμβατότητα με μελλοντικές εκδόσεις DS4Windows. Θα γίνει ανακατεύθυνση στη σελίδα λήψης του .NET 5 Runtime μόλις κλέισετε το παράθυρο.</value>
+    <value> Το .NET 5 Runtime δε βρέθηκε στο σύστημά σας.  Παρακαλώ κατεβάστε και εγκαταστήστε το .NET 5 Runtime για να διασφαλίσετε την συμβατότητα με μελλοντικές εκδόσεις FUT404DS. Θα γίνει ανακατεύθυνση στη σελίδα λήψης του .NET 5 Runtime μόλις κλέισετε το παράθυρο.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Παρακαλώ ενημερώστε το .NET Runtime</value>
@@ -497,7 +497,7 @@ Example: whyme_DS4Windows</value>
     <value>Σε κάποιες περιπτώσεις, μπορεί να φανεί χρήσιμο να περιορίσετε την μέγιστη τιμή που εξάγεται από την έξοδο του αναλογικού μοχλού. Η Μέγιστη έξοδος επιτρέπει τον περιορισμό της τελικής τιμής εξόδου του αναλογικού μοχλού.</value>
   </data>
   <data name="AntiDeadzoneTooltip" xml:space="preserve">
-    <value>Μια anti-deadzone δρα ως αντίβαρο για χρήση με έναν άξονα για να δηλώνει την ελάχιστη τιμή εισόδου μόλις ο άξονας φύγει από την καθορισμένη deadzone. Αυτό έχει ώς στόχο να βοηθήσει κυρίως με την αντιστοίχιση ενός άξονα στην καθορισμένη τιμή deadzone που χρησιμοποιείται για έναν άξονα σ΄ ένα βιντεοπαιχνίδι. Για παράδειγμα, η τυπική αναθετημένη τιμή deadzone για XInput LS σε ένα βιντεοπαιχνίδι είναι γύρω στα 8000 (25%). Χωρίς anti-deadzone, ο άξονας θα έπρεπε να μετακινηθεί πέρα της αναθετημένης deadzone στο DS4Windows μαζί με την αναθετημένη  deadzone άξονα του παιχνιδιού.</value>
+    <value>Μια anti-deadzone δρα ως αντίβαρο για χρήση με έναν άξονα για να δηλώνει την ελάχιστη τιμή εισόδου μόλις ο άξονας φύγει από την καθορισμένη deadzone. Αυτό έχει ώς στόχο να βοηθήσει κυρίως με την αντιστοίχιση ενός άξονα στην καθορισμένη τιμή deadzone που χρησιμοποιείται για έναν άξονα σ΄ ένα βιντεοπαιχνίδι. Για παράδειγμα, η τυπική αναθετημένη τιμή deadzone για XInput LS σε ένα βιντεοπαιχνίδι είναι γύρω στα 8000 (25%). Χωρίς anti-deadzone, ο άξονας θα έπρεπε να μετακινηθεί πέρα της αναθετημένης deadzone στο FUT404DS μαζί με την αναθετημένη  deadzone άξονα του παιχνιδιού.</value>
   </data>
   <data name="StickInputCurveTooltip" xml:space="preserve">
     <value>ΠΑΛΙΑ ΕΓΚΑΤΑΛΕΛΕΙΜΜΕΝΗ ΡΥΘΜΙΣΗ. Προσπαθεί να εφαρμόσει μια καμπύλη βασισμένη σε ακατέργαστες συντεταγμένες εισόδου προτού οποιαδήποτε πληροφορία dead zone info εφαρμοστεί. Περίεργο</value>
@@ -572,7 +572,7 @@ Example: whyme_DS4Windows</value>
 
 - Ανενεργό: η δόνηση θα ρυθμίζεται εγγενώς από το χειριστήριο ανάλογα με το καθορισμένο επίπεδο ισχύος (καλύτερη ποιότητα)
 
-- Ενεργό: Και η γενική ρύθμιση δόνησης του DS4Windows και ο εγγενής χειρισμός του DualSense θα είναι ενεργοί</value>
+- Ενεργό: Και η γενική ρύθμιση δόνησης του FUT404DS και ο εγγενής χειρισμός του DualSense θα είναι ενεργοί</value>
   </data>
   <data name="DualSRumbleModes_Tip" xml:space="preserve">
     <value>Λειτουργία Ακριβές (προτείνεται):
@@ -654,8 +654,8 @@ Example: whyme_DS4Windows</value>
   <data name="SwipeTouchpadToSwitchProfiles" xml:space="preserve">
     <value>Κύλιση στην Επιφάνεια αφής για εναλλαγή προφίλ</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>Προσωρινή Απενεργοποίηση DS4Windows</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>Προσωρινή Απενεργοποίηση FUT404DS</value>
   </data>
   <data name="Unplug" xml:space="preserve">
     <value>Αποσύνδεση</value>
@@ -745,7 +745,7 @@ Example: whyme_DS4Windows</value>
     <value>Υποστήριξη Χειριστηρίου DS3</value>
   </data>
   <data name="FirstLaunch.DeviceIntroText" xml:space="preserve">
-    <value>Λόγω άλλων εφαρμογών αντιστοίχισης  που παρέχουν υποστήριξη για πολλαπλούς τύπους συσκευών από προεπιλογή (Steam Input), το DS4Windows παρέχει υποστήριξη από προεπιλογή μόνο από χειριστήρια DS4. Μπορείτε να προσδιορίσετε υποστήριξη αντιστοίχισης επιπλεόν τύπων συσκευών εδώ. Να είστε προσεκτικοί όταν χρησιμοποιείτε το DS4Windows με άλλες εφαρμογές αντιστίχισης να τρέχουν ταυτόχρονα.</value>
+    <value>Λόγω άλλων εφαρμογών αντιστοίχισης  που παρέχουν υποστήριξη για πολλαπλούς τύπους συσκευών από προεπιλογή (Steam Input), το FUT404DS παρέχει υποστήριξη από προεπιλογή μόνο από χειριστήρια DS4. Μπορείτε να προσδιορίσετε υποστήριξη αντιστοίχισης επιπλεόν τύπων συσκευών εδώ. Να είστε προσεκτικοί όταν χρησιμοποιείτε το FUT404DS με άλλες εφαρμογές αντιστίχισης να τρέχουν ταυτόχρονα.</value>
   </data>
   <data name="FirstLaunch.DS3EnableCkbLabel" xml:space="preserve">
     <value>Υποστήριξη Συσκευής DS3</value>

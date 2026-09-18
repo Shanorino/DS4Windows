@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     internal static class StartupFailureReporter
     {
@@ -44,11 +44,11 @@ namespace DS4WinWPF
         internal static string BuildUserMessage(string logPath)
         {
             const string introduction =
-                "DS4Windows could not finish starting. Your profiles and settings were not removed.";
+                "FUT404DS could not finish starting. Your profiles and settings were not removed.";
             if (string.IsNullOrWhiteSpace(logPath))
             {
                 return introduction +
-                    "\n\nWindows prevented DS4Windows from writing a diagnostic log.";
+                    "\n\nWindows prevented FUT404DS from writing a diagnostic log.";
             }
 
             return introduction +
@@ -58,10 +58,10 @@ namespace DS4WinWPF
         private static IEnumerable<string> CandidateDirectories(
             string configuredDataPath)
         {
-            if (DS4Windows.PortableLabContext.Requested || DS4Windows.PortableLabContext.IsActive)
+            if (FUT404DS.PortableLabContext.Requested || FUT404DS.PortableLabContext.IsActive)
             {
                 // Invalid lab arguments/path must not cause a shared-log write.
-                if (DS4Windows.PortableLabContext.Current is { } lab)
+                if (FUT404DS.PortableLabContext.Current is { } lab)
                 {
                     string directory = null;
                     try
@@ -83,11 +83,11 @@ namespace DS4WinWPF
                 Environment.SpecialFolder.LocalApplicationData);
             if (!string.IsNullOrWhiteSpace(localAppData))
             {
-                yield return Path.Combine(localAppData, "DS4Windows",
+                yield return Path.Combine(localAppData, "FUT404DS",
                     "Logs");
             }
 
-            yield return Path.Combine(Path.GetTempPath(), "DS4Windows");
+            yield return Path.Combine(Path.GetTempPath(), "FUT404DS");
         }
 
         private static string BuildPayload(Exception exception,

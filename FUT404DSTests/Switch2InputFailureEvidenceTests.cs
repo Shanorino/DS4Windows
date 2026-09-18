@@ -2,11 +2,11 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2InputFailureEvidenceTests

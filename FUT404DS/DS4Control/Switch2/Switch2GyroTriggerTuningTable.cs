@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,12 +10,12 @@ the Free Software Foundation, either version 3 of the License, or
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Fixed-size per-profile lookup for Switch2Connect-compatible gyro trigger
 /// tuning. Mouse and Mouse Joystick remain independent mapping scopes, and the
-/// numeric trigger index is the existing append-only DS4Windows profile token.
+/// numeric trigger index is the existing append-only FUT404DS profile token.
 /// </summary>
 internal sealed class Switch2GyroTriggerTuningTable
 {

@@ -1,8 +1,8 @@
-using DS4Windows;
-using DS4Windows.Switch2;
-using Source = DS4WindowsTests.Switch2RawStickCalibrationCollectorTests.Fixture;
+using FUT404DS;
+using FUT404DS.Switch2;
+using Source = FUT404DSTests.Switch2RawStickCalibrationCollectorTests.Fixture;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2RuntimeRawStickCalibrationTests
@@ -314,7 +314,7 @@ public sealed class Switch2RuntimeRawStickCalibrationTests
         using var f = new Fixture(loaded: true);
         var canonical = f.Source.Frame(2100, 2000);
         Assert.IsTrue(Switch2ProProfileInputMapper.TryMap(canonical, out var factory, out _));
-        Assert.IsTrue(Switch2RawStickCalibrationBinding.TryLoad(DS4Windows.InputDevices.InputDeviceType.Switch2Pro,
+        Assert.IsTrue(Switch2RawStickCalibrationBinding.TryLoad(FUT404DS.InputDevices.InputDeviceType.Switch2Pro,
             Switch2Transport.Usb, 1, 1, 0, 0, f.Store, f.Source.Peer, default, out var binding));
         var queued = binding.ApplyPro(factory);
         Assert.IsTrue(queued.HasLocalLeftCalibration);
@@ -645,7 +645,7 @@ public sealed class Switch2RuntimeRawStickCalibrationTests
         }
     }
 
-    private sealed class MouseRecorder(Action move) : DS4Windows.DS4Control.VirtualKBMBase
+    private sealed class MouseRecorder(Action move) : FUT404DS.DS4Control.VirtualKBMBase
     {
         public override bool Connect() => true;
         public override bool Disconnect() => true;

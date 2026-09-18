@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 using System.Buffers.Binary;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class DS4State
     {
@@ -358,7 +358,7 @@ namespace DS4Windows
     }
 
     /// <summary>
-    /// Fixed-size source observation retained across DS4Windows mapping copies.
+    /// Fixed-size source observation retained across FUT404DS mapping copies.
     /// The normalized axes follow the conventional gamepad sign convention
     /// (negative left/up, positive right/down). Raw axes remain in Nintendo's
     /// 12-bit wire units. The C button is retained explicitly and is never

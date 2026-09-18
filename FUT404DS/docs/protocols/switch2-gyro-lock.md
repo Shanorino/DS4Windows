@@ -20,7 +20,7 @@ their prior behavior.
 
 ## Runtime contract
 
-The normal DS4Windows Gyro Mouse or Gyro Mouse Joystick activation policy stays
+The normal FUT404DS Gyro Mouse or Gyro Mouse Joystick activation policy stays
 engaged while locked. The lock suppresses only presentation: mouse remainders
 or mouse-joystick smoothing are reset, and the existing high-rate mouse source
 is withdrawn so no prior velocity can repeat. Unlocking resumes the same active

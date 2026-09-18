@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -13,14 +13,14 @@ Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/gyro.py
 (canonical_timing, build_v2_gyro_output, and
 build_v2_accelerometer_output). The estimator is an allocation-free
-DS4Windows implementation of the same six-axis gyro/accelerometer contract;
+FUT404DS implementation of the same six-axis gyro/accelerometer contract;
 magnetic yaw authority remains in Switch2MagnetometerYawAssist.
 */
 
 using System;
 using System.Numerics;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal readonly struct Switch2HorizonProjectionResult
 {

@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using Concentus;
 using Concentus.Enums;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
 // Offline hypothesis: two separately encoded 50-byte mono channels, motivated
 // by the observed 50-byte mono-compatible INPUT audio region. No claim that

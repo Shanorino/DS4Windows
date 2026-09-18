@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace DS4WinWPF.DS4Control
+namespace FUT404DSWPF.DS4Control
 {
     internal interface IHidHideConfigurationDevice : IDisposable
     {
@@ -103,7 +103,7 @@ namespace DS4WinWPF.DS4Control
                     if (readable && alias)
                         aliases.Add(path);
                     else if (!readable && error != 2 && error != 3)
-                        return FailedAudit("An application permission could not be checked safely. No settings were changed. Check the DS4Windows log for details.", path, error);
+                        return FailedAudit("An application permission could not be checked safely. No settings were changed. Check the FUT404DS log for details.", path, error);
                     // A missing file is not this bug and is never pruned.
                 }
                 if (aliases.Count > 0 && snapshot.Inverse)
@@ -118,7 +118,7 @@ namespace DS4WinWPF.DS4Control
         }
 
         // Caller must obtain confirmation for this exact audit and serialize
-        // with DS4Windows' existing HidHide mutation boundary.
+        // with FUT404DS' existing HidHide mutation boundary.
         internal HidHideConfigurationRepairResult Repair(HidHideConfigurationAudit audit)
         {
             if (audit == null || audit.Failure != null || audit.Aliases.Count == 0 ||

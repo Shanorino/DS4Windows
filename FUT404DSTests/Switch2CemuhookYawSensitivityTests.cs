@@ -1,9 +1,9 @@
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2CemuhookYawSensitivityTests
@@ -106,7 +106,7 @@ public sealed class Switch2CemuhookYawSensitivityTests
             "<Switch2CemuhookYawSensitivity>5</Switch2CemuhookYawSensitivity>");
 
         using var reader = new StringReader(
-            "<DS4Windows config_version=\"5\" />");
+            "<FUT404DS config_version=\"5\" />");
         var legacy = (ProfileDTO)serializer.Deserialize(reader);
         Assert.AreEqual(1, legacy.Switch2CemuhookYawSensitivity);
     }

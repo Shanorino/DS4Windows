@@ -1,14 +1,14 @@
-using DS4Windows.InputDevices;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS.InputDevices;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms.ViewModels;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Globalization;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class JoyConArtworkTests

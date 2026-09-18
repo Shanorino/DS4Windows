@@ -1,9 +1,9 @@
 using System.Runtime.InteropServices;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 using Windows.Storage.Streams;
 using WinRT;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2BluetoothThroughputPreferenceTests

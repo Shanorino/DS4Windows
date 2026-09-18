@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms.ViewModels;
+namespace FUT404DSWPF.DS4Forms.ViewModels;
 
 /// <summary>Cold profile editing only; runtime reads the existing profile fields.</summary>
 public sealed class Switch2DualGyroEditorViewModel : INotifyPropertyChanged

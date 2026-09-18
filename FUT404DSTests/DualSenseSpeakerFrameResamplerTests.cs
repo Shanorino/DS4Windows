@@ -1,10 +1,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DS4WindowsTests;
+using FUT404DSTests;
 using NAudio.Dsp;
 using System;
 using System.Collections.Generic;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class DualSenseSpeakerFrameResamplerTests

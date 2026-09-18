@@ -1,6 +1,6 @@
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows.Switch2.Verification;
+namespace FUT404DS.Switch2.Verification;
 
 internal static class VerificationPlan
 {

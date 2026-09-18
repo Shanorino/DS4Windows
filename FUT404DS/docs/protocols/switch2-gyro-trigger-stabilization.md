@@ -2,7 +2,7 @@
 
 This behavior is pinned to the operative trigger-modifier policy in
 `Switch2Connect` commit `61ac6642ce12fe7217e38a860b14863b18ca7e28`,
-`src/controller.py`. DS4Windows reuses that policy inside its canonical gyro
+`src/controller.py`. FUT404DS reuses that policy inside its canonical gyro
 mouse paths; it does not introduce another mapper or presentation thread.
 
 ## Profile contract
@@ -10,7 +10,7 @@ mouse paths; it does not introduce another mapper or presentation thread.
 `Switch2GyroTriggerTunings` is a sparse per-profile table and appears as
 **In-app gyro trigger stabilization** under **Switch 2 Controls**. The user
 first selects **Gyro Mouse** or **Gyro Mouse Joystick**, then the exact existing
-DS4Windows activation-source token, including Always On. Each source has
+FUT404DS activation-source token, including Always On. Each source has
 independent tuning and may select any Switch 2 semantic button for either of two
 policies:
 
@@ -41,7 +41,7 @@ The trigger evaluator retains the exact activation source that caused the
 inactive-to-active edge. For an AND chord it uses the newly pressed member that
 completed the chord; for a toggle it retains the source across the resulting
 toggle interval. Reverse-ratchet and Always On configurations have deterministic
-configured-source entries as DS4Windows extensions.
+configured-source entries as FUT404DS extensions.
 
 The state machine resets its edge baseline and all time windows when the source
 identity, activation-source entry, tuning, profile revision, or timestamp
@@ -59,7 +59,7 @@ both arithmetic transforms allocate no managed memory.
 Freeze resets the existing mouse accumulator or mouse-joystick smoothing path.
 For high-rate Switch 2 mouse presentation it also withdraws the gyro source, so
 the 1 kHz presenter cannot repeat motion during a freeze. Deadzone and
-dampening are applied after DS4Windows' established gyro deadzone and before
+dampening are applied after FUT404DS' established gyro deadzone and before
 jitter compensation, smoothing, inversion, and output presentation.
 
 The modifier never changes physical parsing, calibration, canonical SixAxis

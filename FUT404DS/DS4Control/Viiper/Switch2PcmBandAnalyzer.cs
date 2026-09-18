@@ -1,5 +1,5 @@
 /*
-DS4Windows - Copyright (C) 2026 hbashton
+FUT404DS - Copyright (C) 2026 hbashton
 SPDX-License-Identifier: GPL-3.0-or-later
 
 Band selection and output-frequency remapping adapted from Switch2Connect,
@@ -8,9 +8,9 @@ Copyright (C) 2026 TommyWabg, src/dualsense_haptic.py at
 The packet-local Goertzel analysis and envelope projection are local code.
 */
 using System;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Uses exactly the 32 samples already in the 3 kHz carrier, without buffering

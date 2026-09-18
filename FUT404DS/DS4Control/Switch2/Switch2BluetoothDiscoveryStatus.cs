@@ -1,12 +1,12 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 SPDX-License-Identifier: GPL-3.0-or-later
 */
 
 using System.Threading;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2BluetoothDiscoveryState : byte
 {

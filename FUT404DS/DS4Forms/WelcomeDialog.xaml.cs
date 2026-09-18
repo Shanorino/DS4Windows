@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     public partial class WelcomeDialog : Window
     {
@@ -36,16 +36,16 @@ namespace DS4WinWPF.DS4Forms
         {
             if (loadConfig)
             {
-                DS4Windows.Global.FindConfigLocation();
-                DS4Windows.Global.Load();
+                FUT404DS.Global.FindConfigLocation();
+                FUT404DS.Global.Load();
             }
 
             InitializeComponent();
             step4HidHidePanel.IsEnabled = IsHidHideCompatible();
-            step5FakerInputPanel.IsEnabled = DS4Windows.Global.IsWin8OrGreater();
+            step5FakerInputPanel.IsEnabled = FUT404DS.Global.IsWin8OrGreater();
 
-            DS4Windows.ViiperPrerequisiteStatus status =
-                DS4Windows.ViiperSetupManager.GetStatus(tryStartServer: true);
+            FUT404DS.ViiperPrerequisiteStatus status =
+                FUT404DS.ViiperSetupManager.GetStatus(tryStartServer: true);
             if (status.Ready)
             {
                 viiperInstallBtn.Content = "VIIPER is ready";
@@ -54,15 +54,15 @@ namespace DS4WinWPF.DS4Forms
 
         private void ViiperInstallBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.ViiperPrerequisiteStatus status =
-                DS4Windows.ViiperSetupManager.GetStatus(tryStartServer: true);
+            FUT404DS.ViiperPrerequisiteStatus status =
+                FUT404DS.ViiperSetupManager.GetStatus(tryStartServer: true);
             if (status.Ready)
             {
                 viiperInstallBtn.Content = "VIIPER is ready";
                 return;
             }
 
-            bool launched = DS4Windows.ViiperSetupManager.
+            bool launched = FUT404DS.ViiperSetupManager.
                 EnsureReadyWithPrompt(this, forcePrompt: true);
             viiperInstallBtn.Content = launched
                 ? "Setup opened — finish it, then click here to verify"
@@ -91,7 +91,7 @@ namespace DS4WinWPF.DS4Forms
             System.Windows.Controls.Button button, string componentName,
             string bundledFileName, string expectedSha256)
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             string target = Path.Combine(AppContext.BaseDirectory, "extras",
                 bundledFileName);
             try
@@ -101,7 +101,7 @@ namespace DS4WinWPF.DS4Forms
                 if (!File.Exists(target))
                 {
                     throw new FileNotFoundException(
-                        $"The offline DS4Windows package is incomplete: " +
+                        $"The offline FUT404DS package is incomplete: " +
                         $"{bundledFileName} is missing.", target);
                 }
 
@@ -135,11 +135,11 @@ namespace DS4WinWPF.DS4Forms
 
                 if (componentName == "HidHide")
                 {
-                    DS4Windows.Global.RefreshHidHideInfo();
+                    FUT404DS.Global.RefreshHidHideInfo();
                 }
                 else if (componentName == "FakerInput")
                 {
-                    DS4Windows.Global.RefreshFakerInputInfo();
+                    FUT404DS.Global.RefreshFakerInputInfo();
                 }
                 button.Content = restartRequired ?
                     $"{componentName} setup complete — restart required" :
@@ -185,15 +185,15 @@ namespace DS4WinWPF.DS4Forms
             viiperInstallBtn.IsEnabled = enabled;
             step4HidHidePanel.IsEnabled = enabled && IsHidHideCompatible();
             step5FakerInputPanel.IsEnabled = enabled &&
-                DS4Windows.Global.IsWin8OrGreater();
+                FUT404DS.Global.IsWin8OrGreater();
         }
 
         private static bool IsHidHideCompatible() =>
-            DS4Windows.Global.IsWin10OrGreater() &&
+            FUT404DS.Global.IsWin10OrGreater() &&
             Environment.Is64BitOperatingSystem;
 
         private void Step2Btn_Click(object sender, RoutedEventArgs e) =>
-            DS4Windows.Util.StartProcessHelper(
+            FUT404DS.Util.StartProcessHelper(
                 "https://support.xbox.com/help/hardware-network/controller/connect-xbox-wireless-controller-to-pc");
 
         private void BluetoothSetLink_Click(object sender,
@@ -206,6 +206,6 @@ namespace DS4WinWPF.DS4Forms
     public class WelcomeDialogResourcePaths
     {
         public string PairmodePNG =>
-            $"{DS4Windows.Global.RESOURCES_PREFIX}/Pairmode.png";
+            $"{FUT404DS.Global.RESOURCES_PREFIX}/Pairmode.png";
     }
 }

@@ -1,10 +1,10 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Characterizes the actual legacy DS3 compositor, not its driver or actuator.
 // No constructor/PostInit, worker, HID read/write, sleep, or controller is used.

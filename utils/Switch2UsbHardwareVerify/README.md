@@ -1,7 +1,7 @@
 # Switch 2 Pro USB hardware verifier
 
 This is a standalone lab utility for one narrow, explicitly
-authorized mechanism check. It is not referenced by DS4Windows, is not part of
+authorized mechanism check. It is not referenced by FUT404DS, is not part of
 controller discovery or startup, and has no registry, API, profile, or CLI
 integration. Building or testing the project does not run it. Its hardware
 entry point has been exercised only in separately authorized runs documented
@@ -222,7 +222,7 @@ cleanup is deliberately attempted before the HID cleanup arm.
 ## Safety and privacy boundaries
 
 - A current manual execution changes volatile player-LED state but cannot send
-  haptics. Close DS4Windows, SDL applications, and other MI_01 command owners
+  haptics. Close FUT404DS, SDL applications, and other MI_01 command owners
   first. The read-only MI_00 lease is share-compatible and is not evidence of
   sole physical output-writer ownership.
 - Disconnect, driver failure, or an unresponsive controller can prevent
@@ -351,7 +351,7 @@ procedure, not a production deployment artifact.
 
 The source-built verifier was published and run only from
 `C:\Users\hbash\Desktop\Controller-Platform-Portable-Lab-2026-08-31`; installed
-Program Files copies of DS4Windows and VIIPER were not changed. The validated
+Program Files copies of FUT404DS and VIIPER were not changed. The validated
 local artifact is `switch2-usb-startup-validated-v2-2026-08-31.json`, SHA-256
 `9FECCE4A9A53BFEFD4AD42967BD1606462162FD958439E5980C615C7F94F9824`.
 

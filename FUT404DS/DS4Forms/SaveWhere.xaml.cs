@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,7 +21,7 @@ using System.IO;
 using System.Windows;
 
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for SaveWhere.xaml
@@ -33,7 +33,7 @@ namespace DS4WinWPF.DS4Forms
 
         public SaveWhere(bool multisavespots)
         {
-            if (DS4Windows.PortableLabContext.IsActive)
+            if (FUT404DS.PortableLabContext.IsActive)
                 throw new InvalidOperationException("Portable lab configuration location is fixed.");
             InitializeComponent();
             multisaves = multisavespots;
@@ -43,7 +43,7 @@ namespace DS4WinWPF.DS4Forms
                 pickWhereTxt.Text += Properties.Resources.OtherFileLocation;
             }
 
-            if (DS4Windows.Global.AdminNeeded())
+            if (FUT404DS.Global.AdminNeeded())
             {
                 progFolderPanel.IsEnabled = false;
             }
@@ -51,21 +51,21 @@ namespace DS4WinWPF.DS4Forms
 
         private void ProgFolderBtn_Click(object sender, RoutedEventArgs e)
         {
-            DS4Windows.Global.SaveWhere(DS4Windows.Global.exedirpath);
+            FUT404DS.Global.SaveWhere(FUT404DS.Global.exedirpath);
             if (multisaves && dontDeleteCk.IsChecked == false)
             {
                 try
                 {
-                    if (Directory.Exists(DS4Windows.Global.appDataPpath))
+                    if (Directory.Exists(FUT404DS.Global.appDataPpath))
                     {
-                        Directory.Delete(DS4Windows.Global.appDataPpath, true);
+                        Directory.Delete(FUT404DS.Global.appDataPpath, true);
                     }
                 }
                 catch { }
             }
             else if (!multisaves)
             {
-                DS4Windows.Global.SaveDefault(DS4Windows.Global.exedirpath + "\\Profiles.xml");
+                FUT404DS.Global.SaveDefault(FUT404DS.Global.exedirpath + "\\Profiles.xml");
             }
 
             ChoiceMade = true;
@@ -78,21 +78,21 @@ namespace DS4WinWPF.DS4Forms
             {
                 try
                 {
-                    Directory.Delete(DS4Windows.Global.exedirpath + "\\Profiles", true);
-                    File.Delete(DS4Windows.Global.exedirpath + "\\Profiles.xml");
-                    File.Delete(DS4Windows.Global.exedirpath + "\\Auto Profiles.xml");
+                    Directory.Delete(FUT404DS.Global.exedirpath + "\\Profiles", true);
+                    File.Delete(FUT404DS.Global.exedirpath + "\\Profiles.xml");
+                    File.Delete(FUT404DS.Global.exedirpath + "\\Auto Profiles.xml");
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    MessageBox.Show("Cannot Delete old settings, please manaully delete", "DS4Windows");
+                    MessageBox.Show("Cannot Delete old settings, please manaully delete", "FUT404DS");
                 }
             }
             else if (!multisaves)
             {
-                DS4Windows.Global.SaveDefault(Path.Combine(DS4Windows.Global.appDataPpath, "Profiles.xml"));
+                FUT404DS.Global.SaveDefault(Path.Combine(FUT404DS.Global.appDataPpath, "Profiles.xml"));
             }
 
-            DS4Windows.Global.SaveWhere(DS4Windows.Global.appDataPpath);
+            FUT404DS.Global.SaveWhere(FUT404DS.Global.appDataPpath);
             ChoiceMade = true;
             Close();
         }

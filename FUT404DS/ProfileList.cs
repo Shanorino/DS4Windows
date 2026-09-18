@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     public class ProfileList
     {
@@ -43,7 +43,7 @@ namespace DS4WinWPF
         public void Refresh()
         {
             profileListCol.Clear();
-            string[] profiles = Directory.GetFiles(DS4Windows.Global.appdatapath + @"\Profiles\");
+            string[] profiles = Directory.GetFiles(FUT404DS.Global.appdatapath + @"\Profiles\");
             foreach (string s in profiles)
             {
                 if (s.EndsWith(".xml"))

@@ -1,14 +1,14 @@
-using DS4WinWPF.DS4Control;
+using FUT404DSWPF.DS4Control;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text.Json;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class HidHideConfigurationGuardTests
 {
     private const string Alias = @"\Device\HarddiskVolume3\Users\test\AppData\Local\Microsoft\WindowsApps\python.exe";
-    private const string Real = @"\Device\HarddiskVolume3\Program Files\DS4Windows\DS4Windows.exe";
+    private const string Real = @"\Device\HarddiskVolume3\Program Files\FUT404DS\FUT404DS.exe";
     private const string Missing = @"\Device\HarddiskVolume3\missing\app.exe";
     private const string Symlink = @"\Device\HarddiskVolume3\links\app.exe";
 
@@ -284,7 +284,7 @@ public class HidHideConfigurationGuardTests
     [TestMethod]
     public void RealLaunchHandlerChecksAndConfirmsBeforeRepairOrLaunching()
     {
-        string source = RepositorySource("DS4Windows", "DS4Forms", "MainWindow.xaml.cs");
+        string source = RepositorySource("FUT404DS", "DS4Forms", "MainWindow.xaml.cs");
         int begin = source.IndexOf("private async void HidHideBtn_Click", StringComparison.Ordinal);
         int end = source.IndexOf("private void FakeExeNameExplainBtn_Click", begin, StringComparison.Ordinal);
         string handler = source.Substring(begin, end - begin);
@@ -303,14 +303,14 @@ public class HidHideConfigurationGuardTests
     [TestMethod]
     public void StartupAndAutoProfileRegistrationAreGuardedBeforeDriverAccess()
     {
-        string source = RepositorySource("DS4Windows", "DS4Control", "ControlService.cs");
+        string source = RepositorySource("FUT404DS", "DS4Control", "ControlService.cs");
         int begin = source.IndexOf("public void CheckHidHidePresence", StringComparison.Ordinal);
         int end = source.IndexOf("internal static bool CanRegisterHidHideApplication", begin, StringComparison.Ordinal);
         string registration = source.Substring(begin, end - begin);
         StringAssert.Contains(registration, "AddExe && !CanRegisterHidHideApplication(ExePath");
         Assert.IsTrue(registration.IndexOf("CanRegisterHidHideApplication(ExePath", StringComparison.Ordinal) <
             registration.IndexOf("new HidHideAPIDevice()", StringComparison.Ordinal));
-        string autoProfile = RepositorySource("DS4Windows", "DS4Forms", "ViewModels", "AutoProfilesViewModel.cs");
+        string autoProfile = RepositorySource("FUT404DS", "DS4Forms", "ViewModels", "AutoProfilesViewModel.cs");
         StringAssert.Contains(autoProfile, "CheckHidHidePresence(autoProf.Path, autoProf.Filename, addExe)");
     }
 

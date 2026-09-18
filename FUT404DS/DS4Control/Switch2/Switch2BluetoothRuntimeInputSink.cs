@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,9 +11,9 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2BluetoothRuntimeSinkFailure : byte
 {

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Admission/retention characterizations, not HID, radio, or actuator benchmarks.
 // Frozen clocks distinguish fresh-command admission from sustain scheduling;

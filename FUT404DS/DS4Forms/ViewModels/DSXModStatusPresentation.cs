@@ -1,4 +1,4 @@
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     internal static class DSXModStatusPresentation
     {
@@ -8,7 +8,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             if (changing) return "Applying game mod settings…";
             if (!string.IsNullOrWhiteSpace(error)) return error;
             if (!requested) return "Off — game mods cannot change your controller.";
-            if (!serviceRunning) return "Enabled — press Start in DS4Windows to accept game mods.";
+            if (!serviceRunning) return "Enabled — press Start in FUT404DS to accept game mods.";
             if (!listening) return "Not listening — open Connection details and choose Apply / Retry.";
             string endpoint = address?.Contains(':') == true ? $"[{address}]:{port}" : $"{address}:{port}";
             return $"Listening on {endpoint}. Connect a DualSense or DualSense Edge for mod effects.";

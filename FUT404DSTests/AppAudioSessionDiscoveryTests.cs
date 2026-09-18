@@ -1,8 +1,8 @@
-using DS4Windows;
-using DS4WinWPF.DS4Forms;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class AppAudioSessionDiscoveryTests
@@ -122,7 +122,7 @@ public sealed class AppAudioSessionDiscoveryTests
     public void SourceHelpExplainsDefaultOutputWithoutPromisingAnAllOutputMix()
     {
         var markup = System.Xml.Linq.XDocument.Load(Path.Combine(FindSourceRoot(),
-            "DS4Windows", "DS4Forms", "AudioHapticsControl.xaml"));
+            "FUT404DS", "DS4Forms", "AudioHapticsControl.xaml"));
         System.Xml.Linq.XNamespace xaml = "http://schemas.microsoft.com/winfx/2006/xaml";
         var help = markup.Descendants().Single(element =>
             (string)element.Attribute(xaml + "Name") == "sourceScopeHelp");
@@ -139,11 +139,11 @@ public sealed class AppAudioSessionDiscoveryTests
         // Wiring contract complements the behavioral traversal/selection tests:
         // neither picker may accidentally reintroduce default-only enumeration.
         var root = FindSourceRoot();
-        string control = File.ReadAllText(Path.Combine(root, "DS4Windows",
+        string control = File.ReadAllText(Path.Combine(root, "FUT404DS",
             "DS4Forms", "AudioHapticsControl.xaml.cs"));
-        string cache = File.ReadAllText(Path.Combine(root, "DS4Windows",
+        string cache = File.ReadAllText(Path.Combine(root, "FUT404DS",
             "DS4Forms", "ViewModels", "AudioEndpointChoiceCache.cs"));
-        string discovery = File.ReadAllText(Path.Combine(root, "DS4Windows",
+        string discovery = File.ReadAllText(Path.Combine(root, "FUT404DS",
             "DS4Forms", "ViewModels", "AppAudioSessionDiscovery.cs"));
 
         StringAssert.Contains(control, "sessions = AppAudioSessionDiscovery.Read();");
@@ -189,8 +189,8 @@ public sealed class AppAudioSessionDiscoveryTests
     private static string FindSourceRoot()
     {
         for (var root = new DirectoryInfo(AppContext.BaseDirectory); root != null; root = root.Parent)
-            if (File.Exists(Path.Combine(root.FullName, "DS4Windows", "DS4WinWPF.csproj")))
+            if (File.Exists(Path.Combine(root.FullName, "FUT404DS", "FUT404DSWPF.csproj")))
                 return root.FullName;
-        throw new DirectoryNotFoundException("DS4Windows source root was not found.");
+        throw new DirectoryNotFoundException("FUT404DS source root was not found.");
     }
 }

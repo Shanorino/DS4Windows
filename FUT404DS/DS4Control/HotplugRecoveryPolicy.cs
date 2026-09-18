@@ -1,4 +1,4 @@
-namespace DS4Windows
+namespace FUT404DS
 {
     internal static class HotplugRecoveryPolicy
     {

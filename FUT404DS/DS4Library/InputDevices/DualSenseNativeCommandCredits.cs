@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// Fixed identity ledger used by the parent and helper for native Bluetooth

@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Drawing;
 
-using DS4WinWPF.DS4Control;
+using FUT404DSWPF.DS4Control;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public struct DS4Color : IEquatable<DS4Color>
     {
@@ -1863,7 +1863,7 @@ namespace DS4Windows
                 Debouncer = SetupDebouncer();
                 firstActive = DateTime.UtcNow;
                 // Preserve the HIDCLASS queue depth used by the verified clean
-                // one-frame 0x12 DS4Windows capture. This does not change the
+                // one-frame 0x12 FUT404DS capture. This does not change the
                 // controller's one-millisecond input interval; it prevents a
                 // short host scheduling stall from exhausting the read queue
                 // while the independent audio handle continues submitting.
@@ -2589,7 +2589,7 @@ namespace DS4Windows
             bool quitOutputThread = false;
             bool usingBT = conType == ConnectionType.BT;
 
-            // Some gamepads don't support lightbar and rumble, so no need to write out anything (writeOut always fails, so DS4Windows would accidentally force quit the gamepad connection).
+            // Some gamepads don't support lightbar and rumble, so no need to write out anything (writeOut always fails, so FUT404DS would accidentally force quit the gamepad connection).
             // If noOutputData featureSet flag is set then don't try to write out anything to the gamepad device.
             if (!SupportsPhysicalOutput)
             {

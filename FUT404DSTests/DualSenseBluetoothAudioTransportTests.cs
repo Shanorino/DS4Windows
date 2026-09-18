@@ -1,5 +1,5 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using System.Collections;
 using System.Buffers.Binary;
 using System.Diagnostics;
@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualSenseBluetoothAudioTransportTests
@@ -1331,7 +1331,7 @@ namespace DS4WindowsTests
         public void DiagnosticPcmTraceHasRecoverableStreamingHeaderImmediately()
         {
             string path = Path.Combine(Path.GetTempPath(),
-                $"ds4windows-dualsense-trace-{Guid.NewGuid():N}.wav");
+                $"fut404ds-dualsense-trace-{Guid.NewGuid():N}.wav");
             try
             {
                 using Pcm16WaveTraceWriter writer =
@@ -1366,7 +1366,7 @@ namespace DS4WindowsTests
         public void DiagnosticPcmTraceDrainsAndFinalizesExactWaveLengths()
         {
             string path = Path.Combine(Path.GetTempPath(),
-                $"ds4windows-dualsense-trace-{Guid.NewGuid():N}.wav");
+                $"fut404ds-dualsense-trace-{Guid.NewGuid():N}.wav");
             byte[] pcm = Enumerable.Range(0, 4096)
                 .Select(index => (byte)(index * 31)).ToArray();
             try
@@ -2115,7 +2115,7 @@ namespace DS4WindowsTests
                 NativeGameLightbarOwnershipReleased,
                 "A native LED update did not claim visual ownership.");
 
-            // Reproduce the former failure: a later DS4Windows profile output
+            // Reproduce the former failure: a later FUT404DS profile output
             // attempted to replace a game's latched trigger state after 100 ms.
             SetFieldValue(NativeStateTimestampField, device, 1L);
             byte[] profile = new byte[78];
@@ -3076,7 +3076,7 @@ namespace DS4WindowsTests
         {
             internal QueueOnlyPacerFixture()
             {
-                string prefix = "DS4Windows.Tests.CombinedAdmission." +
+                string prefix = "FUT404DS.Tests.CombinedAdmission." +
                     Guid.NewGuid().ToString("N");
                 NamedPipeServerStream commandPipe = null;
                 NamedPipeServerStream responsePipe = null;

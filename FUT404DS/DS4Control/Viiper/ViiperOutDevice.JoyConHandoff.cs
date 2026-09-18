@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Threading;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 public sealed partial class ViiperOutDevice
 {

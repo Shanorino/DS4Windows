@@ -2,7 +2,7 @@ using System.IO.Pipes;
 using System.Buffers.Binary;
 using System.Text;
 using System.Text.Json;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
 int captureTailMs = 350;
 if (args.Length >= 2 && args[^2] == "--capture-tail-ms")
@@ -58,7 +58,7 @@ try
     if (!pipeName.StartsWith("ds4w-s2audio-", StringComparison.Ordinal) || pipeName.Length > 100 ||
         pipeName.Any(c => !char.IsAsciiLetterOrDigit(c) && c != '-') ||
         descriptor.RootElement.GetProperty("State").GetString() != "listening")
-        throw new InvalidDataException("Expected a live DS4Windows lab probe session.");
+        throw new InvalidDataException("Expected a live FUT404DS lab probe session.");
     ulong generation = descriptor.RootElement.GetProperty("TransportGeneration").GetUInt64();
     if ((tone || planFile) && (!descriptor.RootElement.TryGetProperty("PacketPlanProtocol", out var protocol) || protocol.GetInt32() != 1))
         throw new InvalidDataException("The running app has no packet-plan bridge. No radio request sent; do not restart automatically.");

@@ -1,6 +1,6 @@
 using Concentus;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class Switch2DualMonoPlanTests

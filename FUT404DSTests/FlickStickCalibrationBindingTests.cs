@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class FlickStickCalibrationBindingTests
@@ -172,5 +172,5 @@ public class FlickStickCalibrationBindingTests
         ? X360Controls.FlickStickCalibrate360LS : X360Controls.FlickStickCalibrate360RS;
 
     private static string BindingWindowPath([CallerFilePath] string caller = "") =>
-        Path.Combine(Path.GetDirectoryName(caller)!, "..", "DS4Windows", "DS4Forms", "BindingWindow.xaml");
+        Path.Combine(Path.GetDirectoryName(caller)!, "..", "FUT404DS", "DS4Forms", "BindingWindow.xaml");
 }

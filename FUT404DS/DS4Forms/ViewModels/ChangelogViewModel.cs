@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -25,10 +25,10 @@ using System.Threading.Tasks;
 using System.Windows.Documents;
 using HttpProgress;
 using System.Text.Json;
-using DS4Windows;
+using FUT404DS;
 using MarkdownEngine = MdXaml.Markdown;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class ChangelogViewModel
     {

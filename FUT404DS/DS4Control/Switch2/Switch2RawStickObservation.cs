@@ -1,11 +1,11 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 This program is free software under the GNU General Public License, version 3
 or (at your option) any later version. See LICENSE for details.
 */
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Owned physical-stick evidence retained across profile projection. It keeps

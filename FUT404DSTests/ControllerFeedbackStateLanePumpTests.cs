@@ -3,9 +3,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ControllerFeedbackStateLanePumpTests

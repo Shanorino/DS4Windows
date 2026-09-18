@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -201,7 +201,7 @@ public sealed class ControllerDiagramMappingTests
     }
 
     private static string SourcePath(string file, [CallerFilePath] string testPath = "") =>
-        Path.Combine(Path.GetDirectoryName(testPath), "..", "DS4Windows", "DS4Forms", file);
+        Path.Combine(Path.GetDirectoryName(testPath), "..", "FUT404DS", "DS4Forms", file);
 
     private static string Extract(string source, string start, string end)
     {

@@ -1,10 +1,10 @@
-using DS4Windows;
-using DS4WinWPF.DS4Control;
+using FUT404DS;
+using FUT404DSWPF.DS4Control;
 using SBC;
 using System;
 using System.Collections.Generic;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualShock4BluetoothAudioProtocolTests

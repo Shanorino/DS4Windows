@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using DS4Windows.DS4Control;
-using DS4WinWPF.DS4Control;
+using FUT404DS.DS4Control;
+using FUT404DSWPF.DS4Control;
 using Microsoft.Win32;
 using NLog;
 using Sensorit.Base;
@@ -31,13 +31,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using DS4WinWPF.DS4Forms;
-using DS4Windows.Switch2;
-using static DS4Windows.Global;
+using FUT404DSWPF.DS4Forms;
+using FUT404DS.Switch2;
+using static FUT404DS.Global;
 using Switch2CemuhookYawPolicy =
-    DS4Windows.Switch2.Switch2CemuhookYawSensitivity;
+    FUT404DS.Switch2.Switch2CemuhookYawSensitivity;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public partial class ControlService
     {
@@ -155,7 +155,7 @@ namespace DS4Windows
         private ControlServiceDeviceOptions deviceOptions;
         public ControlServiceDeviceOptions DeviceOptions { get => deviceOptions; }
 
-        private DS4WinWPF.ArgumentParser cmdParser;
+        private FUT404DSWPF.ArgumentParser cmdParser;
         private static readonly Logger startupDiagLogger = LogManager.GetCurrentClassLogger();
 
         public event EventHandler ServiceStarted;
@@ -264,7 +264,7 @@ namespace DS4Windows
             //return meta;
         }
 
-        public ControlService(DS4WinWPF.ArgumentParser cmdParser)
+        public ControlService(FUT404DSWPF.ArgumentParser cmdParser)
         {
             this.cmdParser = cmdParser;
             inputRegistrationTable =
@@ -468,7 +468,7 @@ namespace DS4Windows
                     return;
                 }
 
-                if (command[1] != "ds4windows")
+                if (command[1] != "fut404ds")
                 {
                     return;
                 }
@@ -505,7 +505,7 @@ namespace DS4Windows
                     }
                     else
                     {
-                        oscSender.Send(new SharpOSC.OscMessage("/ds4windows/monitor/" + stateInd + "/battery", oscState[stateInd].Battery));
+                        oscSender.Send(new SharpOSC.OscMessage("/fut404ds/monitor/" + stateInd + "/battery", oscState[stateInd].Battery));
                     }
                     return;
                 }
@@ -739,7 +739,7 @@ namespace DS4Windows
                 else if (!switched && !stickMouseFakerInputMissingNoticeShown)
                 {
                     stickMouseFakerInputMissingNoticeShown = true;
-                    LogDebug("Stick mouse profile detected, but DS4Windows could not connect to FakerInput. SendInput will remain active.");
+                    LogDebug("Stick mouse profile detected, but FUT404DS could not connect to FakerInput. SendInput will remain active.");
                 }
 
                 return;
@@ -990,7 +990,7 @@ namespace DS4Windows
             if (checkingCurrentProcess)
             {
                 ExePath = Global.exelocation;
-                ExeName = "DS4Windows";
+                ExeName = "FUT404DS";
                 AddExe = true;
             }
             // Windows app-execution aliases are launcher reparse points, not
@@ -1069,7 +1069,7 @@ namespace DS4Windows
 
                     // In inverse mode the application list is the deny list.
                     // Do not change user policy, but only authorize automatic
-                    // device hiding when DS4Windows is proven absent from it.
+                    // device hiding when FUT404DS is proven absent from it.
                     if (inverseAppCloak)
                     {
                         if (checkingCurrentProcess && !exists)
@@ -1267,7 +1267,7 @@ namespace DS4Windows
         }
 
         /// <summary>
-        /// Adds the device to HidHide while the DS4Windows service is running.
+        /// Adds the device to HidHide while the FUT404DS service is running.
         /// Stop releases managed entries and Start acquires them again.
         /// </summary>
         private bool EnsureHidHideSessionForDevice(DS4Device dev)
@@ -1288,14 +1288,14 @@ namespace DS4Windows
             // Never cloak a controller unless this process has first proved
             // that it can see through HidHide.  Without this gate the initial
             // already-open handle works, but the next wired PnP generation is
-            // hidden from DS4Windows itself and appears permanently dead.
+            // hidden from FUT404DS itself and appears permanently dead.
             if (Volatile.Read(ref hidHideCurrentProcessAccessVerified) == 0)
             {
                 CheckHidHidePresence();
                 if (Volatile.Read(
                         ref hidHideCurrentProcessAccessVerified) == 0)
                 {
-                    StartupDiag("HidHide controller containment skipped because DS4Windows whitelist access could not be verified");
+                    StartupDiag("HidHide controller containment skipped because FUT404DS whitelist access could not be verified");
                     return false;
                 }
             }
@@ -1499,7 +1499,7 @@ namespace DS4Windows
 
                     if (removed > 0)
                     {
-                        StartupDiag($"Released {removed} DS4Windows-managed HidHide {reason} entr{(removed == 1 ? "y" : "ies")}");
+                        StartupDiag($"Released {removed} FUT404DS-managed HidHide {reason} entr{(removed == 1 ? "y" : "ies")}");
                     }
                     UpdateHidHideAttributes();
                 }
@@ -1562,7 +1562,7 @@ namespace DS4Windows
                 {
                     if (!Global.IsAdministrator())
                     {
-                        LogDebug("Steam Input reclaim requires DS4Windows to " +
+                        LogDebug("Steam Input reclaim requires FUT404DS to " +
                             "run as administrator.", true);
                         return;
                     }
@@ -1724,7 +1724,7 @@ namespace DS4Windows
                             hidHideManagedDevices.CompleteSessionRelease(
                                 sessionIds, sessionReleased);
                             StartupDiag(sessionReleased
-                                ? $"Released {sessionIds.Count} DS4Windows-managed HidHide session entries"
+                                ? $"Released {sessionIds.Count} FUT404DS-managed HidHide session entries"
                                 : "HidHide session release failed; cleanup will be retried");
                         }
 
@@ -1774,7 +1774,7 @@ namespace DS4Windows
 
                                 if (removed > 0 && persistentReleased)
                                 {
-                                    StartupDiag($"Released {removed} DS4Windows-managed HidHide blacklist entries");
+                                    StartupDiag($"Released {removed} FUT404DS-managed HidHide blacklist entries");
                                 }
                                 else if (!persistentReleased)
                                 {
@@ -1855,7 +1855,7 @@ namespace DS4Windows
         /// <summary>
         /// A VIIPER Sony output is a complete USB/IP HID, so an instance path
         /// accidentally retained in HidHide's persistent blacklist makes the
-        /// virtual controller healthy and writable inside DS4Windows while it
+        /// virtual controller healthy and writable inside FUT404DS while it
         /// is invisible to games. Remove only the exact before/after paths that
         /// this process just created; physical Sony controllers stay cloaked.
         /// </summary>
@@ -2145,7 +2145,7 @@ namespace DS4Windows
 
         private DSXStatusResponse ReadDsxStatus(DsxSession session)
         {
-            var result = new DSXStatusResponse { Status = "DS4Windows DSX UDP Server Running",
+            var result = new DSXStatusResponse { Status = "FUT404DS DSX UDP Server Running",
                 TimeReceived = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), Devices = new List<DSXDeviceInfo>() };
             lock (DsxOutputGate)
             {
@@ -2278,8 +2278,8 @@ namespace DS4Windows
         {
             if (DS4Devices.isExclusiveMode && !device.isExclusive())
             {
-                string message = DS4WinWPF.Properties.Resources.CouldNotOpenDS4.Replace("*Mac address*", device.getMacAddress()) + " " +
-                    DS4WinWPF.Properties.Resources.QuitOtherPrograms;
+                string message = FUT404DSWPF.Properties.Resources.CouldNotOpenDS4.Replace("*Mac address*", device.getMacAddress()) + " " +
+                    FUT404DSWPF.Properties.Resources.QuitOtherPrograms;
                 LogDebug(message, true);
                 AppLogger.LogToTray(message, true);
             }
@@ -2769,14 +2769,14 @@ namespace DS4Windows
                 StartupDiag($"ControlService.Start after InitOutputKBMHandler handler={Global.outputKBMHandler?.GetFullDisplayName()}");
 
                 if (showlog)
-                    LogDebug(DS4WinWPF.Properties.Resources.Starting);
+                    LogDebug(FUT404DSWPF.Properties.Resources.Starting);
 
                 Thread.Sleep(2000);
 
                 bool runningAsAdmin = Global.IsAdministrator();
                 if (Global.outputKBMHandler.GetIdentifier() != FakerInputHandler.IDENTIFIER && !runningAsAdmin)
                 {
-                    string helpURL = @"https://ryochan7.github.io/ds4windows-site/troubleshooting/kb-mouse-issues/#windows-not-responding-to-ds4ws-kb-m-commands-in-some-situations";
+                    string helpURL = @"https://ryochan7.github.io/fut404ds-site/troubleshooting/kb-mouse-issues/#windows-not-responding-to-ds4ws-kb-m-commands-in-some-situations";
                     LogDebug($"Some applications may block controller inputs. (Windows UAC Conflictions). Please go to {helpURL} for more information and workarounds.");
                 }
 
@@ -2802,8 +2802,8 @@ namespace DS4Windows
 
                 if (showlog)
                 {
-                    LogDebug(DS4WinWPF.Properties.Resources.SearchingController);
-                    LogDebug(DS4Devices.isExclusiveMode ? DS4WinWPF.Properties.Resources.UsingExclusive : DS4WinWPF.Properties.Resources.UsingShared);
+                    LogDebug(FUT404DSWPF.Properties.Resources.SearchingController);
+                    LogDebug(DS4Devices.isExclusiveMode ? FUT404DSWPF.Properties.Resources.UsingExclusive : FUT404DSWPF.Properties.Resources.UsingShared);
                 }
 
                 if (isUsingOSCServer() && oscListener == null)
@@ -2860,7 +2860,7 @@ namespace DS4Windows
 
                     // A force-closed prior development build can leave its
                     // USB/IP output imported. Remove those ports before HID
-                    // discovery or DS4Windows will ingest its own VIIPER DS4,
+                    // discovery or FUT404DS will ingest its own VIIPER DS4,
                     // create a second output/UAC endpoint, and recurse.
                     ViiperUsbipPortManager.RecoverStaleLocalViiperPortsAtStartup();
                     // Let usbccgp/HID finish publishing removal before the
@@ -3245,7 +3245,7 @@ namespace DS4Windows
                     StartupDiag("ControlService.Stop PreServiceStop end");
 
                     if (showlog)
-                        LogDebug(DS4WinWPF.Properties.Resources.StoppingX360);
+                        LogDebug(FUT404DSWPF.Properties.Resources.StoppingX360);
 
                     LogDebug("Closing VIIPER virtual-controller connections");
                 }
@@ -3364,7 +3364,7 @@ namespace DS4Windows
                 exactTypedStopRetryPending = false;
 
                 if (showlog)
-                    LogDebug(DS4WinWPF.Properties.Resources.StoppingDS4);
+                    LogDebug(FUT404DSWPF.Properties.Resources.StoppingDS4);
 
                 StartupDiag("ControlService.Stop DualSenseAudio reset begin");
                 dualSenseAudioPassthrough.ResetForServiceStop();
@@ -3404,7 +3404,7 @@ namespace DS4Windows
                 }
 
                 if (showlog)
-                    LogDebug(DS4WinWPF.Properties.Resources.StoppedDS4Windows);
+                    LogDebug(FUT404DSWPF.Properties.Resources.StoppedFUT404DS);
 
                 Stopwatch outputQueueWait = Stopwatch.StartNew();
                 while (outputslotMan.RunningQueue && outputQueueWait.ElapsedMilliseconds < 2000)
@@ -3740,7 +3740,7 @@ namespace DS4Windows
             slotManager.AddController(device, index);
             if (isUsingOSCSender())
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/plug", 1));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/plug", 1));
             }
         }
 
@@ -4052,7 +4052,7 @@ namespace DS4Windows
             (outputDevices[ind] as ViiperOutDevice)?.
                 QueueXboxFeedbackPolicyRefresh(ind);
             if (!getEnableOutputDataToDS4(ind))
-                LogDebug("Output data to DS4 disabled. Lightbar and rumble events are not written to DS4 gamepad. If the gamepad is connected over BT then IdleDisconnect option is recommended to let DS4Windows to close the connection after long period of idling.");
+                LogDebug("Output data to DS4 disabled. Lightbar and rumble events are not written to DS4 gamepad. If the gamepad is connected over BT then IdleDisconnect option is recommended to let FUT404DS to close the connection after long period of idling.");
 
             device.setIdleTimeout(getIdleDisconnectTimeout(ind));
             device.setBTPollRate(getBTPollRate(ind));
@@ -4584,7 +4584,7 @@ namespace DS4Windows
                 if (d.isCharging())
                 {
                     if (d.getBattery() >= 100)
-                        battery = DS4WinWPF.Properties.Resources.Full;
+                        battery = FUT404DSWPF.Properties.Resources.Full;
                     else
                         battery = d.getBattery() + "%+";
                 }
@@ -4596,7 +4596,7 @@ namespace DS4Windows
                 return battery;
             }
             else
-                return DS4WinWPF.Properties.Resources.NA;
+                return FUT404DSWPF.Properties.Resources.NA;
         }
 
         protected void On_SerialChange(object sender, EventArgs e)
@@ -4922,7 +4922,7 @@ namespace DS4Windows
 
             if (logRemoval)
             {
-                string removed = DS4WinWPF.Properties.Resources.
+                string removed = FUT404DSWPF.Properties.Resources.
                     ControllerWasRemoved.Replace("*Mac address*",
                         (index + 1).ToString());
                 if (device.getBattery() <= 20 &&
@@ -4930,7 +4930,7 @@ namespace DS4Windows
                     !device.isCharging())
                 {
                     removed += ". " +
-                        DS4WinWPF.Properties.Resources.ChargeController;
+                        FUT404DSWPF.Properties.Resources.ChargeController;
                 }
                 LogDebug(removed);
                 AppLogger.LogToTray(removed);
@@ -4963,7 +4963,7 @@ namespace DS4Windows
             if (isUsingOSCSender())
             {
                 oscSender.Send(new SharpOSC.OscMessage(
-                    "/ds4windows/monitor/" + index + "/plug", 0));
+                    "/fut404ds/monitor/" + index + "/plug", 0));
             }
             touchPad[index] = null;
             lag[index] = false;
@@ -6289,7 +6289,7 @@ namespace DS4Windows
             if (currentState.Battery != oscMapState.Battery)
             {
                 oscSender.Send(new OscMessage(
-                    "/ds4windows/monitor/" + index + "/battery",
+                    "/fut404ds/monitor/" + index + "/battery",
                     Convert.ToInt32(currentState.Battery)));
                 oscMapState.Battery = currentState.Battery;
             }
@@ -6301,115 +6301,115 @@ namespace DS4Windows
             // Buttons 
             if (oldState.Square != newState.Square)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/square", newState.Square == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/square", newState.Square == true ? 1 : 0));
             }
 
             if (oldState.Triangle != newState.Triangle)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/triangle", newState.Triangle == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/triangle", newState.Triangle == true ? 1 : 0));
             }
 
             if (oldState.Circle != newState.Circle)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/circle", newState.Circle == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/circle", newState.Circle == true ? 1 : 0));
             }
 
             if (oldState.Cross != newState.Cross)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/cross", newState.Cross == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/cross", newState.Cross == true ? 1 : 0));
             }
 
             if (oldState.DpadUp != newState.DpadUp)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/dpadup", newState.DpadUp == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/dpadup", newState.DpadUp == true ? 1 : 0));
             }
 
             if (oldState.DpadDown != newState.DpadDown)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/dpaddown", newState.DpadDown == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/dpaddown", newState.DpadDown == true ? 1 : 0));
             }
 
             if (oldState.DpadLeft != newState.DpadLeft)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/dpadleft", newState.DpadLeft == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/dpadleft", newState.DpadLeft == true ? 1 : 0));
             }
 
             if (oldState.DpadRight != newState.DpadRight)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/dpadright", newState.DpadRight == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/dpadright", newState.DpadRight == true ? 1 : 0));
             }
 
             if (oldState.L1 != newState.L1)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/l1", newState.L1 == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/l1", newState.L1 == true ? 1 : 0));
             }
 
             if (oldState.L3 != newState.L3)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/l3", newState.L3 == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/l3", newState.L3 == true ? 1 : 0));
             }
 
             if (oldState.R1 != newState.R1)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/r1", newState.R1 == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/r1", newState.R1 == true ? 1 : 0));
             }
 
             if (oldState.R3 != newState.R3)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/r3", newState.R3 == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/r3", newState.R3 == true ? 1 : 0));
             }
 
             if (oldState.Options != newState.Options)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/options", newState.Options == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/options", newState.Options == true ? 1 : 0));
             }
 
             if (oldState.Share != newState.Share)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/share", newState.Share == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/share", newState.Share == true ? 1 : 0));
             }
 
             if (oldState.PS != newState.PS)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/ps", newState.PS == true ? 1 : 0));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/ps", newState.PS == true ? 1 : 0));
             }
 
             // Sticks
             if (oldState.LX != newState.LX)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/lx", Convert.ToInt32(newState.LX)));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/lx", Convert.ToInt32(newState.LX)));
             }
 
             if (oldState.LY != newState.LY)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/ly", Convert.ToInt32(newState.LY)));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/ly", Convert.ToInt32(newState.LY)));
             }
 
             if (oldState.RX != newState.RX)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/rx", Convert.ToInt32(newState.RX)));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/rx", Convert.ToInt32(newState.RX)));
             }
 
             if (oldState.RY != newState.RY)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/ry", Convert.ToInt32(newState.RY)));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/ry", Convert.ToInt32(newState.RY)));
             }
 
             // Triggers
             if (oldState.L2 != newState.L2)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/l2", Convert.ToInt32(newState.L2)));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/l2", Convert.ToInt32(newState.L2)));
             }
 
             if (oldState.R2 != newState.R2)
             {
-                oscSender.Send(new OscMessage("/ds4windows/monitor/" + index + "/r2", Convert.ToInt32(newState.R2)));
+                oscSender.Send(new OscMessage("/fut404ds/monitor/" + index + "/r2", Convert.ToInt32(newState.R2)));
             }
 
             // if (oldState.Battery != newState.Battery)
             // {
             //     AppLogger.LogToGui("BATTERY " + oldState.Battery + " : " + newState.Battery, false);
-            //     oscSender.Send(new SharpOSC.OscMessage("/ds4windows/monitor/" + index + "/battery", Convert.ToInt32(newState.Battery)));
+            //     oscSender.Send(new SharpOSC.OscMessage("/fut404ds/monitor/" + index + "/battery", Convert.ToInt32(newState.Battery)));
             // }
         }
 
@@ -6445,12 +6445,12 @@ namespace DS4Windows
                 if (snapshot.LagOn)
                 {
                     LogDebug(string.Format(
-                        DS4WinWPF.Properties.Resources.LatencyOverTen,
+                        FUT404DSWPF.Properties.Resources.LatencyOverTen,
                         snapshot.Controller + 1, snapshot.Latency), true);
                 }
                 else
                 {
-                    LogDebug(DS4WinWPF.Properties.Resources.LatencyNotOverTen
+                    LogDebug(FUT404DSWPF.Properties.Resources.LatencyNotOverTen
                         .Replace("*number*",
                             (snapshot.Controller + 1).ToString()));
                 }
@@ -6461,11 +6461,11 @@ namespace DS4Windows
                 bool profileExists = File.Exists(Path.Combine(appdatapath,
                     "Profiles", $"{snapshot.ProfileName}.xml"));
                 string prolog = profileExists ?
-                    string.Format(DS4WinWPF.Properties.Resources.UsingProfile,
+                    string.Format(FUT404DSWPF.Properties.Resources.UsingProfile,
                         (snapshot.Controller + 1).ToString(),
                         snapshot.ProfileName, $"{snapshot.InitialBattery}") :
                     string.Format(
-                        DS4WinWPF.Properties.Resources.NotUsingProfile,
+                        FUT404DSWPF.Properties.Resources.NotUsingProfile,
                         (snapshot.Controller + 1).ToString(),
                         $"{snapshot.InitialBattery}");
                 LogDebug(prolog);
@@ -6520,12 +6520,12 @@ namespace DS4Windows
             if (on)
             {
                 LogDebug(string.Format(
-                    DS4WinWPF.Properties.Resources.LatencyOverTen,
+                    FUT404DSWPF.Properties.Resources.LatencyOverTen,
                     ind + 1, device.Latency), true);
             }
             else
             {
-                LogDebug(DS4WinWPF.Properties.Resources.LatencyNotOverTen
+                LogDebug(FUT404DSWPF.Properties.Resources.LatencyNotOverTen
                     .Replace("*number*", (ind + 1).ToString()));
             }
         }
@@ -6628,15 +6628,15 @@ namespace DS4Windows
                 if (GetTouchActive(deviceID) && touchreleased[deviceID])
                 {
                     TouchActive[deviceID] = false;
-                    LogDebug(DS4WinWPF.Properties.Resources.TouchpadMovementOff);
-                    AppLogger.LogToTray(DS4WinWPF.Properties.Resources.TouchpadMovementOff);
+                    LogDebug(FUT404DSWPF.Properties.Resources.TouchpadMovementOff);
+                    AppLogger.LogToTray(FUT404DSWPF.Properties.Resources.TouchpadMovementOff);
                     touchreleased[deviceID] = false;
                 }
                 else if (touchreleased[deviceID])
                 {
                     TouchActive[deviceID] = true;
-                    LogDebug(DS4WinWPF.Properties.Resources.TouchpadMovementOn);
-                    AppLogger.LogToTray(DS4WinWPF.Properties.Resources.TouchpadMovementOn);
+                    LogDebug(FUT404DSWPF.Properties.Resources.TouchpadMovementOn);
+                    AppLogger.LogToTray(FUT404DSWPF.Properties.Resources.TouchpadMovementOn);
                     touchreleased[deviceID] = false;
                 }
             }

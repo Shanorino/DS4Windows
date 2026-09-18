@@ -1,7 +1,7 @@
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using System.Diagnostics;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualSenseControllerClockEstimatorTests

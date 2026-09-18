@@ -3,10 +3,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using DS4WinWPF;
+using FUT404DSWPF;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 [DoNotParallelize]
@@ -80,7 +80,7 @@ public class PortableLabContextTests
     [DataRow("-runtask")]
     [DataRow("-command")]
     [DataRow("-re-enabledevice")]
-    [DataRow("--refresh-ds4windows-startup-task")]
+    [DataRow("--refresh-fut404ds-startup-task")]
     [DataRow("--install-viiper")]
     [DataRow("--unknown")]
     public void AnyMaintenanceOrUnknownArgumentRejectsBeforeReadingAnImage(string option)
@@ -199,7 +199,7 @@ public class PortableLabContextTests
     [TestMethod]
     public void LostSingleInstanceCreationRaceNeitherSignalsNorAdmitsSecondMapper()
     {
-        string name = "DS4Windows.PortableLab.Test." + Guid.NewGuid().ToString("N");
+        string name = "FUT404DS.PortableLab.Test." + Guid.NewGuid().ToString("N");
         using var first = App.CreateSingleAppComEvent(name, requireNew: true);
         Assert.IsNotNull(first);
         Assert.IsNull(App.CreateSingleAppComEvent(name, requireNew: true));

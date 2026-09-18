@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 GPL-3.0-or-later; see LICENSE. The physical rotate/settle/center workflow
 follows the source-pinned Switch2Connect reference documented in
@@ -10,11 +10,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms.ViewModels;
+namespace FUT404DSWPF.DS4Forms.ViewModels;
 
 /// <summary>
 /// UI-thread-owned workflow for one exact logical runtime and profile context.

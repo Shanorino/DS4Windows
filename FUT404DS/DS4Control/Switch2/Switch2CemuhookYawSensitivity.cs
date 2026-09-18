@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,13 +10,13 @@ the Free Software Foundation, either version 3 of the License, or
 The five-level yaw multiplier is adapted from the GPL-3.0
 Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/cemuhook_udp.py. The
-physical-family raw gyro scale is intentionally not copied: DS4Windows'
+physical-family raw gyro scale is intentionally not copied: FUT404DS'
 canonical SixAxis state is already expressed in degrees per second.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal static class Switch2CemuhookYawSensitivity
 {

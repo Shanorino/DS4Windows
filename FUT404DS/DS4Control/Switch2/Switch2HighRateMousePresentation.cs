@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -9,7 +9,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 The one-owner, latest-state interpolation model is adapted from the
 GPL-3.0 licensed Switch2Connect project, commit
-61ac6642ce12fe7217e38a860b14863b18ca7e28, src/controller.py. DS4Windows
+61ac6642ce12fe7217e38a860b14863b18ca7e28, src/controller.py. FUT404DS
 keeps its canonical profile mapper authoritative and uses this worker only to
 present already-mapped continuous Switch 2 mouse velocities at high rate.
 */
@@ -18,9 +18,9 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
-using DS4Windows.DS4Control;
+using FUT404DS.DS4Control;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2ContinuousMouseSource : byte
 {

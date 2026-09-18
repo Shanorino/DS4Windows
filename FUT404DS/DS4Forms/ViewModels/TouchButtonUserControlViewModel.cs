@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DS4WinWPF.DS4Forms.ViewModels.Util;
-using DS4Windows;
-using static DS4Windows.Mouse;
+using FUT404DSWPF.DS4Forms.ViewModels.Util;
+using FUT404DS;
+using static FUT404DS.Mouse;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class TouchButtonUserControlViewModel
     {

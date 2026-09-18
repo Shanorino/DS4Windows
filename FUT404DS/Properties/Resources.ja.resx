@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>バージョン *number* を今すぐダウンロードしますか?</value>
   </data>
   <data name="DS4Update" xml:space="preserve">
-    <value>DS4Windows の更新を利用可能です!</value>
+    <value>FUT404DS の更新を利用可能です!</value>
   </data>
   <data name="FallBack" xml:space="preserve">
     <value>フォールバック</value>
@@ -181,7 +181,7 @@
     <value>インストール中...</value>
   </data>
   <data name="LanguagePackApplyRestartRequired" xml:space="preserve">
-    <value>言語パックの変更は、DS4Windows の再起動後に反映されます。</value>
+    <value>言語パックの変更は、FUT404DS の再起動後に反映されます。</value>
   </data>
   <data name="LatencyNotOverTen" xml:space="preserve">
     <value>コントローラー *number* の遅延は 10ms 以下です</value>
@@ -220,13 +220,13 @@
     <value>、他の位置にあるファイルは削除されます</value>
   </data>
   <data name="PleaseDownloadUpdater" xml:space="preserve">
-    <value>アップデーターをダウンロードして、プログラムフォルダ下に格納し DS4Updater.exe にリネームしてください。x86 の場合、再度更新を確認してください。このウインドウを閉じると、DS4Windows は DS4Updater のリリースページを開こうとします。</value>
+    <value>アップデーターをダウンロードして、プログラムフォルダ下に格納し DS4Updater.exe にリネームしてください。x86 の場合、再度更新を確認してください。このウインドウを閉じると、FUT404DS は DS4Updater のリリースページを開こうとします。</value>
   </data>
   <data name="ProfileCannotRestore" xml:space="preserve">
     <value>*Profile name* を復元することはできません。</value>
   </data>
   <data name="QuitOtherPrograms" xml:space="preserve">
-    <value>'DS4コントローラーを隠す'オプションを有効にする前に、UWPアプリ(Netflix)、Steam、Uplay、Edge、NVIDIA IN-GAMEなどの他のアプリケーションを終了する必要があります。詳しくは https://github.com/Ryochan7/DS4Windows/wiki/Exclusive-Mode-(Hide-DS4-Controller-config-option)-tips-and-issues をご覧ください。</value>
+    <value>'DS4コントローラーを隠す'オプションを有効にする前に、UWPアプリ(Netflix)、Steam、Uplay、Edge、NVIDIA IN-GAMEなどの他のアプリケーションを終了する必要があります。詳しくは https://github.com/Ryochan7/FUT404DS/wiki/Exclusive-Mode-(Hide-DS4-Controller-config-option)-tips-and-issues をご覧ください。</value>
   </data>
   <data name="SASteeringWheelEmulationCalibrate" xml:space="preserve">
     <value>6軸ホイールエミュレーションの調整</value>
@@ -264,8 +264,8 @@
   <data name="StopLText" xml:space="preserve">
     <value>弱振動を停止</value>
   </data>
-  <data name="StoppedDS4Windows" xml:space="preserve">
-    <value>DS4Windows を停止しました</value>
+  <data name="StoppedFUT404DS" xml:space="preserve">
+    <value>FUT404DS を停止しました</value>
   </data>
   <data name="StoppingDS4" xml:space="preserve">
     <value>DS4 入力コントローラーを停止中</value>
@@ -307,7 +307,7 @@
     <value>未割り当て</value>
   </data>
   <data name="UpToDate" xml:space="preserve">
-    <value>DS4Windows は最新バージョンです。</value>
+    <value>FUT404DS は最新バージョンです。</value>
   </data>
   <data name="UsingExclusive" xml:space="preserve">
     <value>排他モードで使用</value>

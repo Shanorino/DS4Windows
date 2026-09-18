@@ -1,7 +1,7 @@
 using System;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Encodes Trigger Lab's three public effect modes into the documented

@@ -1,4 +1,4 @@
-﻿/*
+/*
  Modified version of http://damieng.com/blog/2006/08/08/calculating_crc32_in_c_and_net
  Using a default table improves drastically the performance of the algorithm.
  Credit for the implementation should be awarded to Damien Guard.
@@ -11,7 +11,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Implements a 32-bit CRC hash algorithm compatible with Zip etc.

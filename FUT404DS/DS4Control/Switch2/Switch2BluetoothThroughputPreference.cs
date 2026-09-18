@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -14,12 +14,12 @@ using System.Threading;
 using Windows.Devices.Bluetooth;
 using Windows.Foundation.Metadata;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Retained Windows 11 BLE ThroughputOptimized request. The ABI surface is a
 /// GPL-compatible C# adaptation of the proven SDL BLE Switch 2 driver while
-/// preserving DS4Windows' Windows 10 target. Microsoft documents the returned
+/// preserving FUT404DS' Windows 10 target. Microsoft documents the returned
 /// request as an IClosable lifetime; releasing it immediately would discard
 /// the preference instead of owning it for the controller connection.
 /// </summary>

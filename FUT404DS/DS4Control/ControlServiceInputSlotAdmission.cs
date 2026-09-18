@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 SPDX-License-Identifier: GPL-3.0-or-later
 */
@@ -7,7 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 using System;
 using System.Threading;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Bridges table-owned runtimes and legacy devices whose worker lifecycle is

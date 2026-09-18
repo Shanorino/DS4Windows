@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Loopback sockets only. These tests do not open controllers, applications,
 // configured DSU ports, or external interfaces.

@@ -3,7 +3,7 @@ using NAudio.Wave;
 using System;
 using System.Linq;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public sealed class DualSenseMicrophonePassthrough : IDisposable
     {

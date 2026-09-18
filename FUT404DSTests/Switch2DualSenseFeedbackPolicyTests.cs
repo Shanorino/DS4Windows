@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Reflection;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -777,7 +777,7 @@ public sealed class Switch2DualSenseFeedbackPolicyTests
         Assert.IsTrue(store.switch2DualSenseAudioHapticsEnabled.All(value => value));
         Assert.IsTrue(store.switch2DualSenseAdaptiveTriggersEnabled.All(value => value));
         var serializer = new XmlSerializer(typeof(ProfileDTO), ProfileDTO.GetAttributeOverrides());
-        using var reader = new StringReader("<DS4Windows config_version=\"5\" />");
+        using var reader = new StringReader("<FUT404DS config_version=\"5\" />");
         var legacy = (ProfileDTO)serializer.Deserialize(reader)!;
         Assert.IsTrue(legacy.Switch2DualSenseAudioHapticsEnabled);
         Assert.IsTrue(legacy.Switch2DualSenseAdaptiveTriggersEnabled);

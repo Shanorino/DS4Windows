@@ -1,8 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using DS4Windows.Switch2;
-using DS4Windows.Switch2.Verification;
+using FUT404DS.Switch2;
+using FUT404DS.Switch2.Verification;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Switch2UsbHardwareVerify.Tests;
@@ -1419,7 +1419,7 @@ public sealed class VerificationPureTests
             CommandResponseFailureDetail =
                 Switch2UsbCommandFailure.InvalidAcknowledgement.ToString(),
             CommandTransferFailureStage =
-                DS4Windows.Switch2.Verification.CommandTransferFailureStage
+                FUT404DS.Switch2.Verification.CommandTransferFailureStage
                     .ResponseAdmission.ToString(),
             CommandObservedResponseLength = 12,
             CommandObservedResponseHeaderByte4 = 0,

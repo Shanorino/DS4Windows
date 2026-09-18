@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -28,15 +28,15 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using DS4Windows;
-using DS4Windows.StickModifiers;
-using DS4WinWPF.DS4Forms.ViewModels.Util;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.StickModifiers;
+using FUT404DSWPF.DS4Forms.ViewModels.Util;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 using Switch2CemuhookYawPolicy =
-    DS4Windows.Switch2.Switch2CemuhookYawSensitivity;
+    FUT404DS.Switch2.Switch2CemuhookYawSensitivity;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class ProfileSettingsViewModel
     {
@@ -4882,7 +4882,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
             catch (Exception ex)
             {
-                AppLogger.LogToGui($"ERROR. Failed to open {Global.exedirpath}\\BezierCurveEditor\\index.html web app. Check that the web file exits or launch it outside of DS4Windows application. {ex.Message}", true);
+                AppLogger.LogToGui($"ERROR. Failed to open {Global.exedirpath}\\BezierCurveEditor\\index.html web app. Check that the web file exits or launch it outside of FUT404DS application. {ex.Message}", true);
             }
         }
 

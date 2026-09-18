@@ -348,9 +348,9 @@ Zmiany zostaną zastosowane przy łączeniu się z kontrolerem.</value>
     <value>Własna nazwa EXE</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Niektóre gry blokują użycie kontrolera, gdy wykryją one działający program DS4Windows.exe lub InputMapper.exe. Obejść to można zmieniając nazwę programu DS4Windows.exe. Podanie tutaj własnej nazwy tego programu pozwala programowi aktualizującemu na automatyczną aktualizację DS4Windows pod zmienioną nazwą. Pamiętaj, aby nie dodawać rozszerzenia.
+    <value>Niektóre gry blokują użycie kontrolera, gdy wykryją one działający program FUT404DS.exe lub InputMapper.exe. Obejść to można zmieniając nazwę programu FUT404DS.exe. Podanie tutaj własnej nazwy tego programu pozwala programowi aktualizującemu na automatyczną aktualizację FUT404DS pod zmienioną nazwą. Pamiętaj, aby nie dodawać rozszerzenia.
 
-Przykład: 1_DS4Windows</value>
+Przykład: 1_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>XInputChecker</value>

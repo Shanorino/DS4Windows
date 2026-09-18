@@ -1,9 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Forms.ViewModels;
+namespace FUT404DSWPF.DS4Forms.ViewModels;
 
 public class LightbarMacroViewModel
 {

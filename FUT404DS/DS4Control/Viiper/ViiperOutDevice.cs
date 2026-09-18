@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,11 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Concentus;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 using SBC;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal delegate void ViiperAtomicAudioHapticsHandler(
         ViiperOutDevice source, byte[] payload, int feedbackOffset,
@@ -35,7 +35,7 @@ namespace DS4Windows
     internal static class ViiperStateWriteRateSettings
     {
         internal const string EnvironmentVariableName =
-            "DS4WINDOWS_VIIPER_STATE_RATE_HZ";
+            "FUT404DS_VIIPER_STATE_RATE_HZ";
         internal const int DefaultControllerRateHz = 1000;
         private const int MinimumRateHz = 30;
         private const int MaximumRateHz = 1000;
@@ -1320,7 +1320,7 @@ namespace DS4Windows
                     "ordered button boundaries and latest axes/motion state" :
                     "latest-state coalescing";
                 AppLogger.LogToGui(
-                    $"DS4Windows -> VIIPER {viiperType} input publication limit: {stateWriteRateHz} Hz; DS4Windows queue: {queuePolicy}. Virtual USB service cadence is determined separately by the device descriptor.",
+                    $"FUT404DS -> VIIPER {viiperType} input publication limit: {stateWriteRateHz} Hz; FUT404DS queue: {queuePolicy}. Virtual USB service cadence is determined separately by the device descriptor.",
                     false);
             }
         }
@@ -6106,7 +6106,7 @@ namespace DS4Windows
                                 correlation))
                         {
                             throw new IOException(
-                                "DS4Windows rejected an overlapping or invalid canonical Xbox One feedback value; the one-shot persona was retired.");
+                                "FUT404DS rejected an overlapping or invalid canonical Xbox One feedback value; the one-shot persona was retired.");
                         }
                     }
                     else if (activeStreamSupportsDirectSpeaker)
@@ -9833,7 +9833,7 @@ namespace DS4Windows
                     StringComparison.OrdinalIgnoreCase) ||
                 processName.Equals("viiper",
                     StringComparison.OrdinalIgnoreCase) ||
-                processName.Equals("DS4Windows",
+                processName.Equals("FUT404DS",
                     StringComparison.OrdinalIgnoreCase);
         }
 
@@ -10398,7 +10398,7 @@ namespace DS4Windows
 
         /// <summary>
         /// Records a successful VIIPER status query. Returns true only when the
-        /// state visible to the rest of DS4Windows changes.
+        /// state visible to the rest of FUT404DS changes.
         /// </summary>
         internal bool RecordObservation(bool active, long timestamp)
         {
@@ -11534,7 +11534,7 @@ namespace DS4Windows
             if (!IsDs4WindowsOwnedLocalPort(ownedPort, remoteBusId))
             {
                 AppLogger.LogToGui(
-                    $"VIIPER refused to detach usbip port {port} ({reason}) because its DS4Windows ownership token or device identity no longer matches.",
+                    $"VIIPER refused to detach usbip port {port} ({reason}) because its FUT404DS ownership token or device identity no longer matches.",
                     true);
                 return;
             }
@@ -12110,7 +12110,7 @@ namespace DS4Windows
                 if (ownedPort > 0)
                 {
                     detachPort?.Invoke(ownedPort,
-                        "DS4Windows VIIPER device stopped");
+                        "FUT404DS VIIPER device stopped");
                 }
             }
             catch

@@ -12,13 +12,13 @@ from pathlib import Path, PurePosixPath
 
 
 REQUIRED_PUBLISH_FILES = {
-    "DS4Windows.exe",
+    "FUT404DS.exe",
     "BouncyCastle.Cryptography.dll",
     "Resources/BouncyCastle.NOTICE.txt",
     "Resources/DsxTriggerEffects.NOTICE.txt",
     "xbox-one-authorized-persona.json",
     "extras/XBOX-ONE-PERSONA-NOTICE.md",
-    "DS4Windows.release",
+    "FUT404DS.release",
     "extras/install-viiper-backend.ps1",
     "extras/VIIPER-0.1.5-rc4.6-x64.exe",
     "extras/VIIPER-0.1.5-rc4.6-x64.exe.sha256",
@@ -99,7 +99,7 @@ def validate_named_xaml_resources(source_root: Path) -> None:
     """
     declared: set[str] = set()
     referenced: dict[str, set[str]] = {}
-    xaml_files = sorted((source_root / "DS4Windows").rglob("*.xaml"))
+    xaml_files = sorted((source_root / "FUT404DS").rglob("*.xaml"))
     for path in xaml_files:
         source = path.read_text(encoding="utf-8-sig")
         declared.update(re.findall(r'x:Key\s*=\s*["\']([^"\']+)', source))
@@ -152,13 +152,13 @@ def validate_release_workflow(release_workflow: str) -> None:
         'RELEASE_TAG: ${{ needs.identity.outputs.tag }}',
         'TAG="$RELEASE_TAG"',
         "Public release signing material or approved signer identity is missing.",
-        '$firstPartyBinaries = @(".\\bin\\x64\\Release\\output\\DS4Windows.exe")',
+        '$firstPartyBinaries = @(".\\bin\\x64\\Release\\output\\FUT404DS.exe")',
         "First-party release signing failed for $path.",
         "RequireSigning = $env:UNSIGNED_RC_RELEASE -ne 'true'",
         '$signature.SignerCertificate.Thumbprint -ne $approvedThumbprint',
         '-not $signature.TimeStamperCertificate',
         'if: always()',
-        '$certificatePath = Join-Path $env:RUNNER_TEMP "ds4windows-release.pfx"',
+        '$certificatePath = Join-Path $env:RUNNER_TEMP "fut404ds-release.pfx"',
         'Remove-Item -LiteralPath $certificatePath -Force',
         "VIIPER is an immutable release input",
     ]:
@@ -201,7 +201,7 @@ def validate_release_workflow(release_workflow: str) -> None:
     ])
     require(between("    - name: Prepare verified release records", "    - name: Verify and publish exact release assets"), [
         'if ($sourceCommit -cne $tagCommit)',
-        'git archive --format=zip --prefix=DS4Windows/',
+        'git archive --format=zip --prefix=FUT404DS/',
         '$brokerTagCommit.Trim() -cne $brokerCommit',
         'Hash -cne $brokerSourceHash',
         'Hash -cne $brokerHash',
@@ -255,7 +255,7 @@ def validate_release_workflow(release_workflow: str) -> None:
 def validate_setup_actions(setup_actions: str, setup_mutation_ownership: str) -> None:
     # The named mutex lives in the production ownership helper. Program.cs
     # must invoke that helper, not duplicate its implementation or its name.
-    for contract in [r'@"Global\DS4Windows-VIIPER-Setup"', 'setupMutex.WaitOne(0)',
+    for contract in [r'@"Global\FUT404DS-VIIPER-Setup"', 'setupMutex.WaitOne(0)',
                      'catch (AbandonedMutexException)', 'return 1618;',
                      'return action();', 'setupMutex.ReleaseMutex();']:
         if contract not in setup_mutation_ownership:
@@ -276,7 +276,7 @@ def validate_setup_actions(setup_actions: str, setup_mutation_ownership: str) ->
         'StartupSetupRecovery.Register(new',
         'FileMode.CreateNew',
         'HashesEqual(bundleSource, stagedBundle)',
-        '=== DS4Windows setup invocation ',
+        '=== FUT404DS setup invocation ',
         'IsRecognizedProductProcess(process, processName',
         'FileVersionInfo.GetVersionInfo(executablePath)',
         'EnsureDirectoryPathHasNoReparsePoints(InstallerLogRoot)',
@@ -294,14 +294,14 @@ def validate_setup_actions(setup_actions: str, setup_mutation_ownership: str) ->
     ]:
         if contract not in setup_actions:
             raise SystemExit("Setup action safety contract missing: " + contract)
-    if 'SetValue("DS4WindowsSetupResume"' in setup_actions:
+    if 'SetValue("FUT404DSSetupResume"' in setup_actions:
         raise SystemExit("Setup must not create a custom HKLM RunOnce entry.")
 
 
 def validate_startup_recovery(recovery: str, bundle_source: str) -> None:
     """Require the production resume boundary, in addition to behavior tests."""
     for contract in (
-        '"--resume-startup-setup"', '"DS4Windows Setup Resume.lnk"',
+        '"--resume-startup-setup"', '"FUT404DS Setup Resume.lnk"',
         'pending.TargetSid', 'pending.BootSessionId', 'previousAttempt',
         'Guid.TryParseExact(pending.SnapshotId, "N"', 'ExpectedExecutable(pending)',
         'RequirePlainPath(path)', 'ExecutableSha256', 'VerifyExecutable(',
@@ -341,16 +341,16 @@ def main() -> int:
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     if (
         manifest.get("schema") != 1
-        or manifest.get("product") != "DS4Windows"
+        or manifest.get("product") != "FUT404DS"
         or manifest.get("architecture") != "x64"
         or not isinstance(manifest.get("files"), list)
     ):
         raise SystemExit("Installer package manifest metadata is invalid.")
-    release_id = (args.publish_root / "DS4Windows.release").read_text(
+    release_id = (args.publish_root / "FUT404DS.release").read_text(
         encoding="utf-8-sig"
     ).strip()
     if manifest.get("version") != release_id:
-        raise SystemExit("Package manifest version does not match DS4Windows.release.")
+        raise SystemExit("Package manifest version does not match FUT404DS.release.")
 
     manifest_paths = [entry.get("path") for entry in manifest["files"]]
     if any(not isinstance(path, str) or not path for path in manifest_paths):
@@ -389,7 +389,7 @@ def main() -> int:
 
     generated_wix_path = (
         args.bundle_source.parent.parent
-        / "DS4Windows.Package"
+        / "FUT404DS.Package"
         / "GeneratedFiles.wxs"
     )
     generated_wix_xml = ET.fromstring(
@@ -432,7 +432,7 @@ def main() -> int:
         'Name="InstallHidHide"',
         'Name="InstallFakerInput"',
         'Id="ViiperUsbipSetup"',
-        'Id="DS4WindowsMsi"',
+        'Id="FUT404DSMsi"',
         'Id="PostUninstallCleanup"',
         'Id="CloseRunningApplications"',
         'Id="CloseRunningApplicationsForUninstall"',
@@ -444,9 +444,9 @@ def main() -> int:
         '--target-roaming-appdata',
         'Variable="ManagedInstallRegistered"',
         'Variable="ManagedViiperPresent"',
-        'CacheId="DS4WindowsSetupActionsPreflight-$(var.SetupActionsHash)"',
-        'CacheId="DS4WindowsSetupActionsUninstallPreflight-$(var.SetupActionsHash)"',
-        'CacheId="DS4WindowsSetupActionsInfrastructure-$(var.SetupActionsHash)"',
+        'CacheId="FUT404DSSetupActionsPreflight-$(var.SetupActionsHash)"',
+        'CacheId="FUT404DSSetupActionsUninstallPreflight-$(var.SetupActionsHash)"',
+        'CacheId="FUT404DSSetupActionsInfrastructure-$(var.SetupActionsHash)"',
         'Id="HidHide"',
         'Id="FakerInput"',
         'Vital="yes"',
@@ -470,7 +470,7 @@ def main() -> int:
         "PostUninstallCleanup",
         "CloseRunningApplications",
         "CloseRunningApplicationsForUninstall",
-        "DS4WindowsMsi",
+        "FUT404DSMsi",
         "ViiperUsbipSetup",
     ):
         if package_id not in packages:
@@ -513,7 +513,7 @@ def main() -> int:
     for contract in [
         'Get-FileHash -LiteralPath $setupActions -Algorithm SHA256',
         '-p:SetupActionsHash=$setupActionsHash',
-        'Global\\DS4Windows-Installer-Build',
+        'Global\\FUT404DS-Installer-Build',
         'previous orphaned WiX/MSI build',
         'Publish-InstallerFileAtomically',
         '$pendingInstaller',
@@ -595,11 +595,11 @@ def main() -> int:
                 contract
             )
 
-    product = (args.bundle_source.parent.parent / "DS4Windows.Package" / "Product.wxs").read_text(encoding="utf-8")
+    product = (args.bundle_source.parent.parent / "FUT404DS.Package" / "Product.wxs").read_text(encoding="utf-8")
     for contract in [
         '<MajorUpgrade',
         'Scope="perMachine"',
-        'Root="HKLM" Key="Software\\DS4Windows"',
+        'Root="HKLM" Key="Software\\FUT404DS"',
     ]:
         if contract not in product:
             raise SystemExit("MSI upgrade contract missing: " + contract)
@@ -607,7 +607,7 @@ def main() -> int:
     installer_root = args.bundle_source.parent.parent
     bootstrapper = (
         installer_root
-        / "DS4Windows.Bootstrapper"
+        / "FUT404DS.Bootstrapper"
         / "InstallerApplication.cs"
     ).read_text(encoding="utf-8")
     for contract in [
@@ -622,7 +622,7 @@ def main() -> int:
         "Interlocked.CompareExchange(ref planStarted, 1, 0)",
         'engine.SetVariableString("SetupCorrelationId"',
         'Type.GetTypeFromProgID("Schedule.Service")',
-        'GetTask("RunDS4Windows")',
+        'GetTask("RunFUT404DS")',
         'InstallerStartupTaskPolicy.IsManaged(xml,',
         'running != null && WaitForInstalledDs4Process(executable)',
         'if (TryRunInstalledDs4Task(path)) return;',
@@ -633,15 +633,15 @@ def main() -> int:
                 contract
             )
 
-    helper_plan = (installer_root / "DS4Windows.Bootstrapper" / "UninstallHelperPackagePlan.cs").read_text(encoding="utf-8")
+    helper_plan = (installer_root / "FUT404DS.Bootstrapper" / "UninstallHelperPackagePlan.cs").read_text(encoding="utf-8")
     for contract in ['"PostUninstallCleanup"', '"ViiperUsbipUninstall"',
                      '"CloseRunningApplicationsForUninstall"', 'RequestState.Cache',
                      'relation != RelationType.Upgrade', 'infrastructureRecoveryPass']:
         if contract not in helper_plan:
             raise SystemExit("Uninstall helper caching contract missing: " + contract)
 
-    setup_actions = (installer_root / "DS4Windows.SetupActions" / "Program.cs").read_text(encoding="utf-8")
-    setup_mutation_ownership = (installer_root / "DS4Windows.SetupActions" / "SetupMutationOwnership.cs").read_text(encoding="utf-8")
+    setup_actions = (installer_root / "FUT404DS.SetupActions" / "Program.cs").read_text(encoding="utf-8")
+    setup_mutation_ownership = (installer_root / "FUT404DS.SetupActions" / "SetupMutationOwnership.cs").read_text(encoding="utf-8")
     validate_setup_actions(setup_actions, setup_mutation_ownership)
     validate_startup_recovery(
         (installer_root / "StartupSetupState.cs").read_text(encoding="utf-8"),
@@ -654,7 +654,7 @@ def main() -> int:
         / "install-viiper-backend.ps1"
     ).read_text(encoding="utf-8")
     for contract in [
-        '"Global\\DS4Windows-VIIPER-Setup"',
+        '"Global\\FUT404DS-VIIPER-Setup"',
         "Test-SafePackageRelativePath",
         "Assert-SafeManagedDirectory",
         "Install-ViiperAtomically",
@@ -680,7 +680,7 @@ def main() -> int:
         '[Xml.XmlDocument]::new()',
         '"InteractiveToken"',
         '"HighestAvailable"',
-        '"DS4Windows managed startup task v1"',
+        '"FUT404DS managed startup task v1"',
         'Register-ManagedStartupTaskPair',
         'Remove-ManagedStartupTaskPair',
         'Configure-StartupTasksForSetup',
@@ -731,10 +731,10 @@ def main() -> int:
                 "legacy network acquisition found: " + contract
             )
 
-    bootstrapper = (installer_root / "DS4Windows.Bootstrapper" / "InstallerApplication.cs").read_text(encoding="utf-8")
+    bootstrapper = (installer_root / "FUT404DS.Bootstrapper" / "InstallerApplication.cs").read_text(encoding="utf-8")
     for contract in [
         'command.Resume == ResumeType.Reboot',
-        r'@"Global\DS4Windows-Installer-Transaction"',
+        r'@"Global\FUT404DS-Installer-Transaction"',
         'if (command.Resume != ResumeType.Reboot)',
         'result = 3010;',
         'CloseWithCurrentResult()',
@@ -760,7 +760,7 @@ def main() -> int:
         if contract not in bootstrapper:
             raise SystemExit("Bootstrapper lifecycle contract missing: " + contract)
 
-    probe = (installer_root / "DS4Windows.Bootstrapper" / "InfrastructureProbe.cs").read_text(encoding="utf-8")
+    probe = (installer_root / "FUT404DS.Bootstrapper" / "InfrastructureProbe.cs").read_text(encoding="utf-8")
     for contract in [
         '"InfrastructureState"',
         'BeginOutputReadLine()',
@@ -826,7 +826,7 @@ def main() -> int:
 
     setup_manager = (
         args.bundle_source.parent.parent.parent
-        / "DS4Windows"
+        / "FUT404DS"
         / "DS4Control"
         / "Viiper"
         / "ViiperSetupManager.cs"
@@ -878,7 +878,7 @@ def main() -> int:
         "viiper-setup-host.log",
         'startInfo.ArgumentList.Add("-Yes")',
         "definition.Triggers.Add(new LogonTrigger())",
-        "progress = new DS4WinWPF.DS4Forms.ViiperSetupProgress(",
+        "progress = new FUT404DSWPF.DS4Forms.ViiperSetupProgress(",
         "progress.WaitForProcess(process)",
         'startInfo.ArgumentList.Add("-CorrelationId")',
     ]:
@@ -895,7 +895,7 @@ def main() -> int:
     for contract in [
         "is_reparse_point",
         "Refusing to replace output containing a reparse point",
-        ".ds4windows-managed-files.txt",
+        ".fut404ds-managed-files.txt",
     ]:
         if contract not in post_build:
             raise SystemExit(
@@ -908,21 +908,21 @@ def main() -> int:
 def validate_localization_package(publish_root: Path) -> None:
     """Keep both application and dependency satellites in .NET's standard layout."""
     runtime = json.loads(
-        (publish_root / "DS4Windows.runtimeconfig.json").read_text(encoding="utf-8-sig")
+        (publish_root / "FUT404DS.runtimeconfig.json").read_text(encoding="utf-8-sig")
     )
     if runtime.get("runtimeOptions", {}).get("additionalProbingPaths"):
         raise SystemExit("Published localization must not depend on additional probing paths.")
 
     deps = json.loads(
-        (publish_root / "DS4Windows.deps.json").read_text(encoding="utf-8-sig")
+        (publish_root / "FUT404DS.deps.json").read_text(encoding="utf-8-sig")
     )
     validated: set[str] = set()
     for target in deps.get("targets", {}).values():
         for library_name, library in target.items():
             owner = library_name.split("/", 1)[0]
-            if owner not in {"DS4Windows", "TaskScheduler"}:
+            if owner not in {"FUT404DS", "TaskScheduler"}:
                 continue
-            expected_name = ("DS4Windows.resources.dll" if owner == "DS4Windows"
+            expected_name = ("FUT404DS.resources.dll" if owner == "FUT404DS"
                              else "Microsoft.Win32.TaskScheduler.resources.dll")
             for asset, metadata in library.get("resources", {}).items():
                 culture = metadata.get("locale", "")
@@ -933,7 +933,7 @@ def validate_localization_package(publish_root: Path) -> None:
                 if not (publish_root / culture / expected_name).is_file():
                     raise SystemExit("Missing standard-layout satellite: " + culture + "/" + expected_name)
                 validated.add(owner)
-    if validated != {"DS4Windows", "TaskScheduler"}:
+    if validated != {"FUT404DS", "TaskScheduler"}:
         raise SystemExit("Package dependency metadata omits application or TaskScheduler satellites.")
 
 

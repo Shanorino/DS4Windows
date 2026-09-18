@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 public sealed partial class Switch2RuntimeInputDevice
 {

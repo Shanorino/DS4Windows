@@ -1,11 +1,11 @@
 using System.IO;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -383,7 +383,7 @@ public sealed class Switch2ModeShiftTests
         roundTrip.MapTo(target);
         Assert.AreEqual(configured, target.switch2ModeShiftSettings[0]);
 
-        using var legacyReader = new StringReader("<DS4Windows />");
+        using var legacyReader = new StringReader("<FUT404DS />");
         var legacy = (ProfileDTO)serializer.Deserialize(legacyReader);
         legacy.DeviceIndex = 0;
         var legacyTarget = new BackingStore();

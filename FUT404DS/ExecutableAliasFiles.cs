@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal static class ExecutableAliasFiles
 {
@@ -94,7 +94,7 @@ internal static class ExecutableAliasFiles
         // Renaming an apphost does not rename its embedded managed assembly.
         // Hand-renamed hosts can still use the package's canonical sidecars.
         return File.Exists(aliasSidecar) ? aliasSidecar :
-            Path.Combine(Path.GetDirectoryName(executablePath), "DS4Windows" + suffix);
+            Path.Combine(Path.GetDirectoryName(executablePath), "FUT404DS" + suffix);
     }
 
     private static string[] GetAliasPaths(string executablePath, string name)
@@ -104,7 +104,7 @@ internal static class ExecutableAliasFiles
         if (string.IsNullOrWhiteSpace(name) || name != name.Trim() ||
             name.EndsWith('.') || name.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0 ||
             name is "." or ".." ||
-            string.Equals(name, "DS4Windows", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(name, "FUT404DS", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(name, Path.GetFileNameWithoutExtension(executablePath), StringComparison.OrdinalIgnoreCase) ||
             string.Equals(stem, "CON", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(stem, "PRN", StringComparison.OrdinalIgnoreCase) ||

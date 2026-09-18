@@ -1,6 +1,6 @@
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Defines when a physical Bluetooth controller microphone has a real

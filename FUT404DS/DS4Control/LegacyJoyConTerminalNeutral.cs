@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>Release a paused logical owner's output without rebuilding its pad.</summary>
 internal static class LegacyJoyConTerminalNeutral

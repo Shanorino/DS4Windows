@@ -1,11 +1,11 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Control;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Control;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]

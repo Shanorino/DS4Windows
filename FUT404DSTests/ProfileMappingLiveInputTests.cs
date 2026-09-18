@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Integration contracts complement the live control's snapshot and STA tests.
 [TestClass]
@@ -68,7 +68,7 @@ public sealed class ProfileMappingLiveInputTests
         document.Descendants().Single(node => (string)node.Attribute(Xaml + "Name") == name);
 
     private static string SourcePath(string name, [CallerFilePath] string testPath = "") =>
-        Path.Combine(Path.GetDirectoryName(testPath), "..", "DS4Windows", "DS4Forms", name);
+        Path.Combine(Path.GetDirectoryName(testPath), "..", "FUT404DS", "DS4Forms", name);
 
     private static string Between(string source, string start, string end)
     {

@@ -1,8 +1,8 @@
 using System.Reflection;
-using DS4Windows;
+using FUT404DS;
 using NAudio.Wave;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class DualSenseUsbSpeakerSampleRateTests

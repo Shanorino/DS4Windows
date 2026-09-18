@@ -1,7 +1,7 @@
-using DS4Windows;
+using FUT404DS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class DualShock4EffectTransportTests
@@ -39,7 +39,7 @@ public class DualShock4EffectTransportTests
         while (directory != null)
         {
             string candidate = Path.Combine(directory.FullName,
-                "DS4Windows", "DS4Library", "DS4Device.cs");
+                "FUT404DS", "DS4Library", "DS4Device.cs");
             if (File.Exists(candidate)) { path = candidate; break; }
             directory = directory.Parent;
         }

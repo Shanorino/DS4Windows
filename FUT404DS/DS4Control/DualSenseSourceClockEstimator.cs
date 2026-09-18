@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Estimates the long-run production rate of a block-based PCM source.

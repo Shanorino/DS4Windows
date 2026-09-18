@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -25,15 +25,15 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
-using static DS4Windows.Global;
+using static FUT404DS.Global;
 using System.Drawing; // Point struct
 using Sensorit.Base;
-using DS4WinWPF.DS4Control;
-using DS4WinWPF.DS4Forms.ViewModels;
-using DS4Windows.Switch2;
+using FUT404DSWPF.DS4Control;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using FUT404DS.Switch2;
 using ThreadState = System.Threading.ThreadState;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class Mapping
     {
@@ -4803,7 +4803,7 @@ namespace DS4Windows
                                     }
 
                                     DS4Device d = ctrl.DS4Controllers[device];
-                                    string prolog = string.Format(DS4WinWPF.Properties.Resources.UsingProfile,
+                                    string prolog = string.Format(FUT404DSWPF.Properties.Resources.UsingProfile,
                                         (device + 1).ToString(), action.details, $"{d.Battery}");
 
                                     AppLogger.LogToGui(prolog, false);
@@ -5293,7 +5293,7 @@ namespace DS4Windows
 
                             string profileName = untriggeraction[device].prevProfileName;
                             DS4Device d = ctrl.DS4Controllers[device];
-                            string prolog = string.Format(DS4WinWPF.Properties.Resources.UsingProfile,
+                            string prolog = string.Format(FUT404DSWPF.Properties.Resources.UsingProfile,
                                 (device + 1).ToString(), (profileName == string.Empty ? ProfilePath[device] : profileName), $"{d.Battery}");
 
                             AppLogger.LogToGui(prolog, false);
@@ -7087,7 +7087,7 @@ namespace DS4Windows
             return result;
         }
 
-        // Calibrate sixaxis steering wheel emulation. Use DS4Windows configuration screen to start a calibration or press a special action key (if defined)
+        // Calibrate sixaxis steering wheel emulation. Use FUT404DS configuration screen to start a calibration or press a special action key (if defined)
         private static void SAWheelEmulationCalibration(int device, DS4StateExposed exposedState, ControlService ctrl, DS4State currentDeviceState, DS4Device controller)
         {
             int gyroAccelX, gyroAccelZ;
@@ -7267,7 +7267,7 @@ namespace DS4Windows
                     {
                         AppLogger.LogToGui($"Controller {1 + device} sixaxis steering wheel calibration data missing. It is recommended to run steering wheel calibration process by pressing SASteeringWheelEmulationCalibration special action key. Using estimated values until the controller is calibrated at least once.", false);
 
-                        // Use current controller position as "center point". Assume DS4Windows was started while controller was hold in center position (yes, dangerous assumption but can't do much until controller is calibrated)
+                        // Use current controller position as "center point". Assume FUT404DS was started while controller was hold in center position (yes, dangerous assumption but can't do much until controller is calibrated)
                         controller.wheelCenterPoint.X = gyroAccelX;
                         controller.wheelCenterPoint.Y = gyroAccelZ;
 

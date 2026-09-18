@@ -59,7 +59,7 @@ foreach ($functionName in @(
 }
 
 $testRoot = Join-Path ([IO.Path]::GetTempPath()) (
-    "DS4Windows-Usbip-Reboot-Test-" + [Guid]::NewGuid().ToString("N"))
+    "FUT404DS-Usbip-Reboot-Test-" + [Guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Path $testRoot | Out-Null
 
 try {
@@ -90,7 +90,7 @@ try {
     }
     $script:FakeStartupTasks = @{
         RunVIIPER = $true
-        RunDS4Windows = $true
+        RunFUT404DS = $true
     }
     function Test-HighestLogonTask {
         param(
@@ -129,7 +129,7 @@ try {
         return [pscustomobject]@{
             TaskPath = "\"
             TaskName = $taskName
-            Description = "DS4Windows managed startup task v1"
+            Description = "FUT404DS managed startup task v1"
             Settings = [pscustomobject]@{
                 Enabled = $script:FakeStartupTasks[$taskName]
             }
@@ -222,19 +222,19 @@ try {
 
     Suspend-StartupTasksUntilInfrastructureReady `
         (Join-Path $testRoot "viiper.exe") `
-        (Join-Path $testRoot "DS4Windows.exe")
+        (Join-Path $testRoot "FUT404DS.exe")
     if ($script:FakeStartupTasks.RunVIIPER -or
-            $script:FakeStartupTasks.RunDS4Windows) {
+            $script:FakeStartupTasks.RunFUT404DS) {
         throw "Startup tasks could race phase-two USB-IP setup after reboot."
     }
 
     $script:FakeStartupTasks.RunVIIPER = $true
-    $script:FakeStartupTasks.RunDS4Windows = $true
+    $script:FakeStartupTasks.RunFUT404DS = $true
     Set-InfrastructureStartupFailClosed `
         (Join-Path $testRoot "viiper.exe") `
-        (Join-Path $testRoot "DS4Windows.exe")
+        (Join-Path $testRoot "FUT404DS.exe")
     if ($script:FakeStartupTasks.RunVIIPER -or
-            $script:FakeStartupTasks.RunDS4Windows) {
+            $script:FakeStartupTasks.RunFUT404DS) {
         throw "Failed setup could leave an owned startup task enabled."
     }
 

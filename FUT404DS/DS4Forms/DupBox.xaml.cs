@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for DupBox.xaml
@@ -56,8 +56,8 @@ namespace DS4WinWPF.DS4Forms
             if (!string.IsNullOrWhiteSpace(profile) &&
                 profile.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) == -1)
             {
-                System.IO.File.Copy(DS4Windows.Global.appdatapath + "\\Profiles\\" + oldfilename + ".xml",
-                DS4Windows.Global.appdatapath + "\\Profiles\\" + profile + ".xml", true);
+                System.IO.File.Copy(FUT404DS.Global.appdatapath + "\\Profiles\\" + oldfilename + ".xml",
+                FUT404DS.Global.appdatapath + "\\Profiles\\" + profile + ".xml", true);
                 Save?.Invoke(this, profile);
             }
             else

@@ -45,7 +45,7 @@
         <value>决定使用蓝牙连接的DS4硬件的回报率（当配置保存时应用）</value>
     </data>
     <data name="CannotMoveFiles" xml:space="preserve">
-        <value>无法移动文件到新位置，请把DS4Tool文件夹重命名为"DS4Windows"</value>
+        <value>无法移动文件到新位置，请把DS4Tool文件夹重命名为"FUT404DS"</value>
     </data>
     <data name="CannotWriteHere" xml:space="preserve">
         <value>无法在当前位置写入，把设置复制到appdata？</value>
@@ -66,7 +66,7 @@
         <value>这会断开所有控制器的链接。继续？</value>
     </data>
     <data name="CloseDS4W" xml:space="preserve">
-        <value>关闭DS4Windows？</value>
+        <value>关闭FUT404DS？</value>
     </data>
     <data name="CloseMinimize" xml:space="preserve">
         <value>关闭主窗口会最小化应用。需要到通知栏图标关闭应用。</value>
@@ -93,7 +93,7 @@
         <value>控制器*Mac address*被移除或断开连接</value>
     </data>
     <data name="CopyComplete" xml:space="preserve">
-        <value>复制完成，请重启DS4Windows并从程序目录中删除设置</value>
+        <value>复制完成，请重启FUT404DS并从程序目录中删除设置</value>
     </data>
     <data name="CopyFullColor" xml:space="preserve">
         <value>点击来复制所有颜色</value>
@@ -132,10 +132,10 @@
         <value>下</value>
     </data>
     <data name="DS4Update" xml:space="preserve">
-        <value>DS4Windows更新已可用！</value>
+        <value>FUT404DS更新已可用！</value>
     </data>
-    <data name="DS4WindowsCannotEditHere" xml:space="preserve">
-        <value>DS4Windows无法编辑这里的设置，将关闭窗口</value>
+    <data name="FUT404DSCannotEditHere" xml:space="preserve">
+        <value>FUT404DS无法编辑这里的设置，将关闭窗口</value>
     </data>
     <data name="EditProfile" xml:space="preserve">
         <value>编辑</value>
@@ -200,8 +200,8 @@
     <data name="HoverOverItems" xml:space="preserve">
         <value>悬浮于选项上来查看简介或详细信息</value>
     </data>
-    <data name="IfRemovingDS4Windows" xml:space="preserve">
-        <value>如果要删除DS4Windows，你可以删除这些文件夹中的设置</value>
+    <data name="IfRemovingFUT404DS" xml:space="preserve">
+        <value>如果要删除FUT404DS，你可以删除这些文件夹中的设置</value>
     </data>
     <data name="InputDelay" xml:space="preserve">
         <value>输入延迟： {0:0.##} ms</value>
@@ -225,7 +225,7 @@
         <value>在关闭后保持这个窗口尺寸</value>
     </data>
     <data name="LanguagePackApplyRestartRequired" xml:space="preserve">
-        <value>语言包仅会在DS4Windows重启后生效</value>
+        <value>语言包仅会在FUT404DS重启后生效</value>
     </data>
     <data name="LatencyNotOverTen" xml:space="preserve">
         <value>控制器 *number* 的延迟现在已在10ms以内</value>
@@ -312,7 +312,7 @@
         <value>选择输出虚拟手柄类型（在配置文件保存时应用）</value>
     </data>
     <data name="PleaseDownloadUpdater" xml:space="preserve">
-        <value>请现在下载 Updater，并放在文件夹中然后重命名为 DS4Updater.exe （x86设备），然后重新检查更新。DS4Windows会在这个窗口关闭后尝试打开DS4Updater下载页面。</value>
+        <value>请现在下载 Updater，并放在文件夹中然后重命名为 DS4Updater.exe （x86设备），然后重新检查更新。FUT404DS会在这个窗口关闭后尝试打开DS4Updater下载页面。</value>
     </data>
     <data name="PleaseImport" xml:space="preserve">
         <value>请导入或创建一个配置。</value>
@@ -333,7 +333,7 @@
         <value>当通过USB连接时自动禁用蓝牙</value>
     </data>
     <data name="QuitOtherPrograms" xml:space="preserve">
-        <value>在启用隐藏DS4控制器之前，你必须退出其他 UWP 应用 (Netflix), Steam, Uplay, Edge, NVIDIA IN-GAME。详见：https://github.com/Ryochan7/DS4Windows/wiki/Exclusive-Mode-(Hide-DS4-Controller-config-option)-tips-and-issues</value>
+        <value>在启用隐藏DS4控制器之前，你必须退出其他 UWP 应用 (Netflix), Steam, Uplay, Edge, NVIDIA IN-GAME。详见：https://github.com/Ryochan7/FUT404DS/wiki/Exclusive-Mode-(Hide-DS4-Controller-config-option)-tips-and-issues</value>
     </data>
     <data name="RecordText" xml:space="preserve">
         <value>录制</value>
@@ -342,7 +342,7 @@
         <value>右键单击以设置一组控制的预设</value>
     </data>
     <data name="RunAtStartup" xml:space="preserve">
-        <value>让Windows在登录后启动DS4Windows</value>
+        <value>让Windows在登录后启动FUT404DS</value>
     </data>
     <data name="SASteeringWheelEmulationCalibrate" xml:space="preserve">
         <value>六轴方向盘模拟的校准</value>
@@ -395,8 +395,8 @@
     <data name="StopLText" xml:space="preserve">
         <value>停止轻震动</value>
     </data>
-    <data name="StoppedDS4Windows" xml:space="preserve">
-        <value>停止DS4Windows</value>
+    <data name="StoppedFUT404DS" xml:space="preserve">
+        <value>停止FUT404DS</value>
     </data>
     <data name="StoppingDS4" xml:space="preserve">
         <value>停止DS4 控制器输入</value>
@@ -468,7 +468,7 @@
         <value>在此处输入新配置名字</value>
     </data>
     <data name="UACTask" xml:space="preserve">
-        <value>你需要以管理员模式运行DS4Windows来激活这个模式</value>
+        <value>你需要以管理员模式运行FUT404DS来激活这个模式</value>
     </data>
     <data name="UdpServer" xml:space="preserve">
         <value>启用UDP服务器。服务器会监听端口和地址。地址选项：127.0.0.1 仅本地 | 0.0.0.0 全部地址 | 指定主机名或IP地址</value>
@@ -480,7 +480,7 @@
         <value>上</value>
     </data>
     <data name="UpToDate" xml:space="preserve">
-        <value>DS4Windows已经是最新版本</value>
+        <value>FUT404DS已经是最新版本</value>
     </data>
     <data name="UseControllerForMapping" xml:space="preserve">
         <value>你也可以用控制器来改变设置</value>

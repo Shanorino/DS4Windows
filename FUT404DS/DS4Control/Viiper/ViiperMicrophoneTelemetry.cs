@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Collects diagnostic-only microphone pipeline observations. All counters

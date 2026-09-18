@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>Periksa Kemaskini Sekarang</value>
   </data>
   <data name="CheckUpdateStartup" xml:space="preserve">
-    <value>Semak Kemas Kini Pada Permulaan DS4Windows</value>
+    <value>Semak Kemas Kini Pada Permulaan FUT404DS</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Bersihkan</value>
@@ -348,9 +348,9 @@ Perubahan pada pilihan ini berkuat kuasa pada masa sambungan pad permainan.</val
     <value>Nama boleh laku tersuai</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Sesetengah permainan melaksanakan sekatan yang menyebabkan input DS4 diabaikan jika permainan mengesan sama ada 'DS4Windows.exe' atau 'InputMapper.exe' berjalan pada masa itu. Penyelesaian kepada sekatan itu ialah menamakan semula 'DS4Windows.exe' supaya semakan dalam permainan gagal. Menentukan nama exe tersuai di sini membolehkan DS4Updater mengemas kini salinan tersuai DS4Windows secara automatik kepada nama fail yang dikehendaki. Pastikan anda meninggalkan sambungan.
+    <value>Sesetengah permainan melaksanakan sekatan yang menyebabkan input DS4 diabaikan jika permainan mengesan sama ada 'FUT404DS.exe' atau 'InputMapper.exe' berjalan pada masa itu. Penyelesaian kepada sekatan itu ialah menamakan semula 'FUT404DS.exe' supaya semakan dalam permainan gagal. Menentukan nama exe tersuai di sini membolehkan DS4Updater mengemas kini salinan tersuai FUT404DS secara automatik kepada nama fail yang dikehendaki. Pastikan anda meninggalkan sambungan.
 
-Contoh: whyme_DS4Windows</value>
+Contoh: whyme_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>XInputChecker</value>
@@ -437,13 +437,13 @@ Contoh: whyme_DS4Windows</value>
     <value>Penentukuran Dunia Sebenar</value>
   </data>
   <data name="ViGEmPluginFailure" xml:space="preserve">
-      <value>Pemalam Peranti ViGEm Gagal. Kod Ralat {0}. Mungkin masalah dalaman ViGEmBus. Menutup sambungan. Jika isu berterusan, sila tutup DS4Windows dan kemudian but semula Windows.</value>
+      <value>Pemalam Peranti ViGEm Gagal. Kod Ralat {0}. Mungkin masalah dalaman ViGEmBus. Menutup sambungan. Jika isu berterusan, sila tutup FUT404DS dan kemudian but semula Windows.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Pemeriksaan integriti data gagal untuk peranti nirwayar. Menutup peranti.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>.NET 5 Runtime tidak dikesan pada sistem anda. Sila muat turun dan pasang .NET 5 Runtime untuk memastikan keserasian dengan binaan DS4Windows akan datang. Anda akan dialihkan ke halaman muat turun .NET 5 Runtime selepas menutup tetingkap ini.</value>
+    <value>.NET 5 Runtime tidak dikesan pada sistem anda. Sila muat turun dan pasang .NET 5 Runtime untuk memastikan keserasian dengan binaan FUT404DS akan datang. Anda akan dialihkan ke halaman muat turun .NET 5 Runtime selepas menutup tetingkap ini.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Sila kemas kini .NET Runtime</value>
@@ -497,7 +497,7 @@ Contoh: whyme_DS4Windows</value>
     <value>Dalam sesetengah situasi, ia mungkin berguna untuk mengehadkan nilai maksimum yang dikeluarkan oleh output kayu analog. Output Maks membolehkan pendikitan nilai output akhir kayu analog.</value>
   </data>
   <data name="AntiDeadzoneTooltip" xml:space="preserve">
-    <value>Anti-deadzone bertindak sebagai offset untuk digunakan dengan paksi untuk menandakan nilai output minimum yang dijana selepas paksi meninggalkan zon mati yang ditetapkan. Ini terutamanya bertujuan untuk membantu memetakan paksi kepada nilai zon mati yang ditetapkan yang digunakan untuk paksi dalam permainan video. Sebagai contoh, zon mati biasa yang ditetapkan untuk XInput LS dalam permainan video ialah sekitar 8000 (25%). Dengan tiada anti-deadzone ditetapkan, paksi perlu bergerak melepasi zon mati yang ditetapkan dalam DS4Windows bersama-sama dengan zon mati paksi yang ditetapkan permainan.</value>
+    <value>Anti-deadzone bertindak sebagai offset untuk digunakan dengan paksi untuk menandakan nilai output minimum yang dijana selepas paksi meninggalkan zon mati yang ditetapkan. Ini terutamanya bertujuan untuk membantu memetakan paksi kepada nilai zon mati yang ditetapkan yang digunakan untuk paksi dalam permainan video. Sebagai contoh, zon mati biasa yang ditetapkan untuk XInput LS dalam permainan video ialah sekitar 8000 (25%). Dengan tiada anti-deadzone ditetapkan, paksi perlu bergerak melepasi zon mati yang ditetapkan dalam FUT404DS bersama-sama dengan zon mati paksi yang ditetapkan permainan.</value>
   </data>
   <data name="StickInputCurveTooltip" xml:space="preserve">
     <value>TETAPAN USANG/LAMA. Cuba gunakan lengkung berdasarkan koordinat input mentah sebelum sebarang maklumat zon mati digunakan. Wonky</value>
@@ -572,7 +572,7 @@ Tetapan putaran bertujuan untuk membantu membetulkan orientasi kayu(stick) analo
 
 - Dilumpuhkan: derum akan diskala semula secara asli oleh pengawal mengikut tahap kuasa yang ditentukan (kualiti lebih baik)
 
-- Didayakan: kedua-dua skala semula derum generik DS4Windows dan kawalan asli DualSense akan aktif</value>
+- Didayakan: kedua-dua skala semula derum generik FUT404DS dan kawalan asli DualSense akan aktif</value>
   </data>
   <data name="DualSRumbleModes_Tip" xml:space="preserve">
     <value>Mod Tepat (disyorkan):
@@ -655,8 +655,8 @@ Dilumpuhkan:
   <data name="SwipeTouchpadToSwitchProfiles" xml:space="preserve">
     <value>Leret Pad Sentuh Untuk Menukar Profil</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>Matikan DS4Windows Buat Sementara</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>Matikan FUT404DS Buat Sementara</value>
   </data>
   <data name="Unplug" xml:space="preserve">
     <value>Cabut Plag</value>
@@ -746,7 +746,7 @@ Dilumpuhkan:
     <value>Sokongan Alat Kawalan DS3</value>
   </data>
   <data name="FirstLaunch.DeviceIntroText" xml:space="preserve">
-    <value>Disebabkan oleh pemeta lain yang mendayakan sokongan untuk berbilang jenis peranti secara lalai (Input Steam), DS4Windows hanya mendayakan sokongan untuk membaca daripada alat kawalan DS4 secara lalai. Anda boleh menentukan sokongan pemeta untuk jenis peranti lain yang disokong di sini. Berhati-hati apabila menggunakan DS4Windows dengan pemeta lain yang mungkin berjalan pada masa yang sama.</value>
+    <value>Disebabkan oleh pemeta lain yang mendayakan sokongan untuk berbilang jenis peranti secara lalai (Input Steam), FUT404DS hanya mendayakan sokongan untuk membaca daripada alat kawalan DS4 secara lalai. Anda boleh menentukan sokongan pemeta untuk jenis peranti lain yang disokong di sini. Berhati-hati apabila menggunakan FUT404DS dengan pemeta lain yang mungkin berjalan pada masa yang sama.</value>
   </data>
   <data name="FirstLaunch.DS3EnableCkbLabel" xml:space="preserve">
     <value>Sokongan Peranti DS3</value>

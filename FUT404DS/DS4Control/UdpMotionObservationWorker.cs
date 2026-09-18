@@ -3,7 +3,7 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Threading;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal readonly record struct UdpMotionObservationPolicy(
     bool Smooth, double MinCutoff, double Beta, int YawSensitivity);

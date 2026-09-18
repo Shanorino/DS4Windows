@@ -1,7 +1,7 @@
 using System.Text.Json;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class XboxOneAuthorizedPersonaConfigurationTests

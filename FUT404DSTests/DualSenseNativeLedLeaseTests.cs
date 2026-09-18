@@ -1,10 +1,10 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualSenseNativeLedLeaseTests
@@ -498,7 +498,7 @@ namespace DS4WindowsTests
         {
             const BindingFlags instanceFields = BindingFlags.Instance |
                 BindingFlags.NonPublic;
-            ControlService previousHub = DS4Windows.Program.rootHub;
+            ControlService previousHub = FUT404DS.Program.rootHub;
             try
             {
                 var hidDevice = (HidDevice)
@@ -514,7 +514,7 @@ namespace DS4WindowsTests
                         typeof(ControlService));
                 hub.DS4Controllers = new DS4Device[4];
                 hub.DS4Controllers[0] = device;
-                DS4Windows.Program.rootHub = hub;
+                FUT404DS.Program.rootHub = hub;
 
                 var output = new ViiperOutDevice(OutContType.None,
                     ViiperVirtualDeviceType.DualSense);
@@ -589,7 +589,7 @@ namespace DS4WindowsTests
             }
             finally
             {
-                DS4Windows.Program.rootHub = previousHub;
+                FUT404DS.Program.rootHub = previousHub;
             }
         }
 
@@ -599,7 +599,7 @@ namespace DS4WindowsTests
         {
             const BindingFlags fields = BindingFlags.Instance |
                 BindingFlags.NonPublic;
-            ControlService previousHub = DS4Windows.Program.rootHub;
+            ControlService previousHub = FUT404DS.Program.rootHub;
             try
             {
                 var hid = (HidDevice)RuntimeHelpers.GetUninitializedObject(
@@ -613,7 +613,7 @@ namespace DS4WindowsTests
                     typeof(ControlService));
                 hub.DS4Controllers = new DS4Device[4];
                 hub.DS4Controllers[0] = device;
-                DS4Windows.Program.rootHub = hub;
+                FUT404DS.Program.rootHub = hub;
 
                 var output = new ViiperOutDevice(OutContType.None,
                     ViiperVirtualDeviceType.DualSense);
@@ -728,7 +728,7 @@ namespace DS4WindowsTests
             }
             finally
             {
-                DS4Windows.Program.rootHub = previousHub;
+                FUT404DS.Program.rootHub = previousHub;
             }
         }
 
@@ -738,7 +738,7 @@ namespace DS4WindowsTests
         {
             const BindingFlags fields = BindingFlags.Instance |
                 BindingFlags.NonPublic;
-            ControlService previousHub = DS4Windows.Program.rootHub;
+            ControlService previousHub = FUT404DS.Program.rootHub;
             try
             {
                 var hidA = (HidDevice)RuntimeHelpers.GetUninitializedObject(
@@ -757,7 +757,7 @@ namespace DS4WindowsTests
                     typeof(ControlService));
                 hub.DS4Controllers = new DS4Device[4];
                 hub.DS4Controllers[0] = deviceA;
-                DS4Windows.Program.rootHub = hub;
+                FUT404DS.Program.rootHub = hub;
 
                 var output = new ViiperOutDevice(OutContType.None,
                     ViiperVirtualDeviceType.DualSense);
@@ -793,7 +793,7 @@ namespace DS4WindowsTests
             }
             finally
             {
-                DS4Windows.Program.rootHub = previousHub;
+                FUT404DS.Program.rootHub = previousHub;
             }
         }
 

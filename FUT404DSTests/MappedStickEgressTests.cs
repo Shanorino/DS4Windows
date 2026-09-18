@@ -1,8 +1,8 @@
 using System.Buffers.Binary;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -66,7 +66,7 @@ public sealed class MappedStickEgressTests
         var fields = new DS4StateFieldMapping();
         var exposed = new DS4StateExposed(mapped);
         var neutralOsc = new DS4State();
-        var debouncer = new DS4WinWPF.DS4Control.Debouncer(TimeSpan.FromMilliseconds(1));
+        var debouncer = new FUT404DSWPF.DS4Control.Debouncer(TimeSpan.FromMilliseconds(1));
         debouncer.AddDebouncer(nameof(DS4State.Cross));
         var settings = DS4StickProfileTransformTests.NoopSettings(true);
         var curve = new BezierCurve();

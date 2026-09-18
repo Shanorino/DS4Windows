@@ -2,7 +2,7 @@ using System;
 using System.Buffers.Binary;
 using System.IO;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// Original Switch controller SPI calibration, not the Switch 2 protocol.
@@ -94,7 +94,7 @@ namespace DS4Windows.InputDevices
                 int maximum = center + above;
                 if (!userCalibration)
                 {
-                    // Keep the existing DS4Windows factory cutoff behavior.
+                    // Keep the existing FUT404DS factory cutoff behavior.
                     minimum = (int)(minimum * 1.04);
                     maximum = (int)(maximum * 0.96);
                 }

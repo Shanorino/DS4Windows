@@ -1,6 +1,6 @@
 using Switch2BluetoothAudioProbe;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class Switch2BluetoothAudioProbeTests
@@ -25,7 +25,7 @@ public class Switch2BluetoothAudioProbeTests
     public void HeadphoneOutputIsNotTheRumbleCharacteristic()
     {
         Assert.AreEqual(new Guid("cc483f51-9258-427d-a939-630c31f72b06"), ProbeProtocol.HeadsetOutputUuid);
-        Assert.AreNotEqual(DS4Windows.Switch2.Switch2BluetoothHdRumblePhysicalWriter.ProController2CharacteristicUuid,
+        Assert.AreNotEqual(FUT404DS.Switch2.Switch2BluetoothHdRumblePhysicalWriter.ProController2CharacteristicUuid,
             ProbeProtocol.HeadsetOutputUuid);
     }
 

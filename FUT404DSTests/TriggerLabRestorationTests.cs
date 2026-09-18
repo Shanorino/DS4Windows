@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class TriggerLabRestorationTests
@@ -151,7 +151,7 @@ public sealed class TriggerLabRestorationTests
         TriggerEffectSettings LegacySettings);
 
     private static string ReadControlSource([CallerFilePath] string testPath = "") =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(testPath), "..", "DS4Windows",
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(testPath), "..", "FUT404DS",
             "DS4Forms", "TriggerLabControl.xaml.cs"));
 
     private static string Extract(string source, string signature, string next)

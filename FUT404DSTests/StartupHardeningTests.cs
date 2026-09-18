@@ -1,4 +1,4 @@
-using DS4WinWPF;
+using FUT404DSWPF;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog.Config;
 using NLog.Targets;
@@ -6,7 +6,7 @@ using NLog.Targets.Wrappers;
 using System;
 using System.IO;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class StartupHardeningTests
@@ -15,7 +15,7 @@ namespace DS4Windows.Tests
         public void StartupFailureReporterWritesBeforeNLogExists()
         {
             string root = Path.Combine(Path.GetTempPath(),
-                "DS4WindowsTests", Guid.NewGuid().ToString("N"));
+                "FUT404DSTests", Guid.NewGuid().ToString("N"));
             try
             {
                 string path = StartupFailureReporter.Write(

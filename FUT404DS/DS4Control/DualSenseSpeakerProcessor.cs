@@ -1,7 +1,7 @@
 using NAudio.Dsp;
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public enum DualSenseSpeakerCompression : byte
     {

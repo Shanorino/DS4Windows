@@ -1,4 +1,4 @@
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Collapses duplicate WMI suspend/resume notifications into one service

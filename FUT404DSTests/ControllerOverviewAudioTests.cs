@@ -1,16 +1,16 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Forms.ViewModels;
-using DS4WinWPF.DS4Forms;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using FUT404DSWPF.DS4Forms;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -149,7 +149,7 @@ public sealed class ControllerOverviewAudioTests
     {
         for (var root = new DirectoryInfo(AppContext.BaseDirectory); root != null; root = root.Parent)
         {
-            string file = Path.Combine(root.FullName, "DS4Windows", "DS4Forms", "ControllerOverviewControl.xaml");
+            string file = Path.Combine(root.FullName, "FUT404DS", "DS4Forms", "ControllerOverviewControl.xaml");
             if (File.Exists(file)) return XDocument.Load(file);
         }
         throw new FileNotFoundException("Production Overview markup not found.");

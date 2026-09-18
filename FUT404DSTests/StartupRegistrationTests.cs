@@ -1,5 +1,5 @@
-using DS4WinWPF;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DSWPF;
+using FUT404DSWPF.DS4Forms.ViewModels;
 using System.ComponentModel;
 using System.Runtime.ExceptionServices;
 using System.Text.RegularExpressions;
@@ -8,7 +8,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Threading;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -73,9 +73,9 @@ public class StartupRegistrationTests
     }
 
     [DataTestMethod]
-    [DataRow("DS4Windows managed startup task v1", true, true, false, true)]
-    [DataRow("DS4Windows managed startup task v1", false, true, true, false)]
-    [DataRow("DS4Windows managed startup task v1", true, false, true, false)]
+    [DataRow("FUT404DS managed startup task v1", true, true, false, true)]
+    [DataRow("FUT404DS managed startup task v1", false, true, true, false)]
+    [DataRow("FUT404DS managed startup task v1", true, false, true, false)]
     [DataRow("", true, true, true, true)]
     [DataRow("", true, true, false, false)]
     [DataRow("", false, true, true, false)]
@@ -144,8 +144,8 @@ public class StartupRegistrationTests
         Assert.IsTrue(view.RunStartTask);
         Assert.IsFalse(view.CanChangeStartupMode);
         StringAssert.Contains(view.StartupStatusText, "restart Windows");
-        StringAssert.Contains(view.StartupStatusText, "approve DS4Windows setup if prompted");
-        StringAssert.Contains(view.StartupStatusText, "open DS4Windows manually");
+        StringAssert.Contains(view.StartupStatusText, "approve FUT404DS setup if prompted");
+        StringAssert.Contains(view.StartupStatusText, "open FUT404DS manually");
         Assert.AreEqual(System.Windows.Visibility.Visible, view.StartupStatusVisibility);
         view.RunStartProg = true;
         Assert.AreEqual(0, access.Changes,
@@ -188,7 +188,7 @@ public class StartupRegistrationTests
         Assert.IsFalse(view.RunAtStartup);
         Assert.IsTrue(access.State.Enabled);
         StringAssert.Contains(view.StartupStatusText, "choice to turn off automatic startup is saved");
-        StringAssert.Contains(view.StartupStatusText, "Windows may still open DS4Windows");
+        StringAssert.Contains(view.StartupStatusText, "Windows may still open FUT404DS");
         StringAssert.Contains(view.StartupStatusText, "Install / Repair VIIPER");
         Assert.AreEqual(1, access.Errors.Count);
     }
@@ -226,9 +226,9 @@ public class StartupRegistrationTests
         Assert.IsFalse(view.CanChangeStartupPreference);
         Assert.IsFalse(view.CanChangeStartupMode);
         StringAssert.Contains(view.StartupStatusText, "could not be checked");
-        StringAssert.Contains(view.StartupStatusText, "Restart DS4Windows");
+        StringAssert.Contains(view.StartupStatusText, "Restart FUT404DS");
         StringAssert.Contains(view.StartupStatusText, "Log tab");
-        StringAssert.Contains(view.StartupStatusText, "open DS4Windows manually");
+        StringAssert.Contains(view.StartupStatusText, "open FUT404DS manually");
         Assert.IsFalse(view.StartupStatusText.Contains("inspection denied", StringComparison.Ordinal));
         CollectionAssert.AreEqual(new[] { "inspection denied" }, access.Diagnostics);
         view.RunAtStartup = false;
@@ -287,7 +287,7 @@ public class StartupRegistrationTests
         Assert.IsTrue(view.RunAtStartup, "The checkbox must keep the saved choice.");
         StringAssert.Contains(view.StartupStatusText, "saved but not active yet");
         StringAssert.Contains(view.StartupStatusText, "Install / Repair VIIPER");
-        StringAssert.Contains(view.StartupStatusText, "open DS4Windows manually");
+        StringAssert.Contains(view.StartupStatusText, "open FUT404DS manually");
         Assert.IsFalse(view.StartupStatusText.Contains("requested", StringComparison.OrdinalIgnoreCase));
         Assert.AreEqual(0, access.Changes);
     }
@@ -305,7 +305,7 @@ public class StartupRegistrationTests
         StringAssert.Contains(view.StartupStatusText, "different administrator account");
         StringAssert.Contains(view.StartupStatusText, "Ask your administrator");
         StringAssert.Contains(view.StartupStatusText, "this Windows account");
-        StringAssert.Contains(view.StartupStatusText, "open DS4Windows manually");
+        StringAssert.Contains(view.StartupStatusText, "open FUT404DS manually");
         Assert.IsFalse(view.StartupStatusText.Contains("repair", StringComparison.OrdinalIgnoreCase));
         Assert.IsFalse(view.StartupStatusText.Contains("as administrator", StringComparison.OrdinalIgnoreCase));
         Assert.AreEqual(0, access.Changes);
@@ -334,7 +334,7 @@ public class StartupRegistrationTests
     [TestMethod]
     public void BackendReadFailureRemainsVisibleWithoutBreakingHealthyControllerOutput()
     {
-        var status = new DS4Windows.ViiperPrerequisiteStatus
+        var status = new FUT404DS.ViiperPrerequisiteStatus
         {
             ViiperInstalled = true,
             ViiperPackageCurrent = true,
@@ -350,7 +350,7 @@ public class StartupRegistrationTests
         Assert.IsTrue(status.Ready);
         StringAssert.Contains(status.DisplayText, "VIIPER is ready to use");
         StringAssert.Contains(status.DisplayText, "Automatic startup could not be checked");
-        StringAssert.Contains(status.DisplayText, "restart DS4Windows");
+        StringAssert.Contains(status.DisplayText, "restart FUT404DS");
         Assert.IsFalse(status.DisplayText.Contains("inspection denied", StringComparison.Ordinal));
         Assert.AreEqual("inspection denied", status.StartupPreferenceReadError,
             "Technical details remain available separately from the main status text.");
@@ -499,9 +499,9 @@ public class StartupRegistrationTests
         Assert.IsFalse(body.Contains("DeleteViiperStartupTask", StringComparison.Ordinal));
         StringAssert.Contains(body, "ViiperStartupTaskPolicy.RefreshOnLaunch(");
         StringAssert.Contains(body, "CanRepairViiperStartupTask,");
-        DS4Windows.ViiperStartupTaskPolicy.RefreshOnLaunch(false,
-            @"C:\Program Files\DS4Windows\VIIPER\viiper.exe",
-            () => @"C:\Program Files\DS4Windows\VIIPER\viiper.exe",
+        FUT404DS.ViiperStartupTaskPolicy.RefreshOnLaunch(false,
+            @"C:\Program Files\FUT404DS\VIIPER\viiper.exe",
+            () => @"C:\Program Files\FUT404DS\VIIPER\viiper.exe",
             _ => true, () => false, _ => { },
             _ => throw new AssertFailedException(
                 "Passive repair must stop before changing a task when startup is not enabled."));
@@ -514,7 +514,7 @@ public class StartupRegistrationTests
             "public static void RefreshSelectedStartupTaskAfterRunAtStartupChange()",
             "public static bool LaunchInstaller(");
         StringAssert.Matches(body, new Regex(
-            @"if\s*\(!DS4WinWPF\.StartupMethods\.IsRunAtStartupRequested\(\)\)\s*\{\s*" +
+            @"if\s*\(!FUT404DSWPF\.StartupMethods\.IsRunAtStartupRequested\(\)\)\s*\{\s*" +
             @"if\s*\(!RemoveViiperStartupTask\(requestElevation:\s*true\)\)\s*" +
             @"throw new IOException\("));
         StringAssert.Contains(body, "RefreshSelectedStartupTaskOnLaunch();");
@@ -525,7 +525,7 @@ public class StartupRegistrationTests
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory);
              directory != null; directory = directory.Parent)
         {
-            string path = Path.Combine(directory.FullName, "DS4Windows", "DS4Control",
+            string path = Path.Combine(directory.FullName, "FUT404DS", "DS4Control",
                 "Viiper", "ViiperSetupManager.cs");
             if (!File.Exists(path)) continue;
             string source = File.ReadAllText(path);

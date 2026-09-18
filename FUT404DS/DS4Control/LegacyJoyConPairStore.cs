@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal sealed record LegacyJoyConSavedPair(string Left, string Right, bool PreferLeft);
 

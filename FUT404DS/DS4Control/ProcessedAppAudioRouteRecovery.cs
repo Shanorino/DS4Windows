@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using NAudio.Wave;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal readonly struct ProcessedAppAudioRouteObservation
     {

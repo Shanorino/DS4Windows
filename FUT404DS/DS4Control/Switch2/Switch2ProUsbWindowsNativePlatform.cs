@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal sealed class Switch2ProUsbWindowsCleanupAmbiguousException :
     InvalidOperationException
@@ -2047,7 +2047,7 @@ internal static class Switch2ProUsbWindowsOpenPolicy
 
     // Windows' HID stack retains an output-capable MI_00 open on the production
     // Switch 2 Pro. Both read-only and full-duplex application opens fail with
-    // ERROR_SHARING_VIOLATION unless write sharing is admitted. DS4Windows'
+    // ERROR_SHARING_VIOLATION unless write sharing is admitted. FUT404DS'
     // process reservation still permits only one mapper-owned lifetime.
     internal const uint InputDesiredAccess = GenericRead;
     internal const uint InputShareMode = FileShareRead | FileShareWrite;

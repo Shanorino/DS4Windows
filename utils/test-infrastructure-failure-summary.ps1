@@ -7,7 +7,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 if ([string]::IsNullOrWhiteSpace($BootstrapperSource)) {
     $BootstrapperSource = Join-Path $PSScriptRoot `
-        '../installer/DS4Windows.Bootstrapper/InstallerApplication.cs'
+        '../installer/FUT404DS.Bootstrapper/InstallerApplication.cs'
 }
 
 # Compile the production parser alone. No installer, WPF application, Windows
@@ -47,9 +47,9 @@ function Assert-Summary([string]$actual, [string]$expected, [string]$message) {
 }
 
 function Invocation([string]$id, [string]$body, [int]$exitCode = 1) {
-    return "2026-09-09T17:15:42.7399572-05:00 === DS4Windows setup invocation $id started ===`r`n" + `
+    return "2026-09-09T17:15:42.7399572-05:00 === FUT404DS setup invocation $id started ===`r`n" + `
         "$body`r`n" + `
-        "2026-09-09T17:15:46.9663551-05:00 === DS4Windows setup invocation $id completed with exit code $exitCode ===`r`n"
+        "2026-09-09T17:15:46.9663551-05:00 === FUT404DS setup invocation $id completed with exit code $exitCode ===`r`n"
 }
 
 function Conflict([string]$taskName) {
@@ -57,13 +57,13 @@ function Conflict([string]$taskName) {
 }
 
 function Expected-Conflict([string]$taskName) {
-    return "Setup could not verify the existing Windows startup task '$taskName' as belonging to DS4Windows. The task was preserved.`r`nOpen Log includes the diagnostic details."
+    return "Setup could not verify the existing Windows startup task '$taskName' as belonging to FUT404DS. The task was preserved.`r`nOpen Log includes the diagnostic details."
 }
 
 $viiperConflict = Conflict 'RunVIIPER'
-$ds4Conflict = Conflict 'RunDS4Windows'
+$ds4Conflict = Conflict 'RunFUT404DS'
 $viiperExpected = Expected-Conflict 'RunVIIPER'
-$ds4Expected = Expected-Conflict 'RunDS4Windows'
+$ds4Expected = Expected-Conflict 'RunFUT404DS'
 $failedRun = Invocation $runId $viiperConflict
 
 Assert-Summary (Invoke-Summary $failedRun) $viiperExpected `
@@ -74,7 +74,7 @@ Assert-Summary (Invoke-Summary (Invocation $runId `
     "Setup could not finish: Startup task 'RunVIIPER' became a foreign same-name collision during registration.")) `
     $viiperExpected 'A task ownership race must report the preserved conflicting task.'
 Assert-Summary (Invoke-Summary (Invocation $runId `
-    'Setup could not finish: Refusing to suspend an unverified startup task: RunDS4Windows')) `
+    'Setup could not finish: Refusing to suspend an unverified startup task: RunFUT404DS')) `
     $ds4Expected 'Suspension must describe the same verified task ownership boundary.'
 Assert-Summary (Invoke-Summary ($failedRun + (Invocation $runId $ds4Conflict))) `
     $ds4Expected 'A retry must use its own most recent invocation.'
@@ -82,7 +82,7 @@ Assert-Summary (Invoke-Summary ($failedRun + (Invocation $runId `
     'System.InvalidOperationException: failure before child startup'))) `
     $generic 'An early retry failure must not resurrect the previous task conflict.'
 Assert-Summary (Invoke-Summary ($failedRun + (Invocation $runId `
-    'Setup complete. VIIPER is ready for DS4Windows.' 0))) `
+    'Setup complete. VIIPER is ready for FUT404DS.' 0))) `
     $generic 'A successful retry must not reuse its earlier failure.'
 Assert-Summary (Invoke-Summary ((Invocation $otherId $ds4Conflict) + $failedRun)) `
     $viiperExpected 'An outgoing bundle must not override the current bundle diagnostic.'
@@ -97,7 +97,7 @@ Assert-Summary (Invoke-Summary $failedRun 'invalid') $generic `
     'An invalid correlation ID must fail closed to the generic diagnostic.'
 Assert-Summary (Invoke-Summary '') $generic `
     'A missing or unreadable helper log must retain a usable generic diagnostic.'
-Assert-Summary (Invoke-Summary "$viiperConflict`r`n=== DS4Windows setup invocation $runId completed with exit code 1 ===") `
+Assert-Summary (Invoke-Summary "$viiperConflict`r`n=== FUT404DS setup invocation $runId completed with exit code 1 ===") `
     $generic 'A truncated tail without the invocation start must not infer ownership.'
 Assert-Summary (Invoke-Summary (Invocation $runId `
     'Setup could not finish: private token=not-for-setup-page; C:\Users\private\secret.txt')) `
@@ -114,8 +114,8 @@ Assert-Summary (Invoke-Summary (Invocation $runId `
     'Setup could not finish: Refusing to suspend an unverified startup task: RunVIIPERExtra')) `
     $generic 'A task name beginning with RunVIIPER is not the managed task.'
 Assert-Summary (Invoke-Summary (Invocation $runId `
-    'Setup could not finish: Refusing to suspend an unverified startup task: RunDS4Windows-copy')) `
-    $generic 'A task name beginning with RunDS4Windows is not the managed task.'
+    'Setup could not finish: Refusing to suspend an unverified startup task: RunFUT404DS-copy')) `
+    $generic 'A task name beginning with RunFUT404DS is not the managed task.'
 Assert-Summary (Invoke-Summary $failedRun $runId.ToUpperInvariant()) `
     $viiperExpected 'Canonical GUID casing must not change correlation.'
 Assert-Summary (Invoke-Summary $failedRun.Replace("`r`n", "`n")) `

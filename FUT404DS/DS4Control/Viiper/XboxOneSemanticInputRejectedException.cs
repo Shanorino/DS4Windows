@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// An exact, well-formed negative semantic-input acknowledgement. Input is

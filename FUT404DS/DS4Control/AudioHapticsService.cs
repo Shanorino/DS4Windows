@@ -1,6 +1,6 @@
 /*
-DS4Windows
-Copyright (C) 2026  DS4Windows contributors
+FUT404DS
+Copyright (C) 2026  FUT404DS contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -8,8 +8,8 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 */
 
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 using NAudio.CoreAudioApi;
 using NAudio.CoreAudioApi.Interfaces;
 using NAudio.Dmo;
@@ -20,7 +20,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Owns per-controller audio capture and presentation for profile-scoped

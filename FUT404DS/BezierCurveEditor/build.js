@@ -132,10 +132,10 @@
                                 t = e.value,
                                 n = e.progress;
                             return i.createElement("div", null, i.createElement("h1", null, i.createElement("a", {
-                                href: "https://github.com/Ryochan7/DS4Windows/wiki/Settings",
+                                href: "https://github.com/Ryochan7/FUT404DS/wiki/Settings",
                                 style: l
                             }, u.name)), 
-                            i.createElement("p", {style:{"whiteSpace": "pre-wrap"}}, "(1) Grab and move around red handles in a graph to customize the bezier curve or enter specific curve values in the textbox.\n(2) When you are happy with the curve, copy-paste the EASING CURVE DEFINITION values (comma separated list of 4 numbers) to a custom LS/RS/R2/L3/SA curve output options in DS4Windows application."),
+                            i.createElement("p", {style:{"whiteSpace": "pre-wrap"}}, "(1) Grab and move around red handles in a graph to customize the bezier curve or enter specific curve values in the textbox.\n(2) When you are happy with the curve, copy-paste the EASING CURVE DEFINITION values (comma separated list of 4 numbers) to a custom LS/RS/R2/L3/SA curve output options in FUT404DS application."),
                             i.createElement("blockquote", null, ""),
                             i.createElement("input", {
                                id: "inputCurveDefinition",
@@ -143,10 +143,10 @@
                                onBlur: this.onChangeInputCurveDefinition,
                                style: { width: "250px"},
                             }, ""), 
-                            i.createElement("h3", null, "easing curve definition: ", 
+                            i.createElement("h3", null, "easing curve definition:ï¿½", 
                             i.createElement("code", null, this.state.value.map(function(e) {
                                 return e.toFixed(2)
-                            }).join(", ")), i.createElement("br", null), "progress: ", i.createElement("code", null, this.state.progress.toFixed(2).substring(2, 4), "%")), 
+                            }).join(", ")), i.createElement("br", null), "progress:ï¿½", i.createElement("code", null, this.state.progress.toFixed(2).substring(2, 4), "%")), 
 
                            i.createElement("table", null, i.createElement("tr", null, 
                            i.createElement("td", null,
@@ -188,14 +188,14 @@
                             i.createElement("p", null, i.createElement("a", {
                                 style: l,
                                 target: "_blank",
-                                href: "https://github.com/Ryochan7/DS4Windows/wiki/Settings"
-                            }, "Click here to see DS4Windows documentation of axis curve options.")), 
+                                href: "https://github.com/Ryochan7/FUT404DS/wiki/Settings"
+                            }, "Click here to see FUT404DS documentation of axis curve options.")), 
                             i.createElement("p", null, i.createElement("a", {
                                 style: l,
                                 target: "_blank",
                                 href: u.homepage + "/blob/master/example/"
-                            }, "Click here to see the source code of the original Bezier-Editor created by GRE (without DS4Windows modifications).")),
-                            i.createElement("text", null, "Credits go to GRE who created the concept and the first sample web app. The DS4Windows customized version of the editor webapp created by MIKA-N.")
+                            }, "Click here to see the source code of the original Bezier-Editor created by GRE (without FUT404DS modifications).")),
+                            i.createElement("text", null, "Credits go to GRE who created the concept and the first sample web app. The FUT404DS customized version of the editor webapp created by MIKA-N.")
                           )
                         }
                     }
@@ -9208,7 +9208,7 @@
     }, {}],
     182: [function(e, t) {
         t.exports = {
-            name: "Bezier-easing-editor for DS4Windows (curve output of analog gamepad axis)",
+            name: "Bezier-easing-editor for FUT404DS (curve output of analog gamepad axis)",
             version: "0.3.3",
             description: "Cubic Bezier Curve editor made with React & SVG",
             main: "src/index.js",
@@ -9223,7 +9223,7 @@
                 url: "git@github.com:gre/bezier-easing-editor.git"
             },
             keywords: ["react-component", "bezier-easing", "cubic-bezier", "easing", "editor"],
-            author: "Author of the original beizer-curve-editor, Gaëtan Renaudeau",
+            author: "Author of the original beizer-curve-editor, Gaï¿½tan Renaudeau",
             license: "ISC",
             bugs: {
                 url: "https://github.com/gre/bezier-easing-editor/issues"

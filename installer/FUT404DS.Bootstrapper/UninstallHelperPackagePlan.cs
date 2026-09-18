@@ -1,7 +1,7 @@
 using System;
 using WixToolset.BootstrapperApplicationApi;
 
-namespace DS4Windows.Bootstrapper
+namespace FUT404DS.Bootstrapper
 {
     internal static class UninstallHelperPackagePlan
     {

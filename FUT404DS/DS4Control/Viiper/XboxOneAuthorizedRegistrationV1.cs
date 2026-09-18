@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Cold-path capability for one authenticated Xbox factory registration.

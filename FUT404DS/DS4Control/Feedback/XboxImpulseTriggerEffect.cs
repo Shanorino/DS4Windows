@@ -1,6 +1,6 @@
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Fixed Xbox impulse vibration, independent of Trigger Lab's stored designs

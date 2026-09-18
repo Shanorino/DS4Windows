@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,13 +11,13 @@ The Hold/Tap XOR state machine, joined Joy-Con sharing, activation-button
 consumption, and gyro auto-apply policy are adapted from the GPL-3.0
 Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/controller.py and
-src/virtual_controller.py. The result drives DS4Windows' existing shifted
+src/virtual_controller.py. The result drives FUT404DS' existing shifted
 actions; it does not introduce another mapper.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 public enum Switch2ModeShiftScope : byte
 {

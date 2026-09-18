@@ -1,9 +1,9 @@
 using System.Reflection;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class ControllerReadingsSnapshotTests
@@ -201,7 +201,7 @@ public class ControllerReadingsSnapshotTests
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory != null;
              directory = directory.Parent)
         {
-            string path = Path.Combine(directory.FullName, "DS4Windows", relative);
+            string path = Path.Combine(directory.FullName, "FUT404DS", relative);
             if (File.Exists(path)) return path;
         }
         throw new FileNotFoundException(relative);

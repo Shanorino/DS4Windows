@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using FakerInputWrapper;
 
-namespace DS4Windows.DS4Control
+namespace FUT404DS.DS4Control
 {
     public class FakerInputHandler : VirtualKBMBase
     {

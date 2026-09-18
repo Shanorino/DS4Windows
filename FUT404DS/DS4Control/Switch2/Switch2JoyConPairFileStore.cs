@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Versioned, atomic install-local pair catalog. Pair files contain only opaque
@@ -382,7 +382,7 @@ internal sealed class Switch2JoyConPairFileStore :
                 Data = inputMemory,
             };
             bool succeeded = protect ? CryptProtectData(ref input,
-                    "DS4Windows Switch 2 peer identity", IntPtr.Zero,
+                    "FUT404DS Switch 2 peer identity", IntPtr.Zero,
                     IntPtr.Zero, IntPtr.Zero, CryptProtectUiForbidden,
                     out output) :
                 CryptUnprotectData(ref input, out description, IntPtr.Zero,

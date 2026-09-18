@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -13,13 +13,13 @@ GPL-3.0 Switch2Connect project, commit
 src/virtual_controller.py (normalize_djg_settings and handle_djg_trigger).
 Per-side OR activation including IR follows src/controller.py mapping_pairs,
 trigger_djg and prev_djg at commit 61ac6642ce12fe7217e38a860b14863b18ca7e28.
-The implementation remains inside DS4Windows' existing serialized profile
+The implementation remains inside FUT404DS' existing serialized profile
 input lifetime and does not create an input mapper, worker, or output owner.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 public enum Switch2DualGyroMode : byte
 {

@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
-using DS4Windows.SetupActions;
+using FUT404DS.SetupActions;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class InstallerMutationOwnershipTests
@@ -43,7 +43,7 @@ public sealed class InstallerMutationOwnershipTests
         string gate = Section(source, "private static int RunWithSetupMutex(",
             "private static InteractiveUser ResolveInteractiveUser(");
         StringAssert.Contains(gate, "SetupMutationOwnership.Run(action, WriteFallbackLog)");
-        Assert.AreEqual(@"Global\DS4Windows-VIIPER-Setup", SetupMutationOwnership.MutexName);
+        Assert.AreEqual(@"Global\FUT404DS-VIIPER-Setup", SetupMutationOwnership.MutexName);
         StringAssert.Contains(source, "return RunWithSetupMutex(PreflightLocked);");
         StringAssert.Contains(source, "return RunWithSetupMutex(() => UninstallLocked(installRoot));");
     }
@@ -53,7 +53,7 @@ public sealed class InstallerMutationOwnershipTests
     {
         // An isolated name never acquires the real installer mutex. Dedicated
         // threads make ownership unambiguous; Mutex is thread-affine/reentrant.
-        string name = "Local\\DS4Windows-Setup-Test-" + Guid.NewGuid().ToString("N");
+        string name = "Local\\FUT404DS-Setup-Test-" + Guid.NewGuid().ToString("N");
         using var entered = new ManualResetEventSlim();
         using var release = new ManualResetEventSlim();
         int firstResult = -1;
@@ -96,7 +96,7 @@ public sealed class InstallerMutationOwnershipTests
     [TestMethod]
     public void FailingMutationReleasesOwnershipAndDoesNotMasqueradeAsSuccess()
     {
-        string name = "Local\\DS4Windows-Setup-Test-" + Guid.NewGuid().ToString("N");
+        string name = "Local\\FUT404DS-Setup-Test-" + Guid.NewGuid().ToString("N");
         var expected = new IOException("Synthetic transaction failure");
         Assert.AreSame(expected, Assert.ThrowsException<IOException>(() =>
             SetupMutationOwnership.Run(() => throw expected, null, name)));
@@ -111,7 +111,7 @@ public sealed class InstallerMutationOwnershipTests
     [TestMethod]
     public void AbandonedOwnerCanBeRecoveredWithoutLeakingTheRecoveryOwnership()
     {
-        string name = "Local\\DS4Windows-Setup-Test-" + Guid.NewGuid().ToString("N");
+        string name = "Local\\FUT404DS-Setup-Test-" + Guid.NewGuid().ToString("N");
         using var lifetime = new Mutex(false, name);
         var abandon = new Thread(() => lifetime.WaitOne());
         abandon.Start();
@@ -127,7 +127,7 @@ public sealed class InstallerMutationOwnershipTests
 
     private static string ReadSetupActions([CallerFilePath] string source = "") =>
         File.ReadAllText(Path.GetFullPath(Path.Combine(Path.GetDirectoryName(source), "..",
-            "installer", "DS4Windows.SetupActions", "Program.cs")));
+            "installer", "FUT404DS.SetupActions", "Program.cs")));
 
     private static string Section(string source, string start, string end)
     {

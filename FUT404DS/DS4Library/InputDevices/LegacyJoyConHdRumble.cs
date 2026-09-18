@@ -1,17 +1,17 @@
-/* DS4Windows, Copyright (C) 2026 hbashton. GPL-3.0-or-later. */
+/* FUT404DS, Copyright (C) 2026 hbashton. GPL-3.0-or-later. */
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows.InputDevices;
+namespace FUT404DS.InputDevices;
 
 internal sealed record LegacyJoyConHdRumbleAuthority(LegacyJoyConGroup Group, long ProfileRevision);
 
 internal enum LegacyJoyConHdRumbleSource { Generic, DualSenseControl, DualSensePcm }
 
 /// <summary>
-/// Legacy Nintendo protocol boundary for DS4Windows-authored synthesis only.
+/// Legacy Nintendo protocol boundary for FUT404DS-authored synthesis only.
 /// Never accepts raw Switch 2 reports. Original Joy-Cons have one two-band
 /// oscillator description per actuator, not three timed Switch 2 subframes.
 /// The strongest authored slice supplies each band's amplitude and carrier;

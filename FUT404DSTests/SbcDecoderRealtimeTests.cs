@@ -1,6 +1,6 @@
 using SBC;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class SbcDecoderRealtimeTests

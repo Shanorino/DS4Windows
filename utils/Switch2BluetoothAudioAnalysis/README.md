@@ -28,7 +28,7 @@ as audio. Headphone-output framing/codec must be established independently.
 
 `python summarize_att.py <explicit.pcapng> [another.pcapng]` uses Scapy 2.7.0
 to summarize decoded ATT operations and a capture hash. Install Scapy into a
-separate portable tools environment, not the DS4Windows package. This reads
+separate portable tools environment, not the FUT404DS package. This reads
 files only; it does not require a capture driver. It prints neither packet
 payloads nor Bluetooth addresses/keys and does not decrypt or reassemble
 fragmented traffic. Zero decoded ATT records is inconclusive, not evidence

@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -17,11 +17,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using DS4Windows.StickModifiers;
-using DS4WinWPF.DS4Control;
+using FUT404DS.StickModifiers;
+using FUT404DSWPF.DS4Control;
 using Sensorit.Base;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class SquareStickInfo
     {

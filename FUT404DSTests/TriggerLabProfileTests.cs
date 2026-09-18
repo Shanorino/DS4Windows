@@ -1,9 +1,9 @@
 using System.IO;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class TriggerLabProfileTests

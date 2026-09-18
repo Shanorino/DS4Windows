@@ -14,7 +14,7 @@ The compatibility target is Switch2Connect commit
 
 The donor starts an independent `threading.Timer` for each delayed callback.
 Its Xbox callback has an additional generation check, but the traditional and
-DualSense callbacks do not. DS4Windows implements the same user-visible delay
+DualSense callbacks do not. FUT404DS implements the same user-visible delay
 at its canonical Switch 2 feedback-session boundary so every supported virtual
 pad follows one lifecycle and ordering law.
 

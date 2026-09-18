@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class FlickStickCalibrationTurnTests

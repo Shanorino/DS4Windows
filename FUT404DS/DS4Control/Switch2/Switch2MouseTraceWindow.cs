@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Optional portable-lab observation only. Fixed-size counters, no input
 // injection, allocation, logging, locks or new worker on the report path.

@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 This program is free software under the GNU General Public License, version 3
 or (at your option) any later version. See LICENSE for details.
@@ -8,9 +8,9 @@ or (at your option) any later version. See LICENSE for details.
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2RawStickCalibrationCommitResult : byte
 {

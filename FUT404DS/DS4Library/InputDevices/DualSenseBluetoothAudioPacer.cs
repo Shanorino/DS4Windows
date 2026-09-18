@@ -11,11 +11,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// Owns the parent side of the isolated DualSense Bluetooth report pacer.
-    /// The helper is the exact same DS4Windows executable, entered through
+    /// The helper is the exact same FUT404DS executable, entered through
     /// <see cref="TryRunHelper"/> before normal application startup.
     /// </summary>
     internal sealed class DualSenseBluetoothAudioPacer : IDisposable
@@ -786,7 +786,7 @@ namespace DS4Windows.InputDevices
         /// Call this at the very beginning of WPF startup. It returns false for
         /// every normal invocation. In helper mode it owns the process until
         /// the pipe closes or a Stop command arrives, then returns true so the
-        /// caller can shut down WPF without entering normal DS4Windows startup.
+        /// caller can shut down WPF without entering normal FUT404DS startup.
         /// </summary>
         public static bool TryRunHelper(string[] args)
         {
@@ -866,11 +866,11 @@ namespace DS4Windows.InputDevices
             if (string.IsNullOrWhiteSpace(executablePath) ||
                 !File.Exists(executablePath))
             {
-                error = "The exact current DS4Windows executable could not be located.";
+                error = "The exact current FUT404DS executable could not be located.";
                 return false;
             }
 
-            string pipeName = "DS4Windows.DualSenseAudioPacer." +
+            string pipeName = "FUT404DS.DualSenseAudioPacer." +
                 Process.GetCurrentProcess().Id + "." + Guid.NewGuid().ToString("N");
             string commandPipeName = pipeName + ".commands";
             string responsePipeName = pipeName + ".responses";
@@ -1284,7 +1284,7 @@ namespace DS4Windows.InputDevices
         {
             // A momentarily empty producer queue is normal at the boundary
             // between source callbacks. CombinedReportReference simply waits until the next
-            // complete pair exists. Resetting here made DS4Windows wait for a
+            // complete pair exists. Resetting here made FUT404DS wait for a
             // fresh prime and replay its startup rate transfer on every
             // shortage, creating 77 ms gaps followed by a 20 ms burst cadence.
             // A native 0x36 stream has no half-report generation to discard or
@@ -2066,8 +2066,8 @@ namespace DS4Windows.InputDevices
 
         private void SenderLoop()
         {
-            using global::DS4Windows.MultimediaThreadRegistration mmcss =
-                global::DS4Windows.MultimediaThreadRegistration.EnterProAudio();
+            using global::FUT404DS.MultimediaThreadRegistration mmcss =
+                global::FUT404DS.MultimediaThreadRegistration.EnterProAudio();
             try
             {
                 while (Volatile.Read(ref disposed) == 0)
@@ -2138,8 +2138,8 @@ namespace DS4Windows.InputDevices
 
         private void ReceiverLoop()
         {
-            using global::DS4Windows.MultimediaThreadRegistration mmcss =
-                global::DS4Windows.MultimediaThreadRegistration.EnterProAudio();
+            using global::FUT404DS.MultimediaThreadRegistration mmcss =
+                global::FUT404DS.MultimediaThreadRegistration.EnterProAudio();
             // One receiver owns these buffers. In particular, returning native
             // command credit must not allocate a header and payload per ACK.
             byte[] header = new byte[sizeof(byte) + sizeof(int)];
@@ -3258,7 +3258,7 @@ namespace DS4Windows.InputDevices
                 useNativeAudioTransport = true;
                 useV5PresentationCadence = true;
                 string traceDirectory = Environment.GetEnvironmentVariable(
-                    "DS4WINDOWS_DUALSENSE_PCM_TRACE_DIRECTORY");
+                    "FUT404DS_DUALSENSE_PCM_TRACE_DIRECTORY");
                 if (!string.IsNullOrWhiteSpace(traceDirectory))
                 {
                     try
@@ -3342,8 +3342,8 @@ namespace DS4Windows.InputDevices
 
             public void Run()
             {
-                using global::DS4Windows.MultimediaThreadRegistration mmcss =
-                    global::DS4Windows.MultimediaThreadRegistration.EnterProAudio();
+                using global::FUT404DS.MultimediaThreadRegistration mmcss =
+                    global::FUT404DS.MultimediaThreadRegistration.EnterProAudio();
                 TryRaiseHelperProcessPriority();
                 TrySetSustainedLowLatencyGc();
                 acknowledgementThread.Start();
@@ -3902,8 +3902,8 @@ namespace DS4Windows.InputDevices
             private void PacerLoop()
             {
                 timeBeginPeriod(1);
-                using global::DS4Windows.MultimediaThreadRegistration mmcss =
-                    global::DS4Windows.MultimediaThreadRegistration.
+                using global::FUT404DS.MultimediaThreadRegistration mmcss =
+                    global::FUT404DS.MultimediaThreadRegistration.
                         EnterProAudio(critical: true);
                 IntPtr timer = CreateHighResolutionTimer();
                 using var timerWait = timer != IntPtr.Zero ?
@@ -5369,8 +5369,8 @@ namespace DS4Windows.InputDevices
 
             private void AcknowledgementLoop()
             {
-                using global::DS4Windows.MultimediaThreadRegistration mmcss =
-                    global::DS4Windows.MultimediaThreadRegistration.EnterProAudio();
+                using global::FUT404DS.MultimediaThreadRegistration mmcss =
+                    global::FUT404DS.MultimediaThreadRegistration.EnterProAudio();
                 const int writerMetricCount = 17;
                 byte[] payload = new byte[
                     sizeof(long) + sizeof(byte) + sizeof(long) +
@@ -5575,8 +5575,8 @@ namespace DS4Windows.InputDevices
 
             private void InputClockLoop()
             {
-                using global::DS4Windows.MultimediaThreadRegistration mmcss =
-                    global::DS4Windows.MultimediaThreadRegistration.EnterProAudio();
+                using global::FUT404DS.MultimediaThreadRegistration mmcss =
+                    global::FUT404DS.MultimediaThreadRegistration.EnterProAudio();
                 WaitHandle[] waits = { stopRequested, inputArrivalSignal };
                 try
                 {

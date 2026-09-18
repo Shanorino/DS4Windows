@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class XboxOneBrokerFeedbackIngressTests

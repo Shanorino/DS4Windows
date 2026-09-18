@@ -1,10 +1,10 @@
 using System.Buffers.Binary;
-using DS4Windows;
-using DS4Windows.Switch2;
-using Fixture = DS4WindowsTests.Switch2ProductionGyroMappingIntegrationTests.Fixture;
-using RawSticks = DS4WindowsTests.Switch2ProductionGyroMappingIntegrationTests.RawSticks;
+using FUT404DS;
+using FUT404DS.Switch2;
+using Fixture = FUT404DSTests.Switch2ProductionGyroMappingIntegrationTests.Fixture;
+using RawSticks = FUT404DSTests.Switch2ProductionGyroMappingIntegrationTests.RawSticks;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Decoder -> registered runtime/slot -> curve/deadzone and custom mapper ->
 // exact broker payload. OS transports, profile persistence and virtual transport

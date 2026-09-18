@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class ViiperFeedbackDispatchBufferTests

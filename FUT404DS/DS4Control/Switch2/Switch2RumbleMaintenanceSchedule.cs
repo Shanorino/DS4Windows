@@ -1,4 +1,4 @@
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2RumbleMaintenanceDisposition : byte
 {

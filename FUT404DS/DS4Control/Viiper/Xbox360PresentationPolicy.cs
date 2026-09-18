@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -12,12 +12,12 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Parses the operator-declared Xbox 360 ordered-history policy once at
     /// device construction. The duration is transported as a duration only;
-    /// DS4Windows and VIIPER retain their own monotonic clock domains.
+    /// FUT404DS and VIIPER retain their own monotonic clock domains.
     /// </summary>
     internal static class Xbox360PresentationPolicy
     {

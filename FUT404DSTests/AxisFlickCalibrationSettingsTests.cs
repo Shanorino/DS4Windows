@@ -2,13 +2,13 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms;
-using DS4WinWPF.DS4Forms.ViewModels;
-using RuntimeFlickSettings = DS4Windows.FlickStickSettings;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using RuntimeFlickSettings = FUT404DS.FlickStickSettings;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -80,7 +80,7 @@ public sealed class AxisFlickCalibrationSettingsTests
             new XElement("RealWorldCalibration", "17.5"));
         if (value != null)
             element.Add(new XElement("CalibrationTrigger", value));
-        var xml = new XDocument(new XElement("DS4Windows",
+        var xml = new XDocument(new XElement("FUT404DS",
             new XAttribute("config_version", Global.CONFIG_VERSION),
             new XElement("LSOutputSettings", element)));
         using var reader = xml.CreateReader();
@@ -98,7 +98,7 @@ public sealed class AxisFlickCalibrationSettingsTests
     [TestMethod]
     public void ProfileWithoutEitherStickGroupLeavesBothTestsUnassigned()
     {
-        using var reader = new StringReader("<DS4Windows config_version=\"5\" />");
+        using var reader = new StringReader("<FUT404DS config_version=\"5\" />");
         var dto = (ProfileDTO)Serializer().Deserialize(reader);
         dto.DeviceIndex = Slot;
         var destination = CreateConfiguredProfile(DS4Controls.FnL, DS4Controls.FnR);

@@ -1,19 +1,19 @@
-﻿<Window x:Class="DS4WinWPF.DS4Forms.About"
+<Window x:Class="FUT404DSWPF.DS4Forms.About"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DS4WinWPF.DS4Forms"
+        xmlns:local="clr-namespace:FUT404DSWPF.DS4Forms"
         xmlns:lex="http://wpflocalizeextension.codeplex.com"
         mc:Ignorable="d"
         Title="{lex:LocExtension HotkeysAbout}" Height="450" Width="800"
         Style="{DynamicResource WindowStyle}">
     <DockPanel>
-        <Label x:Name="headerLb" Content="DS4Windows - hbashton Build (Version " DockPanel.Dock="Top" HorizontalAlignment="Center" />
+        <Label x:Name="headerLb" Content="FUT404DS - hbashton Build (Version " DockPanel.Dock="Top" HorizontalAlignment="Center" />
 
         <TabControl>
             <TabItem Header="Hotkeys">
-                <TextBlock TextWrapping="Wrap" xml:space="preserve">Use HidHide to Prevent Double Input: Hides the physical controller from games while DS4Windows continues using it, preventing duplicate inputs
+                <TextBlock TextWrapping="Wrap" xml:space="preserve">Use HidHide to Prevent Double Input: Hides the physical controller from games while FUT404DS continues using it, preventing duplicate inputs
 Click left side of touchpad: Left Touch
 Click right side of touchpad: Right Touch
 Click touchpad with 2 fingers: Multitouch
@@ -788,7 +788,7 @@ dondrakon - Ukranian
                                                 Use FakerInput driver to expose system-wide virtual keyboard, relative mouse, and absolute mouse.
                                                 Allows virtual KB+M events to be usable in some situations when SendInput fails.
                                                 Such situations are elevated process and games, UAC prompts, and anti-cheat systems that block SendInput events.
-                                                Use of FakerInput is necessary to allow DS4Windows to work with some games with anti-cheat protection
+                                                Use of FakerInput is necessary to allow FUT404DS to work with some games with anti-cheat protection
                                                 like Valorant.
                                             </TextBlock.Text>
                                         </TextBlock>

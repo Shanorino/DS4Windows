@@ -69,7 +69,7 @@ function Assert-BackupRejected([string]$xml, [string]$reason) {
 }
 
 $fixtureParent = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\', '/')
-$fixtureName = "DS4Windows-StartupBackupTests-" + [Guid]::NewGuid().ToString("N")
+$fixtureName = "FUT404DS-StartupBackupTests-" + [Guid]::NewGuid().ToString("N")
 $fixtureRoot = Join-Path $fixtureParent $fixtureName
 New-Item -ItemType Directory -Path $fixtureRoot -ErrorAction Stop | Out-Null
 try {
@@ -137,7 +137,7 @@ finally {
             [StringComparison]::OrdinalIgnoreCase) -or
             -not $cleanupRoot.StartsWith($fixtureParent + [IO.Path]::DirectorySeparatorChar,
                 [StringComparison]::OrdinalIgnoreCase) -or
-            $fixtureName -notmatch '^DS4Windows-StartupBackupTests-[0-9a-f]{32}$') {
+            $fixtureName -notmatch '^FUT404DS-StartupBackupTests-[0-9a-f]{32}$') {
         throw "Refusing cleanup outside the isolated startup-backup fixture."
     }
     Remove-Item -LiteralPath $cleanupRoot -Recurse -Force -ErrorAction Stop

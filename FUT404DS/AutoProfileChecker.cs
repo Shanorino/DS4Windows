@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -28,9 +28,9 @@ using System.Threading.Tasks;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.Accessibility;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     [SuppressUnmanagedCodeSecurity]
     public class AutoProfileChecker
@@ -78,7 +78,7 @@ namespace DS4WinWPF
                     if (tempEntity.IsMatch(topProcessName, topWindowTitle))
                     {
                         if (autoProfileDebugLogLevel > 0)
-                            DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Rule#{i + 1}  Path={tempEntity.path}  Title={tempEntity.title}  Device={tempEntity.DeviceOption}", false, true);
+                            FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. Rule#{i + 1}  Path={tempEntity.path}  Title={tempEntity.title}  Device={tempEntity.DeviceOption}", false, true);
 
                         matchedProfileEntities.Add(tempEntity);
                     }
@@ -144,7 +144,7 @@ namespace DS4WinWPF
                                 forceLoadProfile)
                             {
                                 if (autoProfileDebugLogLevel > 0)
-                                    DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. LoadProfile Controller {j + 1}={tempname}  DeviceRule={controllerProfileEntity.DeviceOption}", false, true);
+                                    FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. LoadProfile Controller {j + 1}={tempname}  DeviceRule={controllerProfileEntity.DeviceOption}", false, true);
 
                                 if (Global.autoProfileSwitchNotifyChoice !=
                                     AutoProfileDisplayProfileSwitchChoices.None)
@@ -167,7 +167,7 @@ namespace DS4WinWPF
                             else
                             {
                                 if (autoProfileDebugLogLevel > 0)
-                                    DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. LoadProfile Controller {j + 1}={tempname} (already loaded)", false, true);
+                                    FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. LoadProfile Controller {j + 1}={tempname} (already loaded)", false, true);
                             }
                         }
                     }
@@ -178,7 +178,7 @@ namespace DS4WinWPF
                         if (App.rootHub.running)
                         {
                             if (autoProfileDebugLogLevel > 0)
-                                DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Turning DS4Windows temporarily off", false, true);
+                                FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. Turning FUT404DS temporarily off", false, true);
 
                             SetAndWaitServiceStatus(false);
                         }
@@ -188,13 +188,13 @@ namespace DS4WinWPF
                 }
                 else if (tempAutoProfile != null)
                 {
-                    if (turnOffTemp && DS4Windows.Global.AutoProfileRevertDefaultProfile)
+                    if (turnOffTemp && FUT404DS.Global.AutoProfileRevertDefaultProfile)
                     {
                         turnOffTemp = false;
                         if (!App.rootHub.running)
                         {
                             if (autoProfileDebugLogLevel > 0)
-                                DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Turning DS4Windows on before reverting to default profile", false, true);
+                                FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. Turning FUT404DS on before reverting to default profile", false, true);
 
                             SetAndWaitServiceStatus(true);
                         }
@@ -206,10 +206,10 @@ namespace DS4WinWPF
                     {
                         if (Global.useTempProfile[j])
                         {
-                            if (DS4Windows.Global.AutoProfileRevertDefaultProfile)
+                            if (FUT404DS.Global.AutoProfileRevertDefaultProfile)
                             {
                                 if (autoProfileDebugLogLevel > 0)
-                                    DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Unknown process. Reverting to default profile. Controller {j + 1}={Global.ProfilePath[j]} (default)", false, true);
+                                    FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. Unknown process. Reverting to default profile. Controller {j + 1}={Global.ProfilePath[j]} (default)", false, true);
 
                                 if (Global.autoProfileSwitchNotifyChoice !=
                                     AutoProfileDisplayProfileSwitchChoices.None)
@@ -240,7 +240,7 @@ namespace DS4WinWPF
                             else
                             {
                                 if (autoProfileDebugLogLevel > 0)
-                                    DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. Unknown process. Existing profile left as active. Controller {j + 1}={Global.tempprofilename[j]}", false, true);
+                                    FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. Unknown process. Existing profile left as active. Controller {j + 1}={Global.tempprofilename[j]}", false, true);
                             }
                         }
                     }
@@ -326,7 +326,7 @@ namespace DS4WinWPF
 
 
             if (autoProfileDebugLogLevel > 0)
-                DS4Windows.AppLogger.LogToGui($"DEBUG: Auto-Profile. PID={lpdwProcessId}  Path={topProcessName} | WND={hWnd}  Title={topWndTitleName}", false, true);
+                FUT404DS.AppLogger.LogToGui($"DEBUG: Auto-Profile. PID={lpdwProcessId}  Path={topProcessName} | WND={hWnd}  Title={topWndTitleName}", false, true);
 
             return true;
         }
@@ -402,23 +402,23 @@ namespace DS4WinWPF
             {
                 case AutoProfileDisplayProfileSwitchChoices.Log:
                     {
-                        string prolog = string.Format(DS4WinWPF.Properties.Resources.UsingAutoTempProfile, (ind + 1).ToString(), profile);
-                        DS4Windows.AppLogger.LogToGui(prolog, false);
+                        string prolog = string.Format(FUT404DSWPF.Properties.Resources.UsingAutoTempProfile, (ind + 1).ToString(), profile);
+                        FUT404DS.AppLogger.LogToGui(prolog, false);
                     }
 
                     break;
                 case AutoProfileDisplayProfileSwitchChoices.Notification:
                     {
-                        string prolog = string.Format(DS4WinWPF.Properties.Resources.UsingAutoTempProfile, (ind + 1).ToString(), profile);
-                        DS4Windows.AppLogger.LogToTray(prolog);
+                        string prolog = string.Format(FUT404DSWPF.Properties.Resources.UsingAutoTempProfile, (ind + 1).ToString(), profile);
+                        FUT404DS.AppLogger.LogToTray(prolog);
                     }
 
                     break;
                 case AutoProfileDisplayProfileSwitchChoices.LogAndNotification:
                     {
-                        string prolog = string.Format(DS4WinWPF.Properties.Resources.UsingAutoTempProfile, (ind + 1).ToString(), profile);
-                        DS4Windows.AppLogger.LogToGui(prolog, false);
-                        DS4Windows.AppLogger.LogToTray(prolog);
+                        string prolog = string.Format(FUT404DSWPF.Properties.Resources.UsingAutoTempProfile, (ind + 1).ToString(), profile);
+                        FUT404DS.AppLogger.LogToGui(prolog, false);
+                        FUT404DS.AppLogger.LogToTray(prolog);
                     }
 
                     break;

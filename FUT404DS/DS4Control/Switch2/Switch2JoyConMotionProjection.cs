@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,17 +10,17 @@ the Free Software Foundation, either version 3 of the License, or
 Axis orientation and native sensor scales are adapted from the GPL-3.0
 Switch2Connect project, commit 4487322a306f04efa27682e3f3a508635a84fd98,
 src/virtual_controller.py and src/controller.py. The resulting state enters
-DS4Windows' existing SixAxis mapping path.
+FUT404DS' existing SixAxis mapping path.
 */
 
 using System;
 using System.Numerics;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Allocation-free Joy-Con 2 motion projection owned by one serialized runtime
-/// device. It retains the previous SixAxis object for DS4Windows' established
+/// device. It retains the previous SixAxis object for FUT404DS' established
 /// delta-aware mapping path and optionally applies the pinned dual-gyro policy.
 /// </summary>
 internal sealed class Switch2JoyConMotionProjection

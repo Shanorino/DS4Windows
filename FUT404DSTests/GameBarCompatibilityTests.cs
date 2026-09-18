@@ -1,8 +1,8 @@
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Control.DTOXml;
 using System.Xml.Serialization;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class GameBarCompatibilityTests
@@ -171,10 +171,10 @@ namespace DS4WindowsTests
         public void LegacyProfileSwitcherMigratesToCompanionAndIsNotRewritten()
         {
             const string xml = """
-                <DS4Windows>
+                <FUT404DS>
                   <GameBarHomeButtonSupport>True</GameBarHomeButtonSupport>
                   <GameBarProfileName>Legacy Game Bar</GameBarProfileName>
-                </DS4Windows>
+                </FUT404DS>
                 """;
             var serializer = new XmlSerializer(typeof(ProfileDTO),
                 ProfileDTO.GetAttributeOverrides());

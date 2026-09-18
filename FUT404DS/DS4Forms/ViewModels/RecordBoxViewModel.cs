@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -27,10 +27,10 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class RecordBoxViewModel
     {
@@ -423,7 +423,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             {
                 DS4Device dev = Program.rootHub.DS4Controllers[0];
                 DS4State cState = dev.getCurrentStateRef();
-                DS4Windows.Mouse tp = Program.rootHub.touchPad[0];
+                FUT404DS.Mouse tp = Program.rootHub.touchPad[0];
                 for (DS4Controls dc = DS4Controls.LXNeg; dc < DS4Controls.Mute; dc++)
                 {
                     int macroValue = Global.macroDS4Values[dc];

@@ -1,11 +1,11 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Concentus;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using NAudio.Wave;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -235,7 +235,7 @@ public class ControllerSpeakerFormatRoutingTests
             Output = output;
             var hid = (HidDevice)RuntimeHelpers.GetUninitializedObject(typeof(HidDevice));
             var device = new DualSenseDevice(hid, "Speaker format regression");
-            const string traceVariable = "DS4WINDOWS_DUALSENSE_PCM_TRACE_DIRECTORY";
+            const string traceVariable = "FUT404DS_DUALSENSE_PCM_TRACE_DIRECTORY";
             string oldTrace = Environment.GetEnvironmentVariable(traceVariable);
             try
             {

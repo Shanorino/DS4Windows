@@ -1,5 +1,5 @@
 // Derived from SbcSharp commit 8fd1417b142bb1be69b119c23ccfac360ee15ef4.
-// Modified for DS4Windows integration; licensed under Apache-2.0.
+// Modified for FUT404DS integration; licensed under Apache-2.0.
 
 using System;
 

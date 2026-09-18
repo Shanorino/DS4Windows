@@ -1,8 +1,8 @@
 using System.Buffers.Binary;
 using System.Reflection;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualSenseBluetoothAudioHelperProtocolTests
@@ -39,21 +39,21 @@ namespace DS4WindowsTests
                 out int realtimeHapticsCapacity,
                 out string parsedDevicePath));
 
-            Assert.AreEqual("DS4Windows.ProtocolV15.Commands",
+            Assert.AreEqual("FUT404DS.ProtocolV15.Commands",
                 commandPipeName);
-            Assert.AreEqual("DS4Windows.ProtocolV15.Responses",
+            Assert.AreEqual("FUT404DS.ProtocolV15.Responses",
                 responsePipeName);
             Assert.AreEqual(token, parsedToken);
             Assert.AreEqual(4242, parentProcessId);
-            Assert.AreEqual("DS4Windows.ProtocolV15.InputArrival",
+            Assert.AreEqual("FUT404DS.ProtocolV15.InputArrival",
                 inputArrivalSignalName);
-            Assert.AreEqual("DS4Windows.ProtocolV15.InputClock",
+            Assert.AreEqual("FUT404DS.ProtocolV15.InputClock",
                 inputClockMapName);
-            Assert.AreEqual("DS4Windows.ProtocolV15.Haptics",
+            Assert.AreEqual("FUT404DS.ProtocolV15.Haptics",
                 realtimeHapticsMapName);
-            Assert.AreEqual("DS4Windows.ProtocolV15.HapticsSpace",
+            Assert.AreEqual("FUT404DS.ProtocolV15.HapticsSpace",
                 realtimeHapticsSpaceName);
-            Assert.AreEqual("DS4Windows.ProtocolV15.HapticsStop",
+            Assert.AreEqual("FUT404DS.ProtocolV15.HapticsStop",
                 realtimeHapticsStopName);
             Assert.AreEqual(256, realtimeHapticsCapacity);
             Assert.AreEqual(devicePath, parsedDevicePath,
@@ -156,15 +156,15 @@ namespace DS4WindowsTests
             return new[]
             {
                 HelperArgument,
-                "DS4Windows.ProtocolV15.Commands",
-                "DS4Windows.ProtocolV15.Responses",
+                "FUT404DS.ProtocolV15.Commands",
+                "FUT404DS.ProtocolV15.Responses",
                 token.ToString("N"),
                 "4242",
-                "DS4Windows.ProtocolV15.InputArrival",
-                "DS4Windows.ProtocolV15.InputClock",
-                "DS4Windows.ProtocolV15.Haptics",
-                "DS4Windows.ProtocolV15.HapticsSpace",
-                "DS4Windows.ProtocolV15.HapticsStop",
+                "FUT404DS.ProtocolV15.InputArrival",
+                "FUT404DS.ProtocolV15.InputClock",
+                "FUT404DS.ProtocolV15.Haptics",
+                "FUT404DS.ProtocolV15.HapticsSpace",
+                "FUT404DS.ProtocolV15.HapticsStop",
                 "256",
                 devicePath,
             };

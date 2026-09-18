@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Shared with the external client. This is a finite synthetic-audio grammar,
 // never a raw byte/UUID/setup-command API. No file, gain or duration parameters.

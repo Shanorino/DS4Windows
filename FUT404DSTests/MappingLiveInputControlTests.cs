@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class MappingLiveInputControlTests

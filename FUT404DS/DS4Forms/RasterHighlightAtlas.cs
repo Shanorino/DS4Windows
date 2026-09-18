@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Loads controller highlight frames and turns their alpha channel into
@@ -126,7 +126,7 @@ namespace DS4WinWPF.DS4Forms
             }
 
             var resourceUri = new Uri(
-                $"/DS4Windows;component/Resources/{resourceName}",
+                $"{FUT404DS.Global.RESOURCES_PREFIX}/{resourceName}",
                 UriKind.Relative);
             System.Windows.Resources.StreamResourceInfo resource =
                 Application.GetResourceStream(resourceUri);

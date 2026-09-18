@@ -2,7 +2,7 @@ using System;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Cleanup owns actual operation completion, not a cancelled wait. Always try
 // restoring common input after headset disable finishes, even if it failed.

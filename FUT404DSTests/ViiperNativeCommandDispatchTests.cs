@@ -1,10 +1,10 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -81,7 +81,7 @@ public sealed class ViiperNativeCommandDispatchTests
                 case "stop": SetField(fixture.Output, "feedbackDispatchStopRequested", true); break;
                 case "stream": SetField(fixture.Output, "streamGeneration", 1L); break;
                 case "profile": Global.BeginProfileSwitchRevision(0); break;
-                case "replacement": DS4Windows.Program.rootHub.DS4Controllers[0] = fixture.CreateDevice(); break;
+                case "replacement": FUT404DS.Program.rootHub.DS4Controllers[0] = fixture.CreateDevice(); break;
             }
             Assert.IsTrue(reader.Join(2000), "Lifecycle cancellation failed to release the feedback reader.");
             Assert.IsNull(failure);
@@ -149,7 +149,7 @@ public sealed class ViiperNativeCommandDispatchTests
             envelope.Length, 0, out var context));
         switch (boundary)
         {
-            case "replacement": DS4Windows.Program.rootHub.DS4Controllers[0] = fixture.CreateDevice(); break;
+            case "replacement": FUT404DS.Program.rootHub.DS4Controllers[0] = fixture.CreateDevice(); break;
             case "profile": Global.BeginProfileSwitchRevision(0); break;
             case "binding-round-trip":
                 SetField(fixture.Output, "connected", false);
@@ -485,7 +485,7 @@ public sealed class ViiperNativeCommandDispatchTests
 
     private sealed class AdmissionFixture : IDisposable
     {
-        private readonly ControlService previousHub = DS4Windows.Program.rootHub;
+        private readonly ControlService previousHub = FUT404DS.Program.rootHub;
         private readonly bool previousOutput = Global.EnableOutputDataToDS4[0];
         private readonly long previousProfileRevision = Global.ReadProfileSwitchRevision(0);
         private readonly AudioHapticsService audio = new();
@@ -502,7 +502,7 @@ public sealed class ViiperNativeCommandDispatchTests
             hub.DS4Controllers = new DS4Device[4];
             hub.DS4Controllers[0] = Device;
             typeof(ControlService).GetField("audioHapticsService", PrivateInstance)!.SetValue(hub, audio);
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Output = new(OutContType.None, ViiperVirtualDeviceType.DualSense);
             SetField(Output, "physicalDualSenseIdentityPath", string.Empty);
@@ -545,7 +545,7 @@ public sealed class ViiperNativeCommandDispatchTests
         public void Dispose()
         {
             SetField(Output, "connected", false);
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
             Global.EnableOutputDataToDS4[0] = previousOutput;
             var revisions = (long[])typeof(Global).GetField("profileSwitchRevisions",
                 BindingFlags.NonPublic | BindingFlags.Static)!.GetValue(null)!;

@@ -1,23 +1,23 @@
-using DS4Windows.Installation;
+using FUT404DS.Installation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Security.AccessControl;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class SetupResumeBundleSourceTests
 {
     private const string BundleId = "{B9989EB0-A33C-4604-ABAB-BBD165F8A40E}";
     private const string Root = @"C:\ProgramData\Package Cache";
-    private static string BundlePath => Path.Combine(Root, BundleId, "DS4Windows_VIIPERRC4.6.1_Setup_x64.exe");
+    private static string BundlePath => Path.Combine(Root, BundleId, "FUT404DS_VIIPERRC4.6.1_Setup_x64.exe");
 
     [TestMethod]
     [TestCategory("InstalledBundle")]
     public void OptInInstalledBundleResolvesWithoutMutatingRegistryCacheOrLaunchingCode()
     {
-        string id = Environment.GetEnvironmentVariable("DS4WINDOWS_RESUME_BUNDLE_ID");
+        string id = Environment.GetEnvironmentVariable("FUT404DS_RESUME_BUNDLE_ID");
         if (string.IsNullOrWhiteSpace(id))
-            Assert.Inconclusive("Opt in with DS4WINDOWS_RESUME_BUNDLE_ID for a read-only installed Burn cache check.");
+            Assert.Inconclusive("Opt in with FUT404DS_RESUME_BUNDLE_ID for a read-only installed Burn cache check.");
         string source = SetupResumeBundleSource.Resolve(id);
         Assert.IsTrue(File.Exists(source));
         Assert.AreEqual(Guid.Parse(id), Guid.Parse(Path.GetFileName(Path.GetDirectoryName(source))));
@@ -49,12 +49,12 @@ public sealed class SetupResumeBundleSourceTests
         string upgrade = changed == "upgrade" ? provider : SetupResumeBundleSource.UpgradeCode;
         string path = changed switch
         {
-            "path" => @"C:\Users\Public\DS4Windows_Test_Setup_x64.exe",
+            "path" => @"C:\Users\Public\FUT404DS_Test_Setup_x64.exe",
             "otherBundleCache" => Path.Combine(Root, "{0083D13B-244D-4724-8D88-6078F34148BE}",
-                "DS4Windows_Test_Setup_x64.exe"),
-            "nested" => Path.Combine(Root, BundleId, "nested", "DS4Windows_Test_Setup_x64.exe"),
-            "traversal" => Path.Combine(Root, BundleId, "child", "..", "DS4Windows_Test_Setup_x64.exe"),
-            "unc" => @"\\server\share\DS4Windows_Test_Setup_x64.exe",
+                "FUT404DS_Test_Setup_x64.exe"),
+            "nested" => Path.Combine(Root, BundleId, "nested", "FUT404DS_Test_Setup_x64.exe"),
+            "traversal" => Path.Combine(Root, BundleId, "child", "..", "FUT404DS_Test_Setup_x64.exe"),
+            "unc" => @"\\server\share\FUT404DS_Test_Setup_x64.exe",
             "executable" => Path.Combine(Root, BundleId, "unrelated.exe"),
             _ => BundlePath,
         };

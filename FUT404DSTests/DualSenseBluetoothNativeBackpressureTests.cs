@@ -9,12 +9,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WindowsTests;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 [DoNotParallelize]
@@ -351,7 +351,7 @@ public sealed class DualSenseBluetoothNativeBackpressureTests
 
         internal Fixture()
         {
-            string prefix = "DS4Windows.Tests.NativeBusy." + Guid.NewGuid().ToString("N");
+            string prefix = "FUT404DS.Tests.NativeBusy." + Guid.NewGuid().ToString("N");
             commandPipeName = prefix + ".cmd";
             NamedPipeServerStream command = new(commandPipeName, PipeDirection.Out, 1,
                 PipeTransmissionMode.Byte, PipeOptions.Asynchronous);

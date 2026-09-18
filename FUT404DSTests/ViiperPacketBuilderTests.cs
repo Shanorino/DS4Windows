@@ -1,7 +1,7 @@
 using System.Reflection;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ViiperPacketBuilderTests
@@ -105,7 +105,7 @@ namespace DS4WindowsTests
             ViiperVirtualDeviceType type, string expectedName)
         {
             Type builderType = typeof(ViiperVirtualDeviceType).Assembly.GetType(
-                "DS4Windows.ViiperStatePacketBuilder",
+                "FUT404DS.ViiperStatePacketBuilder",
                 throwOnError: true);
             MethodInfo method = builderType.GetMethod(
                 "GetViiperDeviceName",
@@ -119,7 +119,7 @@ namespace DS4WindowsTests
         public void UndefinedVirtualDeviceTypeNeverFallsBackToXbox360()
         {
             Type builderType = typeof(ViiperVirtualDeviceType).Assembly.GetType(
-                "DS4Windows.ViiperStatePacketBuilder",
+                "FUT404DS.ViiperStatePacketBuilder",
                 throwOnError: true)!;
             var invalid = (ViiperVirtualDeviceType)int.MaxValue;
 
@@ -175,7 +175,7 @@ namespace DS4WindowsTests
         private static byte[] BuildViiperStatePacket(ViiperVirtualDeviceType type, DS4State state)
         {
             Type builderType = typeof(ViiperVirtualDeviceType).Assembly.GetType(
-                "DS4Windows.ViiperStatePacketBuilder",
+                "FUT404DS.ViiperStatePacketBuilder",
                 throwOnError: true);
             MethodInfo buildMethod = builderType.GetMethod(
                 "Build",
@@ -187,7 +187,7 @@ namespace DS4WindowsTests
         private static byte[] BuildNeutralViiperStatePacket(ViiperVirtualDeviceType type)
         {
             Type builderType = typeof(ViiperVirtualDeviceType).Assembly.GetType(
-                "DS4Windows.ViiperStatePacketBuilder",
+                "FUT404DS.ViiperStatePacketBuilder",
                 throwOnError: true);
             MethodInfo buildMethod = builderType.GetMethod(
                 "BuildNeutral",

@@ -1,6 +1,6 @@
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms.ViewModels;
+namespace FUT404DSWPF.DS4Forms.ViewModels;
 
 internal static class Switch2BluetoothDiscoveryPresentation
 {
@@ -8,7 +8,7 @@ internal static class Switch2BluetoothDiscoveryPresentation
         int candidateCount) => status?.State switch
     {
         Switch2BluetoothDiscoveryState.Stopped =>
-            "Bluetooth discovery is stopped. Use DS4Windows' Stop/Start controls to start discovery.",
+            "Bluetooth discovery is stopped. Use FUT404DS' Stop/Start controls to start discovery.",
         Switch2BluetoothDiscoveryState.Starting =>
             "Starting Bluetooth discovery. Refresh in a moment to check its status.",
         Switch2BluetoothDiscoveryState.Scanning when candidateCount > 0 =>
@@ -16,11 +16,11 @@ internal static class Switch2BluetoothDiscoveryPresentation
         Switch2BluetoothDiscoveryState.Scanning =>
             "Bluetooth discovery is active. No new controllers found yet. Wake an associated controller to reconnect; use sync mode only to associate a new controller, then refresh.",
         Switch2BluetoothDiscoveryState.Unavailable =>
-            "Windows did not provide a usable Bluetooth adapter. Check that Bluetooth is available and turned on, then stop and start DS4Windows to retry discovery.",
+            "Windows did not provide a usable Bluetooth adapter. Check that Bluetooth is available and turned on, then stop and start FUT404DS to retry discovery.",
         Switch2BluetoothDiscoveryState.StartFailed =>
-            $"Bluetooth discovery could not start{DescribeFailure(status.Failure)}. Stop and start DS4Windows to retry; check the log if it fails again.",
+            $"Bluetooth discovery could not start{DescribeFailure(status.Failure)}. Stop and start FUT404DS to retry; check the log if it fails again.",
         Switch2BluetoothDiscoveryState.Interrupted =>
-            "Bluetooth discovery stopped unexpectedly. Stop and start DS4Windows to retry discovery.",
+            "Bluetooth discovery stopped unexpectedly. Stop and start FUT404DS to retry discovery.",
         Switch2BluetoothDiscoveryState.Stopping =>
             "Bluetooth discovery is still cleaning up. Wait a moment, then retry Stop before starting or associating another controller.",
         Switch2BluetoothDiscoveryState.CleanupFailed =>

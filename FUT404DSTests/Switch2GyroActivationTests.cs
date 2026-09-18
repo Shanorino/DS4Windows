@@ -1,12 +1,12 @@
 using System.Reflection;
 using System.Threading;
 using System.Windows.Controls;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms.ViewModels;
-using GyroMouse = DS4Windows.Mouse;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using GyroMouse = FUT404DS.Mouse;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]

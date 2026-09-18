@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Common cold profile-mutation boundary for workers, direct loads and UI

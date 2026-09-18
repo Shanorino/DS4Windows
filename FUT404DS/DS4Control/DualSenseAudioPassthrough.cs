@@ -1,6 +1,6 @@
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal enum ControllerAudioEndpointKind
     {
@@ -34,8 +34,8 @@ namespace DS4Windows
 
     public sealed class DualSenseAudioPassthrough : IDisposable
     {
-        public const string AutoDetectGameAudioEndpointId = "DS4Windows:AutoDetectDualSenseGameAudio";
-        public const string DefaultSystemAudioEndpointId = "DS4Windows:DefaultSystemAudio";
+        public const string AutoDetectGameAudioEndpointId = "FUT404DS:AutoDetectDualSenseGameAudio";
+        public const string DefaultSystemAudioEndpointId = "FUT404DS:DefaultSystemAudio";
 
         private const string EndpointHistoryValueName = "{4b416b7d-8501-40c1-acfd-97aa9bdc17c8},1";
         private const string RenderEndpointRegistryPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio\Render\";

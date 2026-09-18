@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -27,10 +27,10 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels.Util;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels.Util;
 
-namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions
+namespace FUT404DSWPF.DS4Forms.ViewModels.SpecialActions
 {
     public class LaunchProgramViewModel : NotifyDataErrorBase
     {

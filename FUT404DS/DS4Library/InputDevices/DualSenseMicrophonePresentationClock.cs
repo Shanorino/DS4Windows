@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -11,7 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Diagnostics;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// Reconstructs the logical 100 Hz DualSense microphone clock without

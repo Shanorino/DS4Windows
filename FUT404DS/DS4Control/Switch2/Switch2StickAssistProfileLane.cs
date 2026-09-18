@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,13 +11,13 @@ Switch2Connect commit 61ac6642ce12fe7217e38a860b14863b18ca7e28
 advertises Stick Assist and establishes the applicable stick selection in
 src/controller.py. At that revision the selected sx/sy values are not added to
 the mouse target. This implementation supplies the advertised behavior inside
-DS4Windows' existing profile mouse accumulator without copying that dead path
+FUT404DS' existing profile mouse accumulator without copying that dead path
 or creating another mouse injector.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2StickAssistSource : byte
 {

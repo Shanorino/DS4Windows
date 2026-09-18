@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Runtime;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Keeps blocking full collections out of a live managed audio path.
     ///
     /// The physical Bluetooth writer is isolated in its own process, but its
-    /// encoded-audio producer still lives in DS4Windows. A blocking Gen2 GC in
+    /// encoded-audio producer still lives in FUT404DS. A blocking Gen2 GC in
     /// this process suspends that producer regardless of its MMCSS priority and
     /// can therefore empty the writer's bounded FIFO. The lease is process-wide
     /// and reference counted so multiple controller streams cannot restore the

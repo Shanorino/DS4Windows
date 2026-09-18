@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Threading;
-using DS4Windows;
+using FUT404DS;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     public class LoggerHolder
     {
@@ -33,14 +33,14 @@ namespace DS4WinWPF
         public Logger Logger { get => logger; }
         private ReaderWriterLockSlim logLock = new ReaderWriterLockSlim();
 
-        public LoggerHolder(DS4Windows.ControlService service)
+        public LoggerHolder(FUT404DS.ControlService service)
         {
-            string dataPath = PortableLabContext.Current?.DataPath ?? DS4Windows.Global.appdatapath;
+            string dataPath = PortableLabContext.Current?.DataPath ?? FUT404DS.Global.appdatapath;
             if (string.IsNullOrWhiteSpace(dataPath))
             {
                 dataPath = Path.Combine(Environment.GetFolderPath(
                     Environment.SpecialFolder.LocalApplicationData),
-                    "DS4Windows");
+                    "FUT404DS");
             }
 
             string logDirectory = Path.Combine(
@@ -65,9 +65,9 @@ namespace DS4WinWPF
             }
 
             fileTarget.FileName = Path.Combine(logDirectory,
-                "ds4windows_log.txt");
+                "fut404ds_log.txt");
             fileTarget.ArchiveFileName = Path.Combine(logDirectory,
-                "ds4windows_log_{#}.txt");
+                "fut404ds_log_{#}.txt");
             LogManager.Configuration = configuration;
             LogManager.ReconfigExistingLoggers();
 
@@ -77,7 +77,7 @@ namespace DS4WinWPF
             {
                 service.Debug += WriteToLog;
             }
-            DS4Windows.AppLogger.GuiLog += WriteToLog;
+            FUT404DS.AppLogger.GuiLog += WriteToLog;
         }
 
         internal static FileTarget FindFileTarget(
@@ -92,7 +92,7 @@ namespace DS4WinWPF
             return target as FileTarget;
         }
 
-        private void WriteToLog(object sender, DS4Windows.DebugEventArgs e)
+        private void WriteToLog(object sender, FUT404DS.DebugEventArgs e)
         {
             if (e.Temporary)
             {

@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using DS4Windows;
+using FUT404DS;
 using System.Windows;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for About.xaml
@@ -37,12 +37,12 @@ namespace DS4WinWPF.DS4Forms
 
         private void SiteLink_Click(object sender, RoutedEventArgs e)
         {
-            Util.StartProcessHelper("https://ryochan7.github.io/ds4windows-site/");
+            Util.StartProcessHelper("https://ryochan7.github.io/fut404ds-site/");
         }
 
         private void SourceLink_Click(object sender, RoutedEventArgs e)
         {
-            Util.StartProcessHelper("https://github.com/hbashton/DS4Windows");
+            Util.StartProcessHelper("https://github.com/hbashton/FUT404DS");
         }
 
         private void Ryochan7Link_Click(object sender, RoutedEventArgs e)
@@ -62,7 +62,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void ElectrobrainsLink_Click(object sender, RoutedEventArgs e)
         {
-            Util.StartProcessHelper("https://code.google.com/r/brianfundakowskifeldman-ds4windows/");
+            Util.StartProcessHelper("https://code.google.com/r/brianfundakowskifeldman-fut404ds/");
         }
 
         private void HidHideLink_Click(object sender, RoutedEventArgs e)
@@ -97,7 +97,7 @@ namespace DS4WinWPF.DS4Forms
 
         private void ContributorsLink_OnClick(object sender, RoutedEventArgs e)
         {
-            Util.StartProcessHelper("https://github.com/hbashton/DS4Windows/blob/main/contributors.txt");
+            Util.StartProcessHelper("https://github.com/hbashton/FUT404DS/blob/main/contributors.txt");
         }
     }
 }

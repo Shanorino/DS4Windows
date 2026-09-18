@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -23,9 +23,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// USB output validity bits describe fields present in an update. The
@@ -679,7 +679,7 @@ namespace DS4Windows.InputDevices
         // media-lane depth at 0x80. Use the same native contract for both FE
         // and FF reports; cadence remains one frame per 10.667 ms.
         private const byte BluetoothCombinedSpeakerBufferLength = 0x80;
-        // The game, not a wall-clock timeout in DS4Windows, owns the end of a
+        // The game, not a wall-clock timeout in FUT404DS, owns the end of a
         // native DualSense effect by publishing an explicit silent haptics
         // block. Expiring the newest block between otherwise valid virtual-
         // device callbacks creates audible and tactile holes in sustained
@@ -1375,7 +1375,7 @@ namespace DS4Windows.InputDevices
 
         /// <summary>
         /// True while the physical controller's audio plane is owned by the
-        /// vDS-compatible combined Bluetooth transport. DS4Windows can seed the
+        /// vDS-compatible combined Bluetooth transport. FUT404DS can seed the
         /// exact same report shape even when the virtual controller is not a
         /// DualSense, so speaker, microphone, haptics, and state never compete
         /// through legacy report IDs.
@@ -3531,7 +3531,7 @@ namespace DS4Windows.InputDevices
             {
                 case PhysicalInputFailureKind.Crc:
                     AppLogger.LogToGui(
-                        DS4WinWPF.Translations.Strings.CRC32Fail, true);
+                        FUT404DSWPF.Translations.Strings.CRC32Fail, true);
                     break;
                 case PhysicalInputFailureKind.BluetoothTimeout:
                 case PhysicalInputFailureKind.UsbTimeout:
@@ -4839,9 +4839,9 @@ namespace DS4Windows.InputDevices
 
         private unsafe void ReadInput()
         {
-            using global::DS4Windows.MultimediaThreadRegistration mmcss =
+            using global::FUT404DS.MultimediaThreadRegistration mmcss =
                 conType == ConnectionType.BT ?
-                    global::DS4Windows.MultimediaThreadRegistration.EnterGames() :
+                    global::FUT404DS.MultimediaThreadRegistration.EnterGames() :
                     default;
             unchecked
             {
@@ -6523,7 +6523,7 @@ namespace DS4Windows.InputDevices
                 // VIIPER owns this state only after a game has actually sent a
                 // native USB output report. Audio-only sidecars and a newly
                 // enumerated virtual pad otherwise repeat vDS's green default
-                // carrier on every PCM packet. Preserve DS4Windows' current
+                // carrier on every PCM packet. Preserve FUT404DS' current
                 // profile/custom lightbar and audio routing in that case.
                 if (hasNativeGameState)
                 {
@@ -8121,7 +8121,7 @@ namespace DS4Windows.InputDevices
                 throw new ArgumentOutOfRangeException(nameof(stateOffset));
             }
 
-            // These fields belong to DS4Windows' physical audio route. Keep
+            // These fields belong to FUT404DS' physical audio route. Keep
             // the raw report's controller-command nibble and LED validity for
             // its one exact emission, but replace the audio validity/value
             // domain with the current coherent profile snapshot. A consumed

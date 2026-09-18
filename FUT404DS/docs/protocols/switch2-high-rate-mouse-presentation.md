@@ -7,7 +7,7 @@ This contract is pinned to the one-owner, latest-state interpolation design in
 
 ## Scope
 
-DS4Windows' existing mapper remains authoritative. The high-rate presenter is
+FUT404DS' existing mapper remains authoritative. The high-rate presenter is
 not a second mapping stack and does not read physical HID reports. It receives
 only the latest already-mapped continuous velocity for four Switch 2 sources:
 
@@ -16,7 +16,7 @@ only the latest already-mapped continuous velocity for four Switch 2 sources:
 - verified Joy-Con 2 IR mouse movement;
 - orientation-corrected Gyro Mouse Stick Assist; and
 - an authored logical-stick direction mapped to Mouse Up, Down, Left, or Right,
-  after the ordinary DS4Windows deadzone, sensitivity, vertical scale,
+  after the ordinary FUT404DS deadzone, sensitivity, vertical scale,
   delta-acceleration, mapped-stick sensitivity, and mouse-acceleration policy.
 
 Wheel events, flick-stick deltas, mouse buttons, keys, macros, profile actions,

@@ -1,6 +1,6 @@
 /*
-DS4Windows
-Copyright (C) 2026  DS4Windows contributors
+FUT404DS
+Copyright (C) 2026  FUT404DS contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Activates the Windows 10 process-loopback virtual audio interface. This

@@ -3,10 +3,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
-using DS4Windows.DS4Control;
-using DS4Windows.InputDevices;
+using FUT404DS.DS4Control;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class DSXUdpServerTests

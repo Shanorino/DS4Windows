@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal enum DualShock4AudioTransportMode
     {
@@ -28,7 +28,7 @@ namespace DS4Windows
     internal static class DualShock4AudioTransportSettings
     {
         internal const string EnvironmentVariableName =
-            "DS4WINDOWS_DS4_AUDIO_TRANSPORT_MODE";
+            "FUT404DS_DS4_AUDIO_TRANSPORT_MODE";
         internal const int MeasuredTransportAsyncSlotCount = 8;
         internal const int MeasuredTransportAsyncEncodedFrameQueueLimit = 12;
         // the measured transport's clean hardware trace is driven by its shared 512-frame

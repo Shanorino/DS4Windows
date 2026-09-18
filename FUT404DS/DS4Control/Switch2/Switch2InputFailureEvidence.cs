@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // Fault-only evidence. Never stores controller addresses, packet bodies,
 // exception messages, user paths or exception objects. Successful input does

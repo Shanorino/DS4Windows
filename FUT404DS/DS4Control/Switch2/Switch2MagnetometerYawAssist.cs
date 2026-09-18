@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,14 +11,14 @@ The relative magnetic-closure policy and conservative limits in this file are
 adapted from the GPL-3.0 Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/gyro.py
 (MotionMagneticClosureEstimator and its RobustBiasRate law). The implementation
-is allocation-free DS4Windows code and remains inside the existing serialized
+is allocation-free FUT404DS code and remains inside the existing serialized
 Switch 2 motion projection.
 */
 
 using System;
 using System.Numerics;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal readonly struct Switch2MagnetometerYawAssistResult
 {

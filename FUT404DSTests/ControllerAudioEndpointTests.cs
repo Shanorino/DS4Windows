@@ -1,4 +1,4 @@
-using DS4Windows;
+using FUT404DS;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Net;
@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ControllerAudioEndpointTests
@@ -128,7 +128,7 @@ namespace DS4WindowsTests
             true, false)]
         [DataRow("{0.0.0.00000000}.{virtual-controller}", true, true)]
         [DataRow("{0.0.0.00000000}.{other-endpoint}", false, false)]
-        [DataRow("DS4Windows:AudioHapticsAuto:0", true, false)]
+        [DataRow("FUT404DS:AudioHapticsAuto:0", true, false)]
         public void DirectSpeakerRouteHonorsExplicitEndpointOwnership(
             string endpointId, bool endpointOwnedByDirectSource, bool expected)
         {
@@ -168,7 +168,7 @@ namespace DS4WindowsTests
         [DataRow("explicit", false, false,
             (int)DirectSpeakerEndpointOwnership.Unresolved,
             (int)DirectSpeakerRouteDecision.Loopback)]
-        [DataRow("DS4Windows:AudioHapticsAuto:0", true, true,
+        [DataRow("FUT404DS:AudioHapticsAuto:0", true, true,
             (int)DirectSpeakerEndpointOwnership.Owned,
             (int)DirectSpeakerRouteDecision.Loopback)]
         public void DirectSpeakerRouteRetriesTransientEnumerationAndRecovery(
@@ -1376,7 +1376,7 @@ namespace DS4WindowsTests
         public void NativeGameOwnerFilteringRejectsShellAndInfrastructureOnly()
         {
             Assert.IsTrue(ViiperOutDevice.IsExcludedNativeGameOwner(
-                "DS4Windows"));
+                "FUT404DS"));
             Assert.IsTrue(ViiperOutDevice.IsExcludedNativeGameOwner(
                 "viiper"));
             Assert.IsTrue(ViiperOutDevice.IsExcludedNativeGameOwner(

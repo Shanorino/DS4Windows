@@ -1,8 +1,8 @@
 using System.Threading;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 public partial class Switch2ProUsbRuntimeOwnerTests
 {

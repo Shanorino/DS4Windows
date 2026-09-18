@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualSenseBluetoothSpeakerLifecyclePolicyTests

@@ -1,10 +1,10 @@
 using System.Globalization;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -105,7 +105,7 @@ public class ReportedSettingsSerializationTests
         var serializer = new XmlSerializer(typeof(ProfileDTO),
             ProfileDTO.GetAttributeOverrides());
         using var reader = new StringReader(
-            $"<DS4Windows config_version=\"5\">{colorElements}</DS4Windows>");
+            $"<FUT404DS config_version=\"5\">{colorElements}</FUT404DS>");
         var dto = (ProfileDTO)serializer.Deserialize(reader);
         dto.DeviceIndex = Global.TEST_PROFILE_INDEX;
         BackingStore store = BackingStore.CreateProfileValidationStore();
@@ -173,13 +173,13 @@ public class ReportedSettingsSerializationTests
         const string normalExtras = "10,20,0,0,0,0,0,0,0";
         const string shiftExtras = "30,40,0,0,0,0,0,0,0";
         BackingStore store = ReadProfile($"""
-            <DS4Windows config_version="5">
+            <FUT404DS config_version="5">
               <Control><Extras><Cross>{normalExtras}</Cross></Extras></Control>
               <ShiftControl>
                 <Button><Cross Trigger="12">B</Cross></Button>
                 <Extras><Cross{extrasTrigger}>{shiftExtras}</Cross></Extras>
               </ShiftControl>
-            </DS4Windows>
+            </FUT404DS>
             """);
 
         DS4ControlSettings actual = store.GetDS4CSetting(
@@ -196,11 +196,11 @@ public class ReportedSettingsSerializationTests
     {
         const string extras = "0,0,0,0,0,0,0,1,7";
         BackingStore store = ReadProfile($"""
-            <DS4Windows config_version="5">
+            <FUT404DS config_version="5">
               <ShiftControl><Extras>
                 <Cross Trigger="37">{extras}</Cross>
               </Extras></ShiftControl>
-            </DS4Windows>
+            </FUT404DS>
             """);
 
         for (int cycle = 0; cycle < 2; cycle++)

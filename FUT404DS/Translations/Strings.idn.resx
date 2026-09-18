@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>Periksa Pembaruan Sekarang</value>
   </data>
   <data name="CheckUpdateStartup" xml:space="preserve">
-    <value>Periksa pembaruan saat DS4Windows mulai</value>
+    <value>Periksa pembaruan saat FUT404DS mulai</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Bersihkan</value>
@@ -348,7 +348,7 @@ Perubahan pada opsi ini berlaku saat kontroler terhubung</value>
     <value>Nama Exe Kustom</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Beberapa permainan menerapkan pemblokiran yang menyebabkan input dari DS4 diabaikan jika permainan tersebut mendeteksi DS4Windows.exe atau InputMapper.exe berjalan pada saat yang sama. Solusi alternatif untuk mengatasi pemblokiran ini adalah dengan mengganti nama DS4Windows.exe sehingga pemeriksaan pada game tersebut gagal. Menentukan nama exe kustom di sini memungkinkan DS4Updater untuk secara otomatis memperbarui salinan kustom DS4Windows ke nama file yang diinginkan. Pastikan untuk menghilangkan ekstensinya. Contoh: whyme_DS4Windows</value>
+    <value>Beberapa permainan menerapkan pemblokiran yang menyebabkan input dari DS4 diabaikan jika permainan tersebut mendeteksi FUT404DS.exe atau InputMapper.exe berjalan pada saat yang sama. Solusi alternatif untuk mengatasi pemblokiran ini adalah dengan mengganti nama FUT404DS.exe sehingga pemeriksaan pada game tersebut gagal. Menentukan nama exe kustom di sini memungkinkan DS4Updater untuk secara otomatis memperbarui salinan kustom FUT404DS ke nama file yang diinginkan. Pastikan untuk menghilangkan ekstensinya. Contoh: whyme_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>Pemeriksa XInput</value>
@@ -435,13 +435,13 @@ Perubahan pada opsi ini berlaku saat kontroler terhubung</value>
     <value>Pengkalibrasi Langsung</value>
   </data>
   <data name="ViGEmPluginFailure" xml:space="preserve">
-    <value>Plugin Perangkat ViGEm Gagal. Kemungkinan masalah internal ViGEmBus. Menutup koneksi. Jika masalah berlanjut, harap tutup DS4Windows dan kemudian restart Windows.</value>
+    <value>Plugin Perangkat ViGEm Gagal. Kemungkinan masalah internal ViGEmBus. Menutup koneksi. Jika masalah berlanjut, harap tutup FUT404DS dan kemudian restart Windows.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Pengecekan informasi pada intergritas data gagal untuk perangkat nirkabel, Menutup perangkat.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>.NET 5 Runtime tidak terdeteksi pada sistem/komputer Anda. Silakan unduh dan instal .NET 5 Runtime untuk memastikan kompatibilitas dengan versi DS4Windows yang akan datang. Anda akan diarahkan ke halaman unduhan .NET 5 Runtime setelah menutup jendela ini.</value>
+    <value>.NET 5 Runtime tidak terdeteksi pada sistem/komputer Anda. Silakan unduh dan instal .NET 5 Runtime untuk memastikan kompatibilitas dengan versi FUT404DS yang akan datang. Anda akan diarahkan ke halaman unduhan .NET 5 Runtime setelah menutup jendela ini.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Mohon perbarui .NET Runtime.</value>
@@ -495,7 +495,7 @@ Perubahan pada opsi ini berlaku saat kontroler terhubung</value>
     <value>Dalam beberapa situasi, mungkin berguna untuk membatasi nilai maksimum yang dihasilkan oleh output analog stick. Output Maksimum memungkinkan pengendalian nilai output akhir dari analog stick.</value>
   </data>
   <data name="AntiDeadzoneTooltip" xml:space="preserve">
-    <value>Anti-deadzone bertindak sebagai offset untuk digunakan dengan aksis dalam menunjukkan nilai output minimum yang dihasilkan setelah aksis meninggalkan deadzone yang ditetapkan. Hal ini terutama dimaksudkan untuk membantu pemetaan sumbu ke nilai deadzone yang ditetapkan yang digunakan untuk aksis dalam permainan. Sebagai contoh, deadzone yang ditetapkan untuk XInput LS dalam permainan video adalah sekitar 8000 (25%). Tanpa anti-deadzone yang ditetapkan, sebuah aksis harus bergerak melewati deadzone yang ditetapkan di DS4Windows bersama dengan deadzone aksis yang ditetapkan dalam permainan.
+    <value>Anti-deadzone bertindak sebagai offset untuk digunakan dengan aksis dalam menunjukkan nilai output minimum yang dihasilkan setelah aksis meninggalkan deadzone yang ditetapkan. Hal ini terutama dimaksudkan untuk membantu pemetaan sumbu ke nilai deadzone yang ditetapkan yang digunakan untuk aksis dalam permainan. Sebagai contoh, deadzone yang ditetapkan untuk XInput LS dalam permainan video adalah sekitar 8000 (25%). Tanpa anti-deadzone yang ditetapkan, sebuah aksis harus bergerak melewati deadzone yang ditetapkan di FUT404DS bersama dengan deadzone aksis yang ditetapkan dalam permainan.
 
 </value>
   </data>
@@ -567,7 +567,7 @@ Pengaturan rotasi dimaksudkan untuk membantu memperbaiki orientasi stik analog j
     <value>Pengaturan getar khusus DualSense</value>
   </data>
   <data name="DualSRumbleForceGenericRescale_Tip" xml:space="preserve">
-    <value>Dianjurkan untuk TIDAK AKTIFKAN.-Dinonaktifkan: getar akan disesuaikan ulang secara native oleh kontroler sesuai dengan tingkat daya yang ditentukan (kualitas lebih baik)-Diaktifkan: kedua reskalasi getar generik DS4Windows dan kontroler asli DualSense akan aktif</value>
+    <value>Dianjurkan untuk TIDAK AKTIFKAN.-Dinonaktifkan: getar akan disesuaikan ulang secara native oleh kontroler sesuai dengan tingkat daya yang ditentukan (kualitas lebih baik)-Diaktifkan: kedua reskalasi getar generik FUT404DS dan kontroler asli DualSense akan aktif</value>
   </data>
   <data name="DualSRumbleModes_Tip" xml:space="preserve">
     <value>Mode Akurat (Disarankan):
@@ -653,8 +653,8 @@ Contoh (62%): [terendah = 50% /// tertinggi = 74%]</value>
   <data name="SwipeTouchpadToSwitchProfiles" xml:space="preserve">
     <value>Geser Touchpad Untuk Mengganti Profil</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>Matikan DS4Windows untuk sementara</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>Matikan FUT404DS untuk sementara</value>
   </data>
   <data name="Unplug" xml:space="preserve">
     <value>Unplug</value>
@@ -744,7 +744,7 @@ Contoh (62%): [terendah = 50% /// tertinggi = 74%]</value>
     <value>Dukungan Kontroler DS3</value>
   </data>
   <data name="FirstLaunch.DeviceIntroText" xml:space="preserve">
-    <value>Dikarenakan mapper lain secara bawaan mengaktifkan dukungan untuk beberapa jenis perangkat (Steam Input), DS4Windows hanya mengaktifkan dukungan untuk membaca dari kontroler DS4 secara bawaan. Anda dapat menentukan dukungan mapper untuk jenis perangkat lain yang didukung di sini. Hati-hati saat menggunakan DS4Windows bersama mapper lain yang mungkin berjalan pada saat yang sama</value>
+    <value>Dikarenakan mapper lain secara bawaan mengaktifkan dukungan untuk beberapa jenis perangkat (Steam Input), FUT404DS hanya mengaktifkan dukungan untuk membaca dari kontroler DS4 secara bawaan. Anda dapat menentukan dukungan mapper untuk jenis perangkat lain yang didukung di sini. Hati-hati saat menggunakan FUT404DS bersama mapper lain yang mungkin berjalan pada saat yang sama</value>
   </data>
   <data name="FirstLaunch.DS3EnableCkbLabel" xml:space="preserve">
     <value>Dukungan Perangkat DS3 (PS3)</value>

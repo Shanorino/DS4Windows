@@ -1,4 +1,4 @@
-"""Deterministic release-gate simulation for DS4Windows installer ownership.
+"""Deterministic release-gate simulation for FUT404DS installer ownership.
 
 This deliberately models transitions rather than launching a kernel-driver
 installer on the build machine. Source-contract checks below tie every modeled
@@ -134,12 +134,12 @@ def require(text: str, *contracts: str) -> None:
 
 
 def main() -> None:
-    bootstrapper = (ROOT / "installer/DS4Windows.Bootstrapper/InstallerApplication.cs").read_text(encoding="utf-8")
-    bundle = (ROOT / "installer/DS4Windows.Bundle/Bundle.wxs").read_text(encoding="utf-8")
-    setup_actions = (ROOT / "installer/DS4Windows.SetupActions/Program.cs").read_text(encoding="utf-8")
+    bootstrapper = (ROOT / "installer/FUT404DS.Bootstrapper/InstallerApplication.cs").read_text(encoding="utf-8")
+    bundle = (ROOT / "installer/FUT404DS.Bundle/Bundle.wxs").read_text(encoding="utf-8")
+    setup_actions = (ROOT / "installer/FUT404DS.SetupActions/Program.cs").read_text(encoding="utf-8")
     backend = (ROOT / "extras/install-viiper-backend.ps1").read_text(encoding="utf-8")
-    runtime = (ROOT / "DS4Windows/DS4Control/Viiper/ViiperSetupManager.cs").read_text(encoding="utf-8")
-    startup_policy = (ROOT / "DS4Windows/DS4Control/Viiper/ViiperStartupTaskPolicy.cs").read_text(encoding="utf-8")
+    runtime = (ROOT / "FUT404DS/DS4Control/Viiper/ViiperSetupManager.cs").read_text(encoding="utf-8")
+    startup_policy = (ROOT / "FUT404DS/DS4Control/Viiper/ViiperStartupTaskPolicy.cs").read_text(encoding="utf-8")
     recovery = (ROOT / "installer/StartupSetupState.cs").read_text(encoding="utf-8")
 
     require(
@@ -164,16 +164,16 @@ def main() -> None:
         "managedRelatedBundles",
         "ManagedBundleTag",
     )
-    helper_plan = (ROOT / "installer/DS4Windows.Bootstrapper/UninstallHelperPackagePlan.cs").read_text(encoding="utf-8")
+    helper_plan = (ROOT / "installer/FUT404DS.Bootstrapper/UninstallHelperPackagePlan.cs").read_text(encoding="utf-8")
     require(helper_plan, '"PostUninstallCleanup"', '"ViiperUsbipUninstall"',
             '"CloseRunningApplicationsForUninstall"', "RequestState.Cache",
             "relation != RelationType.Upgrade", "infrastructureRecoveryPass")
     require(
         bundle,
-        'Tag="DS4WindowsManagedV2"',
+        'Tag="FUT404DSManagedV2"',
         'Id="PostUninstallCleanup"',
         'Id="ViiperUsbipUninstall"',
-        'Name="DS4Windows.SetupActions.InfrastructureUninstall.exe"',
+        'Name="FUT404DS.SetupActions.InfrastructureUninstall.exe"',
         'Permanent="yes"',
         'Behavior="scheduleReboot"',
         '--bundle-id',

@@ -1,6 +1,6 @@
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 // Logical Nintendo profile metadata, not a fabricated Switch 2 wire report.
 // Values are copied with DS4State; lifecycle generations come from the owner.

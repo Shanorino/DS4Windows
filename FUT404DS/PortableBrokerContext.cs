@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal sealed class PortableBrokerStartupException : Exception
 {
@@ -21,10 +21,10 @@ internal sealed class PortableBrokerStartupException : Exception
 // change profile storage, lab policy, installed credentials, tasks or drivers.
 internal sealed class PortableBrokerContext : IDisposable
 {
-    internal const string MarkerFileName = "DS4Windows.portable";
-    internal const string MarkerText = "DS4Windows portable package v1";
-    private const string CloseOtherBroker = "Another VIIPER is running, or its ownership could not be verified. Close VIIPER, then reopen this portable DS4Windows. No existing broker was stopped.";
-    private const string StartFailure = "The portable VIIPER could not start safely. Close VIIPER and reopen DS4Windows. Check that this extracted folder is writable and the supported USB/IP driver is installed. If Windows denies driver access, run DS4Windows as administrator.";
+    internal const string MarkerFileName = "FUT404DS.portable";
+    internal const string MarkerText = "FUT404DS portable package v1";
+    private const string CloseOtherBroker = "Another VIIPER is running, or its ownership could not be verified. Close VIIPER, then reopen this portable FUT404DS. No existing broker was stopped.";
+    private const string StartFailure = "The portable VIIPER could not start safely. Close VIIPER and reopen FUT404DS. Check that this extracted folder is writable and the supported USB/IP driver is installed. If Windows denies driver access, run FUT404DS as administrator.";
     private readonly object gate = new();
     private readonly IPortableBrokerProcessHost host;
     private readonly Action<string> validatePath;
@@ -66,13 +66,13 @@ internal sealed class PortableBrokerContext : IDisposable
         }
         return "Portable VIIPER did not become ready.\n\nReadiness check: " + detail +
             "\n\nInclude this check in your bug report. Use a complete extracted portable package and USB/IP 0.9.7.7. " +
-            "Close any conflicting VIIPER before reopening DS4Windows. Your key and profiles were not replaced.";
+            "Close any conflicting VIIPER before reopening FUT404DS. Your key and profiles were not replaced.";
     }
 
     internal static void Initialize(string executableDirectory)
     {
         if (current != null)
-            throw new PortableBrokerStartupException("The portable broker owner was already initialized. Reopen DS4Windows.");
+            throw new PortableBrokerStartupException("The portable broker owner was already initialized. Reopen FUT404DS.");
         current = Create(executableDirectory, ViiperSetupManager.SupportedViiperSha256,
             new PortableBrokerProcessHost(), ReadManagedRoots);
     }
@@ -103,7 +103,7 @@ internal sealed class PortableBrokerContext : IDisposable
             if ((markerAttributes & (FileAttributes.Directory | FileAttributes.ReparsePoint)) != 0 ||
                 new FileInfo(marker).Length > 128 ||
                 File.ReadAllText(marker).TrimEnd('\r', '\n') != MarkerText)
-                throw new PortableBrokerStartupException("This portable package marker is invalid. Extract a fresh, complete DS4Windows portable package.");
+                throw new PortableBrokerStartupException("This portable package marker is invalid. Extract a fresh, complete FUT404DS portable package.");
             ValidateRoot(directory);
             PortableBrokerContext context = new(root, expectedDigest, processHost, inspect);
             try { context.FindCompatibleCandidate(); return context; }
@@ -112,7 +112,7 @@ internal sealed class PortableBrokerContext : IDisposable
         catch (PortableBrokerStartupException) { throw; }
         catch
         {
-            throw new PortableBrokerStartupException("The portable package could not be verified. Extract it into a writable local folder outside Program Files, without links, and reopen DS4Windows.");
+            throw new PortableBrokerStartupException("The portable package could not be verified. Extract it into a writable local folder outside Program Files, without links, and reopen FUT404DS.");
         }
     }
 
@@ -131,7 +131,7 @@ internal sealed class PortableBrokerContext : IDisposable
         {
             if (!string.Equals(Convert.ToHexString(SHA256.HashData(backendPin)),
                     expectedDigest, StringComparison.OrdinalIgnoreCase))
-                throw new PortableBrokerStartupException("The portable viiper.exe does not match this DS4Windows release. Extract a fresh, complete portable package; do not substitute another VIIPER build.");
+                throw new PortableBrokerStartupException("The portable viiper.exe does not match this FUT404DS release. Extract a fresh, complete portable package; do not substitute another VIIPER build.");
         }
         catch { backendPin.Dispose(); throw; }
     }
@@ -139,10 +139,10 @@ internal sealed class PortableBrokerContext : IDisposable
     private static IEnumerable<string> ReadManagedRoots()
     {
         using RegistryKey machine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-        using RegistryKey key = machine.OpenSubKey(@"SOFTWARE\DS4Windows", writable: false);
+        using RegistryKey key = machine.OpenSubKey(@"SOFTWARE\FUT404DS", writable: false);
         object value = key?.GetValue("InstallPath", null, RegistryValueOptions.DoNotExpandEnvironmentNames);
         if (value != null && value is not string)
-            throw new InvalidDataException("The registered DS4Windows installation path is not a string.");
+            throw new InvalidDataException("The registered FUT404DS installation path is not a string.");
         return new[] { value as string };
     }
 
@@ -159,7 +159,7 @@ internal sealed class PortableBrokerContext : IDisposable
             throw new ArgumentException("The registered managed installation path is not local and absolute.");
         string root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(directory));
         if (root == Path.GetPathRoot(root))
-            throw new ArgumentException("A drive root is not a registered DS4Windows installation directory.");
+            throw new ArgumentException("A drive root is not a registered FUT404DS installation directory.");
         return root;
     }
 
@@ -295,7 +295,7 @@ internal sealed class PortableBrokerContext : IDisposable
                 configurationPin = new FileStream(ConfigPath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 ValidateLocalPaths();
                 if (configurationPin.Length != 2 || configurationPin.ReadByte() != '{' || configurationPin.ReadByte() != '}')
-                    throw new PortableBrokerStartupException("The generated portable VIIPER configuration was changed. Restore portable-data/VIIPER/viiper.json to an empty JSON object ({}) and reopen DS4Windows. Your key and profiles were not replaced.");
+                    throw new PortableBrokerStartupException("The generated portable VIIPER configuration was changed. Restore portable-data/VIIPER/viiper.json to an empty JSON object ({}) and reopen FUT404DS. Your key and profiles were not replaced.");
                 PortableBrokerProcessIdentity? latest = FindCompatibleCandidate();
                 if (latest != candidate) throw new PortableBrokerStartupException(CloseOtherBroker);
                 if (candidate is { } existing)
@@ -439,7 +439,7 @@ internal sealed class PortableBrokerProcessHost : IPortableBrokerProcessHost
         foreach (ManagementObject row in rows)
             using (row) { count++; commandLine = row["CommandLine"] as string; }
         if (count != 1 || string.IsNullOrWhiteSpace(commandLine) || commandLine.Length > 32_768)
-            throw new PortableBrokerStartupException("VIIPER launch settings could not be verified. Close VIIPER, then reopen DS4Windows.");
+            throw new PortableBrokerStartupException("VIIPER launch settings could not be verified. Close VIIPER, then reopen FUT404DS.");
         IntPtr arguments = CommandLineToArgvW(commandLine, out int argumentCount);
         if (arguments == IntPtr.Zero) throw new InvalidOperationException("Cannot read VIIPER arguments.");
         try
@@ -470,7 +470,7 @@ internal sealed class PortableBrokerProcessHost : IPortableBrokerProcessHost
                     // Only a verified exit may disappear from the snapshot.
                     // An unreadable live owner must never look like no broker.
                     try { if (process.HasExited) continue; } catch { }
-                    throw new PortableBrokerStartupException("VIIPER process ownership could not be read. Close VIIPER, then reopen DS4Windows.");
+                    throw new PortableBrokerStartupException("VIIPER process ownership could not be read. Close VIIPER, then reopen FUT404DS.");
                 }
             }
             return result;

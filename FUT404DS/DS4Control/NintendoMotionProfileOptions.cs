@@ -1,7 +1,7 @@
 using System.Numerics;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>Shared motion options for calibrated original Nintendo samples.</summary>
 internal sealed class NintendoMotionProfileOptions

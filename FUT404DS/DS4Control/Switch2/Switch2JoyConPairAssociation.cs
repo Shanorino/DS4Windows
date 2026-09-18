@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@ using System.Buffers.Binary;
 using System.Security.Cryptography;
 using System.Threading;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Install-local, opaque pseudonym for one OS-associated Switch 2 peer. It is
@@ -44,7 +44,7 @@ internal readonly struct Switch2PersistentPeerId :
         out Switch2PersistentPeerId peerId)
     {
         ReadOnlySpan<byte> domain =
-            "DS4Windows/Switch2/PersistentPeer/v1"u8;
+            "FUT404DS/Switch2/PersistentPeer/v1"u8;
         if (installKey.Length != InstallKeyLength ||
             !ContainsNonzeroByte(installKey) ||
             osAssociationIdentity.IsEmpty ||

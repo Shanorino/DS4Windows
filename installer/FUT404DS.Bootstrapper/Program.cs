@@ -1,6 +1,6 @@
 using WixToolset.BootstrapperApplicationApi;
 
-namespace DS4Windows.Bootstrapper
+namespace FUT404DS.Bootstrapper
 {
     internal static class Program
     {
@@ -15,7 +15,7 @@ namespace DS4Windows.Bootstrapper
             {
                 try
                 {
-                    var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "DS4Windows.Bootstrapper.failure.log");
+                    var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "FUT404DS.Bootstrapper.failure.log");
                     System.IO.File.WriteAllText(path, ex.ToString());
                 }
                 catch { }

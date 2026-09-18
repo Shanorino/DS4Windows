@@ -5,7 +5,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using ManagedChaCha20Poly1305 = Org.BouncyCastle.Crypto.Modes.ChaCha20Poly1305;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal enum ViiperCipherImplementation
 {

@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
-using DS4WinWPF.DS4Control;
+using FUT404DSWPF.DS4Control;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class HidHideConfigurationListReaderTests

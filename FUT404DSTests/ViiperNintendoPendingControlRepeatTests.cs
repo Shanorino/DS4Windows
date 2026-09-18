@@ -2,11 +2,11 @@ using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize] // Reader fixtures replace the shared controller/profile lookup only.
@@ -321,7 +321,7 @@ public sealed class ViiperNintendoPendingControlRepeatTests
 
     private sealed class ReaderFixture : IDisposable
     {
-        private readonly ControlService previousHub = DS4Windows.Program.rootHub;
+        private readonly ControlService previousHub = FUT404DS.Program.rootHub;
         private readonly bool previousOutput = Global.EnableOutputDataToDS4[0];
         private readonly int previousDelay = Global.Switch2RumbleDelayMilliseconds[0];
         private readonly Switch2BluetoothFeedbackLifetime owner;
@@ -358,7 +358,7 @@ public sealed class ViiperNintendoPendingControlRepeatTests
             var hub = (ControlService)RuntimeHelpers.GetUninitializedObject(typeof(ControlService));
             hub.DS4Controllers = new DS4Device[4]; hub.DS4Controllers[0] = device;
             Set(hub, "audioHapticsService", audio);
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Global.Switch2RumbleDelayMilliseconds[0] = 0;
             Output = new(OutContType.None, ViiperVirtualDeviceType.DualSense);
@@ -381,7 +381,7 @@ public sealed class ViiperNintendoPendingControlRepeatTests
             }
             finally
             {
-                DS4Windows.Program.rootHub = previousHub;
+                FUT404DS.Program.rootHub = previousHub;
                 Global.EnableOutputDataToDS4[0] = previousOutput;
                 Global.Switch2RumbleDelayMilliseconds[0] = previousDelay;
                 audio.Dispose();

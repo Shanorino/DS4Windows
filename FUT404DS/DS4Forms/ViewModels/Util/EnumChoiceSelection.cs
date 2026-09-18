@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 using System;
 
-namespace DS4WinWPF.DS4Forms.ViewModels.Util
+namespace FUT404DSWPF.DS4Forms.ViewModels.Util
 {
     public class EnumChoiceSelection<T>
     {

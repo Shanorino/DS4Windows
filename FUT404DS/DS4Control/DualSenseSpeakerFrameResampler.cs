@@ -1,7 +1,7 @@
 using NAudio.Dsp;
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Streaming resampler for the physical DualSense speaker clock.
@@ -224,7 +224,7 @@ namespace DS4Windows
 
     /// <summary>
     /// DualSense direct-PCM route matching the validated implementation's signal stages while
-    /// retaining DS4Windows' long-window source/controller clock correction.
+    /// retaining FUT404DS' long-window source/controller clock correction.
     ///
     /// Stage one applies only the small dynamic clock ratio and always emits
     /// exactly 512 intermediate frames. Stage two is the reference feed-driven

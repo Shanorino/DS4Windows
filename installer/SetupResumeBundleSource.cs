@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace DS4Windows.Installation;
+namespace FUT404DS.Installation;
 
 // Burn caches and registers its own engine before executing the package chain.
 // Registry values are only routing hints: the current engine's immutable bundle
@@ -12,7 +12,7 @@ namespace DS4Windows.Installation;
 internal static class SetupResumeBundleSource
 {
     private const string UninstallPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-    internal const string BundleTag = "DS4WindowsManagedV2";
+    internal const string BundleTag = "FUT404DSManagedV2";
     internal const string UpgradeCode = "BC70CCB1-AD65-42A0-B468-8A7278A37A62";
 
     internal static string Resolve(string bundleId)
@@ -46,7 +46,7 @@ internal static class SetupResumeBundleSource
         if (!Guid.TryParse(providerKey, out Guid provider) || provider != Guid.Parse(id) ||
             !string.Equals(tag, BundleTag, StringComparison.Ordinal) || upgradeCodes == null ||
             !upgradeCodes.Any(value => Guid.TryParse(value, out Guid upgrade) && upgrade == Guid.Parse(UpgradeCode)))
-            throw new InvalidDataException("The current cache registration does not identify this DS4Windows bundle.");
+            throw new InvalidDataException("The current cache registration does not identify this FUT404DS bundle.");
         if (string.IsNullOrWhiteSpace(cachePath) || !Path.IsPathFullyQualified(cachePath) ||
             cachePath.StartsWith(@"\\", StringComparison.Ordinal) || cachePath.Contains('/'))
             throw new InvalidDataException("The current bundle cache path is invalid.");
@@ -54,7 +54,7 @@ internal static class SetupResumeBundleSource
         string fileName = Path.GetFileName(source);
         if (!string.Equals(source, cachePath, StringComparison.OrdinalIgnoreCase) ||
             !SamePath(Path.GetDirectoryName(source), Path.Combine(cacheRoot, id)) ||
-            !fileName.StartsWith("DS4Windows_", StringComparison.Ordinal) ||
+            !fileName.StartsWith("FUT404DS_", StringComparison.Ordinal) ||
             !fileName.EndsWith("_Setup_x64.exe", StringComparison.Ordinal) ||
             fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             throw new InvalidDataException("Setup resume must use the exact current bundle in the protected machine cache.");

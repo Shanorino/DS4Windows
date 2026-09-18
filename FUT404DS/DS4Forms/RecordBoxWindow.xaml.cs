@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for RecordBoxWindow.xaml
@@ -39,7 +39,7 @@ namespace DS4WinWPF.DS4Forms
     {
         public event EventHandler Saved;
 
-        public RecordBoxWindow(int deviceNum, DS4Windows.DS4ControlSettings settings, bool repeatable = true)
+        public RecordBoxWindow(int deviceNum, FUT404DS.DS4ControlSettings settings, bool repeatable = true)
         {
             InitializeComponent();
 

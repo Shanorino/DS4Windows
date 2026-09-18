@@ -1,10 +1,10 @@
 using System.Buffers.Binary;
 using System.Reflection;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HelperFixture = DS4Windows.Tests.DualSenseBluetoothNativeIdleRetryTests.Fixture;
+using HelperFixture = FUT404DS.Tests.DualSenseBluetoothNativeIdleRetryTests.Fixture;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 /// <summary>
 /// Reproduces the caller/helper circular wait when a native burst fills the

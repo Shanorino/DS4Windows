@@ -7,9 +7,9 @@
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <UseWPF>true</UseWPF>
     <EnableDynamicLoading>true</EnableDynamicLoading>
-    <AssemblyName>DS4Windows.Bootstrapper</AssemblyName>
-    <RootNamespace>DS4Windows.Bootstrapper</RootNamespace>
-    <ApplicationIcon>..\..\DS4Windows\DS4W.ico</ApplicationIcon>
+    <AssemblyName>FUT404DS.Bootstrapper</AssemblyName>
+    <RootNamespace>FUT404DS.Bootstrapper</RootNamespace>
+    <ApplicationIcon>..\..\FUT404DS\DS4W.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
@@ -20,7 +20,7 @@
     <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\..\DS4Windows\DS4W.ico" Link="DS4W.ico" />
+    <Resource Include="..\..\FUT404DS\DS4W.ico" Link="DS4W.ico" />
     <Compile Include="..\InstallerStartupTaskPolicy.cs" Link="InstallerStartupTaskPolicy.cs" />
     <Compile Include="..\StartupSetupState.cs" Link="StartupSetupState.cs" />
   </ItemGroup>

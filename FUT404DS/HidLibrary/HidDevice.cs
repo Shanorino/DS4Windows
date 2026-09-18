@@ -8,7 +8,7 @@ using Windows.Win32.Foundation;
 using Windows.Win32.Security;
 using Windows.Win32.Storage.FileSystem;
 using Microsoft.Win32.SafeHandles;
-namespace DS4Windows
+namespace FUT404DS
 {
     public class HidDevice : IDisposable
     {
@@ -699,7 +699,7 @@ namespace DS4Windows
                 return serial;
 
             // Some devices don't have MAC address (especially gamepads with USB only suports in PC). If the serial number reading fails 
-            // then use dummy zero MAC address, because there is a good chance the gamepad stll works in DS4Windows app (the code would throw
+            // then use dummy zero MAC address, because there is a good chance the gamepad stll works in FUT404DS app (the code would throw
             // an index out of bounds exception anyway without IF-THEN-ELSE checks after trying to read a serial number).
 
             if (Capabilities.InputReportByteLength == 64)

@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     // Original, code-native illustrations: scalable, theme-independent, and
     // shared once per process. The adjacent text supplies accessible meaning.

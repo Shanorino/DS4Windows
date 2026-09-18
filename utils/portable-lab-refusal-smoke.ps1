@@ -8,7 +8,7 @@ $desktopPath = [Environment]::GetFolderPath('DesktopDirectory').TrimEnd('\')
 if (!$labFullPath.StartsWith($desktopPath + '\', [StringComparison]::OrdinalIgnoreCase)) {
     throw 'This test requires a dedicated Desktop lab directory.'
 }
-$labExe = Join-Path $labFullPath 'DS4Windows.exe'
+$labExe = Join-Path $labFullPath 'FUT404DS.exe'
 $labViiper = Join-Path $labFullPath 'viiper.exe'
 $labData = Join-Path $labFullPath 'lab-data'
 if (!(Test-Path -LiteralPath $labExe) -or (Test-Path -LiteralPath $labData)) {
@@ -17,19 +17,19 @@ if (!(Test-Path -LiteralPath $labExe) -or (Test-Path -LiteralPath $labData)) {
 if ((Get-FileHash -LiteralPath $labViiper -Algorithm SHA256).Hash -ne $ExpectedViiperSha256) {
     throw 'The staged backend does not match the independently recorded digest.'
 }
-if (@(Get-Process -Name DS4Windows -ErrorAction SilentlyContinue).Count -ne 1) {
+if (@(Get-Process -Name FUT404DS -ErrorAction SilentlyContinue).Count -ne 1) {
     throw 'This negative test requires exactly one already-running mapper; it will not stop it.'
 }
 
 function Get-RefusalSnapshot {
     $snapshot = [ordered]@{}
     foreach ($file in @(
-        'C:\Program Files\DS4Windows\DS4Windows.exe',
-        'C:\Program Files\DS4Windows\VIIPER\viiper.exe',
+        'C:\Program Files\FUT404DS\FUT404DS.exe',
+        'C:\Program Files\FUT404DS\VIIPER\viiper.exe',
         'C:\Program Files\USBip\usbip.exe')) {
         $snapshot[$file] = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash
     }
-    foreach ($taskName in @('RunDS4Windows', 'RunVIIPER')) {
+    foreach ($taskName in @('RunFUT404DS', 'RunVIIPER')) {
         $task = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
         $snapshot["task:$taskName"] = if ($task) {
             Export-ScheduledTask -TaskName $taskName
@@ -39,7 +39,7 @@ function Get-RefusalSnapshot {
     foreach ($file in @(Get-ChildItem -LiteralPath $startup -File | Sort-Object FullName)) {
         $snapshot[$file.FullName] = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash
     }
-    $roaming = Join-Path ([Environment]::GetFolderPath('ApplicationData')) 'DS4Windows'
+    $roaming = Join-Path ([Environment]::GetFolderPath('ApplicationData')) 'FUT404DS'
     foreach ($file in @(Get-ChildItem -LiteralPath $roaming -File -Recurse | Where-Object {
         $_.Extension -in @('.xml', '.json') -and $_.FullName -notlike '*\Logs\*'
     } | Sort-Object FullName)) {
@@ -48,7 +48,7 @@ function Get-RefusalSnapshot {
             lastWriteUtc = $file.LastWriteTimeUtc.ToString('O')
         }
     }
-    $snapshot['existingProcesses'] = @(Get-Process -Name DS4Windows,viiper -ErrorAction SilentlyContinue |
+    $snapshot['existingProcesses'] = @(Get-Process -Name FUT404DS,viiper -ErrorAction SilentlyContinue |
         Sort-Object Id | ForEach-Object { [ordered]@{ id=$_.Id; name=$_.ProcessName; started=$_.StartTime.ToUniversalTime().ToString('O') } })
     return ($snapshot | ConvertTo-Json -Depth 5)
 }

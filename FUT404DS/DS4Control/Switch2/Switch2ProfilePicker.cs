@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 GPL-3.0-or-later; see LICENSE.
 
@@ -10,7 +10,7 @@ See docs/protocols/switch2-profile-picker.md for provenance and integration gate
 */
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 [Flags]
 internal enum Switch2ProfilePickerButtons : byte

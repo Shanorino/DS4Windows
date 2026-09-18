@@ -1,10 +1,10 @@
 using System;
 using System.Text;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms;
+namespace FUT404DSWPF.DS4Forms;
 
 internal enum MappingLiveInputStatus { Waiting, Live, Stale, Disconnected, Replaced }
 

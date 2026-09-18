@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 using Concentus;
 using Concentus.Enums;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Finite, synthetic headphone-format hypotheses, NOT a production encoder.

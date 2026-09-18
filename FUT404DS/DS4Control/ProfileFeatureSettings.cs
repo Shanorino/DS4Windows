@@ -1,6 +1,6 @@
 /*
-DS4Windows
-Copyright (C) 2026  DS4Windows contributors
+FUT404DS
+Copyright (C) 2026  FUT404DS contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public enum AudioHapticsSourceKind : byte
     {
@@ -60,7 +60,7 @@ namespace DS4Windows
 
     /// <summary>
     /// Per-profile audio-to-advanced-haptics settings. Defaults and ranges are
-    /// shared by the UI, persistence layer, and native DS4Windows runtime.
+    /// shared by the UI, persistence layer, and native FUT404DS runtime.
     /// </summary>
     public sealed class AudioHapticsProfileSettings
     {

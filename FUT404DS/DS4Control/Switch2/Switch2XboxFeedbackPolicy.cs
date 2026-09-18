@@ -1,10 +1,10 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 SPDX-License-Identifier: GPL-3.0-or-later
 */
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // A presentation restriction, not another feedback publisher or sequence owner.
 internal readonly record struct Switch2XboxFeedbackPolicy(bool OutputEnabled,

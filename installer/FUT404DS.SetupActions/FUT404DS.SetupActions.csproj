@@ -4,8 +4,8 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <Platforms>x64</Platforms>
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyName>DS4Windows.SetupActions</AssemblyName>
-    <RootNamespace>DS4Windows.SetupActions</RootNamespace>
+    <AssemblyName>FUT404DS.SetupActions</AssemblyName>
+    <RootNamespace>FUT404DS.SetupActions</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>

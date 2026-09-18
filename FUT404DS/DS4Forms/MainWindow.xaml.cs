@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -39,14 +39,14 @@ using System.ComponentModel;
 using HttpProgress;
 using System.Windows.Threading;
 
-using DS4WinWPF.DS4Forms.ViewModels;
-using DS4Windows;
-using DS4WinWPF.DS4Control;
-using DS4WinWPF.Translations;
-using DS4Windows.Switch2;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Control;
+using FUT404DSWPF.Translations;
+using FUT404DS.Switch2;
 using H.NotifyIcon.Core;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -129,7 +129,7 @@ namespace DS4WinWPF.DS4Forms
         public MainWindow(ArgumentParser parser)
         {
             InitializeComponent();
-            if (PortableLabContext.IsActive) Title = "DS4Windows — Portable controller lab";
+            if (PortableLabContext.IsActive) Title = "FUT404DS — Portable controller lab";
             profileEditorReturnTabIndex = mainTabCon.Items.IndexOf(profilesTab);
 
             mainWinVM = new MainWindowsViewModel();
@@ -309,7 +309,7 @@ namespace DS4WinWPF.DS4Forms
                     }
                     catch
                     {
-                        Dispatcher.Invoke(() => MessageBox.Show(Strings.FailedToRetrieveLatestVersion, "DS4Windows Updater"));
+                        Dispatcher.Invoke(() => MessageBox.Show(Strings.FailedToRetrieveLatestVersion, "FUT404DS Updater"));
                         // bubble the exception up to allow to see what's wrong in the log
                         throw;
                     }
@@ -444,7 +444,7 @@ namespace DS4WinWPF.DS4Forms
 
                 if (showstatus)
                 {
-                    Dispatcher.Invoke(() => MessageBox.Show(Properties.Resources.UpToDate, "DS4Windows Updater"));
+                    Dispatcher.Invoke(() => MessageBox.Show(Properties.Resources.UpToDate, "FUT404DS Updater"));
                 }
             }
         }
@@ -466,7 +466,7 @@ namespace DS4WinWPF.DS4Forms
             }
         }
 
-        private void ShowNotification(object sender, DS4Windows.DebugEventArgs e)
+        private void ShowNotification(object sender, FUT404DS.DebugEventArgs e)
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
@@ -752,7 +752,7 @@ Suspend support not enabled.", true);
                     }
 
                     service.LogDebug(
-                        DS4WinWPF.Translations.Strings.WakeupFromSuspend);
+                        FUT404DSWPF.Translations.Strings.WakeupFromSuspend);
                     service.Start();
                 }
             }
@@ -1126,7 +1126,7 @@ Suspend support not enabled.", true);
             }), DispatcherPriority.Send);
         }
 
-        private void UpdateLastStatusMessage(object sender, DS4Windows.DebugEventArgs e)
+        private void UpdateLastStatusMessage(object sender, FUT404DS.DebugEventArgs e)
         {
             lastLogMsg.Message = e.Data;
             lastLogMsg.Warning = e.Warning;
@@ -1877,7 +1877,7 @@ Suspend support not enabled.", true);
 
             if (!persisted)
             {
-                button.ToolTip = controller.Device is DS4Windows.InputDevices.JoyConDevice ?
+                button.ToolTip = controller.Device is FUT404DS.InputDevices.JoyConDevice ?
                     "The holding style is active, but the profile could not be saved." :
                     "The new hold mode is active for this connection, but " +
                     "its controller-specific record could not be saved.";
@@ -2173,7 +2173,7 @@ Suspend support not enabled.", true);
 
                                     if (tdevice >= 0 && tdevice < ControlService.MAX_DS4_CONTROLLER_COUNT)
                                     {
-                                        // Name of the property to query from a profile or DS4Windows app engine
+                                        // Name of the property to query from a profile or FUT404DS app engine
                                         propName = strData[2].ToLower();
 
                                             if (propName == "profilename")
@@ -2227,7 +2227,7 @@ Suspend support not enabled.", true);
                     }
                     catch
                     {
-                        // Eat all exceptions in WM_COPYDATA because exceptions here are not fatal for DS4Windows background app
+                        // Eat all exceptions in WM_COPYDATA because exceptions here are not fatal for FUT404DS background app
                     }
                     break;
                 }
@@ -2554,7 +2554,7 @@ Suspend support not enabled.", true);
             if (changingDSXUdp) return;
             bool enabled = useDSXUdpServerCk.IsChecked == true;
             dsxUdpValidationError = null;
-            if (enabled && !DS4Windows.DS4Control.DSXUdpServer.TryValidateEndpoint(
+            if (enabled && !FUT404DS.DS4Control.DSXUdpServer.TryValidateEndpoint(
                     dsxUpdPortNum.Value ?? 0, dsxUdpServerTxt.Text.Trim(), out _, out dsxUdpValidationError))
             {
                 RefreshDSXUdpStatus();
@@ -3111,7 +3111,7 @@ Suspend support not enabled.", true);
             if (App.rootHub?.running != true)
             {
                 switch2JoyConCandidateStatusText.Text =
-                    "Start DS4Windows before joining Joy-Con 2 controllers.";
+                    "Start FUT404DS before joining Joy-Con 2 controllers.";
                 UpdateSwitch2JoyConActionAdmission();
                 return;
             }
@@ -3248,11 +3248,11 @@ Suspend support not enabled.", true);
                     if (Changelog.CheckNewerReleaseExists(out string releaseTag, false))
                         DisplayUpdaterWindow(releaseTag);
                     else
-                        Dispatcher.Invoke(() => MessageBox.Show(Properties.Resources.UpToDate, "DS4Windows Updater"));
+                        Dispatcher.Invoke(() => MessageBox.Show(Properties.Resources.UpToDate, "FUT404DS Updater"));
                 }
                 catch
                 {
-                    Dispatcher.Invoke(() => MessageBox.Show(Strings.FailedToRetrieveLatestVersion, "DS4Windows Updater"));
+                    Dispatcher.Invoke(() => MessageBox.Show(Strings.FailedToRetrieveLatestVersion, "FUT404DS Updater"));
                     // bubble the exception up to allow to see what's wrong in the log
                     throw;
                 }
@@ -3264,7 +3264,7 @@ Suspend support not enabled.", true);
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.AddExtension = true;
             dialog.DefaultExt = ".xml";
-            dialog.Filter = "DS4Windows Profile (*.xml)|*.xml";
+            dialog.Filter = "FUT404DS Profile (*.xml)|*.xml";
             dialog.Title = "Select Profile to Import File";
             if (Global.appdatapath != Global.exedirpath)
                 dialog.InitialDirectory = Path.Combine(Global.appDataPpath, "Profiles");
@@ -3291,7 +3291,7 @@ Suspend support not enabled.", true);
                 SaveFileDialog dialog = new SaveFileDialog();
                 dialog.AddExtension = true;
                 dialog.DefaultExt = ".xml";
-                dialog.Filter = "DS4Windows Profile (*.xml)|*.xml";
+                dialog.Filter = "FUT404DS Profile (*.xml)|*.xml";
                 dialog.Title = "Select Profile to Export File";
                 Stream stream;
                 Stream profile = new StreamReader(Global.appdatapath + "\\Profiles\\" + entity.Name + ".xml").BaseStream;

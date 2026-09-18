@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 public sealed class DS4DeviceWorkerLifecycleTests

@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -170,7 +170,7 @@ public sealed class LegacyJoyConDualSenseFeedbackTests
         internal readonly RecordingJoyCon Left, Right;
         internal readonly LegacyJoyConLinkCoordinator Links = new(() => new Projection(), (_, _, _) => { });
         private readonly ViiperOutDevice output = new(OutContType.None, ViiperVirtualDeviceType.DualSense);
-        private readonly ControlService previousHub = DS4Windows.Program.rootHub;
+        private readonly ControlService previousHub = FUT404DS.Program.rootHub;
         private readonly bool oldOutput = Global.EnableOutputDataToDS4[0];
         private readonly bool oldAudio = Global.Switch2DualSenseAudioHapticsEnabled[0];
         private readonly bool oldAdaptive = Global.Switch2DualSenseAdaptiveTriggersEnabled[0];
@@ -189,7 +189,7 @@ public sealed class LegacyJoyConDualSenseFeedbackTests
             Assert.IsTrue(Links.TryLink(Left.ProfileConnection, Right.ProfileConnection, (_, _) => { }, out _));
             var hub = (ControlService)RuntimeHelpers.GetUninitializedObject(typeof(ControlService));
             hub.DS4Controllers = new DS4Device[] { Left, Right };
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Set(typeof(ViiperOutDevice), output, "lastInputDeviceIndex", 0);
         }
         internal void Apply(byte[] feedback, bool fresh = true, long stream = 11)
@@ -203,7 +203,7 @@ public sealed class LegacyJoyConDualSenseFeedbackTests
         public void Dispose()
         {
             Left.Stop(); Right.Stop();
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
             Global.EnableOutputDataToDS4[0] = oldOutput;
             Global.Switch2DualSenseAudioHapticsEnabled[0] = oldAudio;
             Global.Switch2DualSenseAdaptiveTriggersEnabled[0] = oldAdaptive;

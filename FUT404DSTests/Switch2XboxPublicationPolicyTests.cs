@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -15,8 +15,8 @@ public sealed class Switch2XboxPublicationPolicyTests
     public void ProfileDisableDuringPublicationCannotFallBetweenSnapshotAndRefresh(bool disableAll)
     {
         const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
-        var previousHub = DS4Windows.Program.rootHub;
-        var previousAppHub = DS4WinWPF.App.rootHub;
+        var previousHub = FUT404DS.Program.rootHub;
+        var previousAppHub = FUT404DSWPF.App.rootHub;
         bool previousOutput = Global.EnableOutputDataToDS4[0];
         bool previousImpulse = Global.Switch2MapXboxImpulseTriggersToHdRumble[0];
         int previousDelay = Global.Switch2RumbleDelayMilliseconds[0];
@@ -35,8 +35,8 @@ public sealed class Switch2XboxPublicationPolicyTests
             var output = new ViiperOutDevice(OutContType.ViiperXboxOne, ViiperVirtualDeviceType.XboxOne);
             hub.DS4Controllers = new DS4Device[] { target };
             hub.outputDevices = new OutputDevice[] { output };
-            DS4Windows.Program.rootHub = hub;
-            DS4WinWPF.App.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
+            FUT404DSWPF.App.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Global.Switch2MapXboxImpulseTriggersToHdRumble[0] = true;
             Global.Switch2RumbleDelayMilliseconds[0] = 0;
@@ -51,8 +51,8 @@ public sealed class Switch2XboxPublicationPolicyTests
                 .CreateDelegate(typeof(Func<byte[], int, bool>), output);
             var refresh = (Func<bool>)typeof(ViiperOutDevice).GetMethod("ProcessXboxFeedbackPolicyRefresh", fields)
                 .CreateDelegate(typeof(Func<bool>), output);
-            var profile = (DS4WinWPF.DS4Forms.ViewModels.ProfileSettingsViewModel)RuntimeHelpers.GetUninitializedObject(
-                typeof(DS4WinWPF.DS4Forms.ViewModels.ProfileSettingsViewModel));
+            var profile = (FUT404DSWPF.DS4Forms.ViewModels.ProfileSettingsViewModel)RuntimeHelpers.GetUninitializedObject(
+                typeof(FUT404DSWPF.DS4Forms.ViewModels.ProfileSettingsViewModel));
             object sessionGate = typeof(Switch2VirtualFeedbackSession).GetField("gate", fields).GetValue(session);
             bool accepted = false;
             Exception publicationError = null;
@@ -102,8 +102,8 @@ public sealed class Switch2XboxPublicationPolicyTests
             Global.EnableOutputDataToDS4[0] = previousOutput;
             Global.Switch2MapXboxImpulseTriggersToHdRumble[0] = previousImpulse;
             Global.Switch2RumbleDelayMilliseconds[0] = previousDelay;
-            DS4Windows.Program.rootHub = previousHub;
-            DS4WinWPF.App.rootHub = previousAppHub;
+            FUT404DS.Program.rootHub = previousHub;
+            FUT404DSWPF.App.rootHub = previousAppHub;
         }
     }
 }

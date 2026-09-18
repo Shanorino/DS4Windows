@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -24,19 +24,19 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using Microsoft.Win32.TaskScheduler;
-using DS4Windows.Installation;
+using FUT404DS.Installation;
 using Task = Microsoft.Win32.TaskScheduler.Task;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     [System.Security.SuppressUnmanagedCodeSecurity]
     public static class StartupMethods
     {
         private const string RefreshTaskArgument =
-            "--refresh-ds4windows-startup-task";
+            "--refresh-fut404ds-startup-task";
         private const string RemoveTaskArgument =
-            "--remove-ds4windows-startup-task";
-        public static string lnkpath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\DS4Windows.lnk";
+            "--remove-fut404ds-startup-task";
+        public static string lnkpath = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\FUT404DS.lnk";
 
         public static bool TryRunTaskRefreshHelper(string[] args,
             out int exitCode)
@@ -62,9 +62,9 @@ namespace DS4WinWPF
             }
 
             string currentUserSid = WindowsIdentity.GetCurrent().User?.Value;
-            if (DS4Windows.PortableLabContext.IsActive ||
+            if (FUT404DS.PortableLabContext.IsActive ||
                 !StartupRegistrationPolicy.AuthorizesTaskHelper(
-                    DS4Windows.Global.IsAdministrator(), currentUserSid, targetUserSid))
+                    FUT404DS.Global.IsAdministrator(), currentUserSid, targetUserSid))
             {
                 exitCode = 5;
                 return true;
@@ -79,7 +79,7 @@ namespace DS4WinWPF
                     // Reinspect after elevation. A task disabled or removed
                     // while the approval prompt was open must stay that way.
                     using TaskService service = new TaskService();
-                    using Task task = service.GetTask(@"\RunDS4Windows");
+                    using Task task = service.GetTask(@"\RunFUT404DS");
                     if (TaskNeedsRepair(task)) WriteTaskEntry();
                 }
                 exitCode = 0;
@@ -94,17 +94,17 @@ namespace DS4WinWPF
 
         public static void RetargetExistingTaskToCurrentExecutable()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             try
             {
                 using TaskService ts = new TaskService();
-                using Task task = ts.GetTask(@"\RunDS4Windows");
+                using Task task = ts.GetTask(@"\RunFUT404DS");
                 if (!TaskNeedsRepair(task))
                 {
                     return;
                 }
 
-                if (DS4Windows.Global.IsAdministrator())
+                if (FUT404DS.Global.IsAdministrator())
                 {
                     WriteTaskEntry();
                     return;
@@ -125,22 +125,22 @@ namespace DS4WinWPF
 
         public static bool HasStartProgEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return false;
+            if (FUT404DS.PortableLabContext.IsActive) return false;
             // Exception handling should not be needed here. Method handles most cases
             return File.Exists(lnkpath) && IsOwnedShortcut(lnkpath);
         }
 
         public static bool HasTaskEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return false;
+            if (FUT404DS.PortableLabContext.IsActive) return false;
             using TaskService ts = new TaskService();
-            using Task tasker = ts.GetTask(@"\RunDS4Windows");
+            using Task tasker = ts.GetTask(@"\RunFUT404DS");
             return TaskIsEnabled(tasker) && IsOwnedTask(tasker);
         }
 
         public static bool IsRunAtStartupEnabled()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return false;
+            if (FUT404DS.PortableLabContext.IsActive) return false;
             if (HasStartProgEntry())
             {
                 return true;
@@ -160,7 +160,7 @@ namespace DS4WinWPF
 
         public static bool IsRunAtStartupRequested()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return false;
+            if (FUT404DS.PortableLabContext.IsActive) return false;
             using WindowsIdentity identity = WindowsIdentity.GetCurrent();
             string sid = identity.User?.Value ?? throw new InvalidOperationException(
                 "Windows did not provide the current account SID.");
@@ -172,7 +172,7 @@ namespace DS4WinWPF
 
         public static void WriteStartProgEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             EnsureShortcutOwnership();
             Type t = Type.GetTypeFromCLSID(new Guid("72C24DD5-D70A-438B-8A42-98424B88AFB8")); // Windows Script Host Shell Object
             dynamic shell = Activator.CreateInstance(t);
@@ -181,11 +181,11 @@ namespace DS4WinWPF
                 var lnk = shell.CreateShortcut(lnkpath);
                 try
                 {
-                    string app = DS4Windows.Global.exelocation;
-                    lnk.TargetPath = DS4Windows.Global.exelocation;
+                    string app = FUT404DS.Global.exelocation;
+                    lnk.TargetPath = FUT404DS.Global.exelocation;
                     lnk.Arguments = "-m";
                     lnk.Description = StartupRegistrationPolicy.ManagedTaskDescription;
-                    lnk.WorkingDirectory = DS4Windows.Global.exedirpath;
+                    lnk.WorkingDirectory = FUT404DS.Global.exedirpath;
 
                     //lnk.TargetPath = Assembly.GetExecutingAssembly().Location;
                     //lnk.Arguments = "-m";
@@ -202,29 +202,29 @@ namespace DS4WinWPF
                 Marshal.FinalReleaseComObject(shell);
             }
             if (!HasStartProgEntry())
-                throw new IOException("Windows did not save the DS4Windows startup shortcut.");
+                throw new IOException("Windows did not save the FUT404DS startup shortcut.");
         }
 
         public static void DeleteStartProgEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             StartupRegistrationPolicy.RemoveShortcut(lnkpath, IsOwnedShortcut);
         }
 
         public static void DeleteOldTaskEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             using TaskService ts = new TaskService();
-            using Task tasker = ts.GetTask(@"\RunDS4Windows");
+            using Task tasker = ts.GetTask(@"\RunFUT404DS");
             if (TaskNeedsRepair(tasker))
             {
-                ts.RootFolder.DeleteTask("RunDS4Windows");
+                ts.RootFolder.DeleteTask("RunFUT404DS");
             }
         }
 
         public static bool CanWriteStartEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return false;
+            if (FUT404DS.PortableLabContext.IsActive) return false;
             bool result = false;
             if (!new FileInfo(lnkpath).IsReadOnly)
             {
@@ -236,9 +236,9 @@ namespace DS4WinWPF
 
         public static void WriteTaskEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             using TaskService ts = new TaskService();
-            using Task existing = ts.GetTask(@"\RunDS4Windows");
+            using Task existing = ts.GetTask(@"\RunFUT404DS");
             EnsureTaskOwnership(existing);
             TaskDefinition td = ts.NewTask();
             td.RegistrationInfo.Description = StartupRegistrationPolicy.ManagedTaskDescription;
@@ -250,9 +250,9 @@ namespace DS4WinWPF
             // lookup when the computer and local account share a name while
             // retaining the same interactive-user security boundary.
             td.Triggers.Add(new LogonTrigger());
-            string dir = DS4Windows.Global.exedirpath;
+            string dir = FUT404DS.Global.exedirpath;
             td.Actions.Add(new ExecAction(
-                DS4Windows.Global.exelocation, "-m", dir));
+                FUT404DS.Global.exelocation, "-m", dir));
 
             td.Principal.UserId = currentUserSid;
             td.Principal.LogonType = TaskLogonType.InteractiveToken;
@@ -264,37 +264,37 @@ namespace DS4WinWPF
             td.Settings.AllowDemandStart = true;
             // Task Scheduler defaults new tasks to BELOW_NORMAL (priority 7),
             // including low I/O and memory priority.  That can starve the
-            // controller media producer during a CPU spike before DS4Windows
+            // controller media producer during a CPU spike before FUT404DS
             // has a chance to raise its own process priority.
             td.Settings.Priority = ProcessPriorityClass.High;
             // Replace in place; a failed registration must not first delete
             // the user's previous working startup entry.
-            using Task registered = ts.RootFolder.RegisterTaskDefinition("RunDS4Windows", td);
+            using Task registered = ts.RootFolder.RegisterTaskDefinition("RunFUT404DS", td);
             if (registered == null || !TaskTargetsCurrentExecutable(registered))
-                throw new IOException("Windows did not confirm the DS4Windows startup task.");
+                throw new IOException("Windows did not confirm the FUT404DS startup task.");
         }
 
         public static void DeleteTaskEntry()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             using TaskService ts = new TaskService();
-            using Task tasker = ts.GetTask(@"\RunDS4Windows");
+            using Task tasker = ts.GetTask(@"\RunFUT404DS");
             if (tasker != null)
             {
                 EnsureTaskOwnership(tasker);
-                if (DS4Windows.Global.IsAdministrator())
-                    ts.RootFolder.DeleteTask("RunDS4Windows");
+                if (FUT404DS.Global.IsAdministrator())
+                    ts.RootFolder.DeleteTask("RunFUT404DS");
                 else
                     RunTaskHelper(RemoveTaskArgument);
-                using Task remaining = ts.GetTask(@"\RunDS4Windows");
+                using Task remaining = ts.GetTask(@"\RunFUT404DS");
                 if (remaining != null)
-                    throw new IOException("The DS4Windows startup task remained after removal.");
+                    throw new IOException("The FUT404DS startup task remained after removal.");
             }
         }
 
         internal static StartupRegistrationState ReadRegistrationState()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return default;
+            if (FUT404DS.PortableLabContext.IsActive) return default;
             StartupRegistrationState state = default;
             try
             {
@@ -308,7 +308,7 @@ namespace DS4WinWPF
                     userRequested, setup?.Requested, setup?.DeferredReason);
                 state = state with { Program = HasStartProgEntry() };
                 using TaskService service = new TaskService();
-                using Task task = service.GetTask(@"\RunDS4Windows");
+                using Task task = service.GetTask(@"\RunFUT404DS");
                 state = state with { Task = TaskIsEnabled(task) && IsOwnedTask(task) };
                 if (!state.Requested.HasValue && !state.Enabled && task != null &&
                     !TaskIsEnabled(task) && IsOwnedTask(task) &&
@@ -319,7 +319,7 @@ namespace DS4WinWPF
                     using var machine = Microsoft.Win32.RegistryKey.OpenBaseKey(
                         Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
                     using var setupKey = machine.OpenSubKey(StartupSetupStore.MachinePath + "\\" + sid);
-                    using var infrastructure = machine.OpenSubKey(@"SOFTWARE\DS4Windows");
+                    using var infrastructure = machine.OpenSubKey(@"SOFTWARE\FUT404DS");
                     state = StartupRegistrationPolicy.RecoverLegacySetupDeferral(state,
                         hasSetupRecord: setupKey != null, exactOwnedDisabledTask: true,
                         infrastructure?.GetValue("InfrastructureState") as string);
@@ -334,7 +334,7 @@ namespace DS4WinWPF
 
         internal static void SetRegistrationMode(StartupRegistrationMode mode)
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             if (mode == StartupRegistrationMode.Disabled)
             {
                 // Persist cancellation before task removal or UAC. A pending
@@ -359,7 +359,7 @@ namespace DS4WinWPF
             // collision is not permission to remove another program's task.
             EnsureShortcutOwnership();
             using (TaskService service = new TaskService())
-            using (Task task = service.GetTask(@"\RunDS4Windows"))
+            using (Task task = service.GetTask(@"\RunFUT404DS"))
                 EnsureTaskOwnership(task);
 
             switch (mode)
@@ -390,7 +390,7 @@ namespace DS4WinWPF
                 throw new InvalidOperationException("Windows did not provide the current account SID.");
             ProcessStartInfo startInfo = new()
             {
-                FileName = DS4Windows.Global.exelocation,
+                FileName = FUT404DS.Global.exelocation,
                 UseShellExecute = true,
                 Verb = "runas",
             };
@@ -436,23 +436,23 @@ namespace DS4WinWPF
         {
             if (task != null && !IsOwnedTask(task))
                 throw new InvalidOperationException(
-                    "The RunDS4Windows task belongs to another owner or has an unrecognized configuration. It was not changed.");
+                    "The RunFUT404DS task belongs to another owner or has an unrecognized configuration. It was not changed.");
         }
 
         private static void EnsureShortcutOwnership()
         {
             if (File.Exists(lnkpath) && !IsOwnedShortcut(lnkpath))
-                throw new InvalidOperationException("The DS4Windows startup shortcut belongs to another application. It was not changed.");
+                throw new InvalidOperationException("The FUT404DS startup shortcut belongs to another application. It was not changed.");
         }
 
         private static bool IsRecognizedExecutable(string path)
         {
-            if (PathsEqual(path, DS4Windows.Global.exelocation)) return true;
+            if (PathsEqual(path, FUT404DS.Global.exelocation)) return true;
             try
             {
                 return File.Exists(path) && string.Equals(
                     FileVersionInfo.GetVersionInfo(path).ProductName,
-                    "DS4Windows", StringComparison.OrdinalIgnoreCase);
+                    "FUT404DS", StringComparison.OrdinalIgnoreCase);
             }
             catch { return false; }
         }
@@ -480,16 +480,16 @@ namespace DS4WinWPF
 
         public static bool CheckStartupExeLocation()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return false;
+            if (FUT404DS.PortableLabContext.IsActive) return false;
             string lnkprogpath = ResolveShortcut(lnkpath);
-            return lnkprogpath != DS4Windows.Global.exelocation;
+            return lnkprogpath != FUT404DS.Global.exelocation;
         }
 
         public static void LaunchOldTask()
         {
-            if (DS4Windows.PortableLabContext.IsActive) return;
+            if (FUT404DS.PortableLabContext.IsActive) return;
             using TaskService ts = new TaskService();
-            using Task tasker = ts.GetTask(@"\RunDS4Windows");
+            using Task tasker = ts.GetTask(@"\RunFUT404DS");
             if (TaskIsEnabled(tasker) && IsOwnedTask(tasker))
             {
                 tasker.Run("");
@@ -567,11 +567,11 @@ namespace DS4WinWPF
                 definition.Settings.Priority == ProcessPriorityClass.High &&
                 !definition.Settings.StopIfGoingOnBatteries &&
                 !definition.Settings.DisallowStartIfOnBatteries &&
-                PathsEqual(action.Path, DS4Windows.Global.exelocation) &&
+                PathsEqual(action.Path, FUT404DS.Global.exelocation) &&
                 string.Equals(action.Arguments?.Trim(), "-m",
                     StringComparison.Ordinal) &&
                 PathsEqual(action.WorkingDirectory,
-                    DS4Windows.Global.exedirpath);
+                    FUT404DS.Global.exedirpath);
         }
 
         private static bool AccountMatchesSid(string account,

@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class XboxOneFeedbackOutputPolicyTests
@@ -13,8 +13,8 @@ public sealed class XboxOneFeedbackOutputPolicyTests
     public void NonSwitch2ProfileOutputDisableWakesCurrentEffectWithoutNewPacket()
     {
         const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
-        var previousHub = DS4Windows.Program.rootHub;
-        var previousAppHub = DS4WinWPF.App.rootHub;
+        var previousHub = FUT404DS.Program.rootHub;
+        var previousAppHub = FUT404DSWPF.App.rootHub;
         bool previousOutput = Global.EnableOutputDataToDS4[0];
         byte previousBoost = Global.RumbleBoost[0];
         bool previousInverse = Global.InverseRumbleMotors[0];
@@ -27,8 +27,8 @@ public sealed class XboxOneFeedbackOutputPolicyTests
             var output = new ViiperOutDevice(OutContType.ViiperXboxOne, ViiperVirtualDeviceType.XboxOne);
             hub.DS4Controllers = new DS4Device[] { target };
             hub.outputDevices = new OutputDevice[] { output };
-            DS4Windows.Program.rootHub = hub;
-            DS4WinWPF.App.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
+            FUT404DSWPF.App.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Global.RumbleBoost[0] = 100;
             Global.InverseRumbleMotors[0] = false;
@@ -50,8 +50,8 @@ public sealed class XboxOneFeedbackOutputPolicyTests
                 .CreateDelegate(typeof(Func<byte[], int, bool>), output);
             var refresh = (Func<bool>)typeof(ViiperOutDevice).GetMethod("ProcessXboxFeedbackPolicyRefresh", fields)
                 .CreateDelegate(typeof(Func<bool>), output);
-            var profile = (DS4WinWPF.DS4Forms.ViewModels.ProfileSettingsViewModel)RuntimeHelpers.GetUninitializedObject(
-                typeof(DS4WinWPF.DS4Forms.ViewModels.ProfileSettingsViewModel));
+            var profile = (FUT404DSWPF.DS4Forms.ViewModels.ProfileSettingsViewModel)RuntimeHelpers.GetUninitializedObject(
+                typeof(FUT404DSWPF.DS4Forms.ViewModels.ProfileSettingsViewModel));
             void Publish(ulong sequence)
             {
                 byte[] wire = PolicyWire(Frame(sequence, timestamp: clock.Now, ttl: 250_000), true);
@@ -109,8 +109,8 @@ public sealed class XboxOneFeedbackOutputPolicyTests
         finally
         {
             session?.TryRetire();
-            DS4Windows.Program.rootHub = previousHub;
-            DS4WinWPF.App.rootHub = previousAppHub;
+            FUT404DS.Program.rootHub = previousHub;
+            FUT404DSWPF.App.rootHub = previousAppHub;
             Global.EnableOutputDataToDS4[0] = previousOutput;
             Global.RumbleBoost[0] = previousBoost;
             Global.InverseRumbleMotors[0] = previousInverse;
@@ -123,7 +123,7 @@ public sealed class XboxOneFeedbackOutputPolicyTests
     {
         const BindingFlags privateInstance = BindingFlags.Instance |
             BindingFlags.NonPublic;
-        ControlService previousHub = DS4Windows.Program.rootHub;
+        ControlService previousHub = FUT404DS.Program.rootHub;
         bool previousOutputEnabled = Global.EnableOutputDataToDS4[0];
         byte previousBoost = Global.RumbleBoost[0];
         XboxOnePhysicalFeedbackSession session = null;
@@ -133,7 +133,7 @@ public sealed class XboxOneFeedbackOutputPolicyTests
             var hub = (ControlService)RuntimeHelpers.GetUninitializedObject(
                 typeof(ControlService));
             hub.DS4Controllers = new DS4Device[] { target };
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.RumbleBoost[0] = 100;
             var output = new ViiperOutDevice(OutContType.ViiperXboxOne,
                 ViiperVirtualDeviceType.XboxOne);
@@ -194,7 +194,7 @@ public sealed class XboxOneFeedbackOutputPolicyTests
             session?.TryRetire();
             Global.EnableOutputDataToDS4[0] = previousOutputEnabled;
             Global.RumbleBoost[0] = previousBoost;
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
         }
     }
 

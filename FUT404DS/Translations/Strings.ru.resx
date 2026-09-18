@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -157,7 +157,7 @@
     <value>Проверка обновлений</value>
   </data>
   <data name="CheckUpdateStartup" xml:space="preserve">
-    <value>Проверка обновлений DS4Windows при запуске</value>
+    <value>Проверка обновлений FUT404DS при запуске</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Очистить</value>
@@ -342,9 +342,9 @@
 (string)</comment>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Некоторые игры встроили блок, который приводит к игнорированию ввода DS4, если игра обнаруживает, что в это время запущен DS4Windows.exe или InputMapper.exe. Обходной путь к блокировке - переименовать DS4Windows.exe, чтобы проверка в игре не прошла. Указание настраиваемого имени exe-файла позволяет DS4Updater автоматически обновлять настраиваемую копию DS4Windows до желаемого имени файла. Обязательно уберите расширение.
+    <value>Некоторые игры встроили блок, который приводит к игнорированию ввода DS4, если игра обнаруживает, что в это время запущен FUT404DS.exe или InputMapper.exe. Обходной путь к блокировке - переименовать FUT404DS.exe, чтобы проверка в игре не прошла. Указание настраиваемого имени exe-файла позволяет DS4Updater автоматически обновлять настраиваемую копию FUT404DS до желаемого имени файла. Обязательно уберите расширение.
 
-Пример: whyme_DS4Windows</value>
+Пример: whyme_FUT404DS</value>
     <comment>Settings tab
 (help button)</comment>
   </data>
@@ -471,13 +471,13 @@
     <comment>Profiles tab&gt;Edit&gt;Axis Config&gt;Flick Stick</comment>
   </data>
   <data name="ViGEmPluginFailure" xml:space="preserve">
-    <value>Подключение устройства ViGEm не удалось. Вероятно, внутренняя проблема ViGEmBus. Закрытие соединения. Если проблема не устранена, закройте DS4Windows, а затем запустите приложение PurgeOldXInput из папки Tools. Также может потребоваться перезагрузка Windows.</value>
+    <value>Подключение устройства ViGEm не удалось. Вероятно, внутренняя проблема ViGEmBus. Закрытие соединения. Если проблема не устранена, закройте FUT404DS, а затем запустите приложение PurgeOldXInput из папки Tools. Также может потребоваться перезагрузка Windows.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Сбой проверки целостности данных для беспроводного устройства. Закрытие устройства.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>Среда выполнения .NET 5 не была обнаружена в вашей системе. Пожалуйста, загрузите и установите среду выполнения .NET 5, чтобы обеспечить совместимость с будущими сборками DS4Windows. После закрытия этого окна вы будете перенаправлены на страницу загрузки среды выполнения .NET 5.</value>
+    <value>Среда выполнения .NET 5 не была обнаружена в вашей системе. Пожалуйста, загрузите и установите среду выполнения .NET 5, чтобы обеспечить совместимость с будущими сборками FUT404DS. После закрытия этого окна вы будете перенаправлены на страницу загрузки среды выполнения .NET 5.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Пожалуйста, обновите среду выполнения .NET</value>
@@ -560,8 +560,8 @@
   <data name="SwipeTouchpadToSwitchProfiles" xml:space="preserve">
     <value>Проведите по тачпаду, чтобы переключить профиль</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>Временно выключить DS4Windows</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>Временно выключить FUT404DS</value>
   </data>
   <data name="Unplug" xml:space="preserve">
     <value>Отключить</value>
@@ -648,7 +648,7 @@
     <value>Поддержка контроллера DS3</value>
   </data>
   <data name="FirstLaunch.DeviceIntroText" xml:space="preserve">
-    <value>Из-за того, что другие мапперы по умолчанию поддерживают использование нескольких типов устройств (Steam Input), DS4Windows по умолчанию активирует поддержку только для чтения с контроллеров DS4. Вы можете указать поддержку маппера для других поддерживаемых типов устройств здесь. Будьте осторожны при использовании DS4Windows с возможным одновременным запуском других мапперов.</value>
+    <value>Из-за того, что другие мапперы по умолчанию поддерживают использование нескольких типов устройств (Steam Input), FUT404DS по умолчанию активирует поддержку только для чтения с контроллеров DS4. Вы можете указать поддержку маппера для других поддерживаемых типов устройств здесь. Будьте осторожны при использовании FUT404DS с возможным одновременным запуском других мапперов.</value>
   </data>
   <data name="FirstLaunch.DS3EnableCkbLabel" xml:space="preserve">
     <value>Поддержка контроллера DS3</value>
@@ -1152,7 +1152,7 @@
     <value>Program Folder</value>
   </data>
   <data name="SaveWhere.AppDataDescText" xml:space="preserve">
-    <value>Для тех, кто предпочитает обычную установку. Настройки сохраняются по пути %appdata%\DS4Windows</value>
+    <value>Для тех, кто предпочитает обычную установку. Настройки сохраняются по пути %appdata%\FUT404DS</value>
   </data>
   <data name="SaveWhere.DontDelete" xml:space="preserve">
     <value>Не удаляйте другие настройки пока</value>
@@ -1201,13 +1201,13 @@
     <value>(Дополнительно) Шаг 4: Установите HidHide Driver</value>
   </data>
   <data name="Welcome.Step5HelpText" xml:space="preserve">
-    <value>Используйте драйвер FakerInput для создания системной виртуальной клавиатуры, относительной мыши и абсолютной мыши. Позволяет использовать виртуальные события клавиатуры и мыши в некоторых ситуациях, когда SendInput не работает. Такие ситуации включают в себя повышенный процесс и игры, запросы контроля учетных записей пользователей, и системы античита, блокирующие события SendInput. Использование FakerInput необходимо для работы DS4Windows с некоторыми играми, защищенными системами античита, такими как Valorant.</value>
+    <value>Используйте драйвер FakerInput для создания системной виртуальной клавиатуры, относительной мыши и абсолютной мыши. Позволяет использовать виртуальные события клавиатуры и мыши в некоторых ситуациях, когда SendInput не работает. Такие ситуации включают в себя повышенный процесс и игры, запросы контроля учетных записей пользователей, и системы античита, блокирующие события SendInput. Использование FakerInput необходимо для работы FUT404DS с некоторыми играми, защищенными системами античита, такими как Valorant.</value>
   </data>
   <data name="Welcome.Step5Text" xml:space="preserve">
     <value>(Дополнительно) Шаг 5: Установите FakerInput Driver</value>
   </data>
   <data name="Welcome.WinTitle" xml:space="preserve">
-    <value>Добро пожаловать в DS4Windows</value>
+    <value>Добро пожаловать в FUT404DS</value>
   </data>
   <data name="SpecialActionEdit.CheckBattery" xml:space="preserve">
     <value>Проверить заряд батаери</value>

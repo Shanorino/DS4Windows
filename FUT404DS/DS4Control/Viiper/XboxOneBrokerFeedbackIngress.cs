@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ GNU General Public License for more details.
 
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Generation-bound receive edge for virtual-controller feedback authored

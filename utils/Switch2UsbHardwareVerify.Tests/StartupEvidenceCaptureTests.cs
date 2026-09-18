@@ -1,9 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Switch2.Verification.Tests;
+namespace FUT404DS.Switch2.Verification.Tests;
 
 [TestClass]
 public sealed class StartupEvidenceCaptureTests

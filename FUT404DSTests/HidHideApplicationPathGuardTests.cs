@@ -1,15 +1,15 @@
-using DS4WinWPF.DS4Control;
+using FUT404DSWPF.DS4Control;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class HidHideApplicationPathGuardTests
     {
         [DataTestMethod]
-        [DataRow(@"C:\Apps\DS4Windows.exe", @"\\?\C:\Apps\DS4Windows.exe")]
+        [DataRow(@"C:\Apps\FUT404DS.exe", @"\\?\C:\Apps\FUT404DS.exe")]
         [DataRow(@"c:/Program Files/App/app.exe", @"\\?\c:\Program Files\App\app.exe")]
         [DataRow(@"\Device\HarddiskVolume3\Apps\app.exe", @"\\?\GLOBALROOT\Device\HarddiskVolume3\Apps\app.exe")]
         [DataRow(@"\device\harddiskvolume123\Apps\app.exe", @"\\?\GLOBALROOT\device\harddiskvolume123\Apps\app.exe")]
@@ -151,7 +151,7 @@ namespace DS4WindowsTests
 
                 Assert.IsFalse(alias);
                 Assert.AreEqual(0, error);
-                Assert.IsTrue(DS4Windows.ControlService.CanRegisterHidHideApplication(
+                Assert.IsTrue(FUT404DS.ControlService.CanRegisterHidHideApplication(
                     path, out string rejection), rejection);
                 CollectionAssert.AreEqual(contents, File.ReadAllBytes(path));
                 Assert.AreEqual(writeTime, File.GetLastWriteTimeUtc(path));
@@ -166,13 +166,13 @@ namespace DS4WindowsTests
         public void NativeInspectionRejectsMissingFilesAndDirectories()
         {
             string missingPath = Path.Combine(Path.GetTempPath(),
-                "DS4Windows-HidHide-guard-" + Guid.NewGuid().ToString("N") + ".exe");
+                "FUT404DS-HidHide-guard-" + Guid.NewGuid().ToString("N") + ".exe");
 
             Assert.IsFalse(HidHideApplicationPathGuard.TryInspect(missingPath,
                 out bool missingAlias, out int missingError));
             Assert.IsFalse(missingAlias);
             Assert.AreEqual(2, missingError);
-            Assert.IsFalse(DS4Windows.ControlService.CanRegisterHidHideApplication(
+            Assert.IsFalse(FUT404DS.ControlService.CanRegisterHidHideApplication(
                 missingPath, out string missingReason));
             StringAssert.Contains(missingReason, "Windows error 2");
 

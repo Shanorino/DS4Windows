@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using WPFLocalizeExtension.Engine;
 
-namespace DS4WinWPF
+namespace FUT404DSWPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -94,7 +94,7 @@ namespace DS4WinWPF
         }
 
         private Thread controlThread;
-        public static DS4Windows.ControlService rootHub;
+        public static FUT404DS.ControlService rootHub;
         public static HttpClient requestClient;
         private bool skipSave;
         private bool runShutdown;
@@ -108,14 +108,14 @@ namespace DS4WinWPF
         private static LoggerHolder logHolder;
 
         private MemoryMappedFile ipcClassNameMMF = null; // MemoryMappedFile for inter-process communication used to hold className of DS4Form window
-        private MemoryMappedFile ipcResultDataMMF = null; // MemoryMappedFile for inter-process communication used to exchange string result data between cmdline client process and the background running DS4Windows app
+        private MemoryMappedFile ipcResultDataMMF = null; // MemoryMappedFile for inter-process communication used to exchange string result data between cmdline client process and the background running FUT404DS app
 
-        private static Dictionary<DS4Windows.AppThemeChoice, string> themeLocs = new
-            Dictionary<DS4Windows.AppThemeChoice, string>()
+        private static Dictionary<FUT404DS.AppThemeChoice, string> themeLocs = new
+            Dictionary<FUT404DS.AppThemeChoice, string>()
         {
-            [DS4Windows.AppThemeChoice.Default] = "DS4Forms/Themes/DefaultTheme.xaml",
-            [DS4Windows.AppThemeChoice.Light] = "DS4Forms/Themes/DefaultTheme.xaml",
-            [DS4Windows.AppThemeChoice.Dark] = "DS4Forms/Themes/DarkTheme.xaml",
+            [FUT404DS.AppThemeChoice.Default] = "DS4Forms/Themes/DefaultTheme.xaml",
+            [FUT404DS.AppThemeChoice.Light] = "DS4Forms/Themes/DefaultTheme.xaml",
+            [FUT404DS.AppThemeChoice.Dark] = "DS4Forms/Themes/DarkTheme.xaml",
         };
 
         public event EventHandler ThemeChanged;
@@ -147,8 +147,8 @@ namespace DS4WinWPF
 
             // Validate explicit lab policy before any maintenance helper can
             // repair tasks, install packages, or signal a running mapper.
-            DS4Windows.PortableLabContext.Initialize(e.Args,
-                Path.GetDirectoryName(DS4Windows.Global.exelocation));
+            FUT404DS.PortableLabContext.Initialize(e.Args,
+                Path.GetDirectoryName(FUT404DS.Global.exelocation));
 
             if (StartupMethods.TryRunTaskRefreshHelper(e.Args,
                     out int startupTaskExitCode))
@@ -158,7 +158,7 @@ namespace DS4WinWPF
                 return;
             }
 
-            if (DS4Windows.ViiperSetupManager.
+            if (FUT404DS.ViiperSetupManager.
                 TryRunStartupTaskRegistrationHelper(e.Args,
                     out int viiperTaskExitCode))
             {
@@ -167,7 +167,7 @@ namespace DS4WinWPF
                 return;
             }
 
-            if (DS4Windows.ViiperSetupManager.
+            if (FUT404DS.ViiperSetupManager.
                 TryRunSetupResume(e.Args, out int setupResumeExitCode))
             {
                 runShutdown = false;
@@ -175,7 +175,7 @@ namespace DS4WinWPF
                 return;
             }
 
-            if (DS4Windows.ViiperSetupManager.
+            if (FUT404DS.ViiperSetupManager.
                 TryRunElevatedInstallerHost(e.Args,
                     out int viiperInstallerExitCode))
             {
@@ -184,7 +184,7 @@ namespace DS4WinWPF
                 return;
             }
 
-            if (DS4Windows.ViiperSetupManager.
+            if (FUT404DS.ViiperSetupManager.
                 TryRunForeignViiperTerminationHelper(e.Args,
                     out int viiperHelperExitCode))
             {
@@ -193,7 +193,7 @@ namespace DS4WinWPF
                 return;
             }
 
-            if (DS4Windows.InputDevices.DualSenseBluetoothAudioPacer.
+            if (FUT404DS.InputDevices.DualSenseBluetoothAudioPacer.
                 TryRunHelper(e.Args))
             {
                 runShutdown = false;
@@ -201,7 +201,7 @@ namespace DS4WinWPF
                 return;
             }
 
-            if (DS4Windows.GameBarIntegration.TryRunProbeCommand(e.Args))
+            if (FUT404DS.GameBarIntegration.TryRunProbeCommand(e.Args))
             {
                 runShutdown = false;
                 Current.Shutdown();
@@ -214,7 +214,7 @@ namespace DS4WinWPF
 
             try
             {
-                string exeDir = Path.GetDirectoryName(DS4Windows.Global.exelocation);
+                string exeDir = Path.GetDirectoryName(FUT404DS.Global.exelocation);
                 if (!string.IsNullOrEmpty(exeDir))
                 {
                     Environment.CurrentDirectory = exeDir;
@@ -222,7 +222,7 @@ namespace DS4WinWPF
             }
             catch
             {
-                // Keep startup going. A bad working directory should not block DS4Windows.
+                // Keep startup going. A bad working directory should not block FUT404DS.
             }
 
             if (exitApp)
@@ -233,14 +233,14 @@ namespace DS4WinWPF
             // The ZIP's explicit marker selects normal portable broker
             // ownership. Resolve conflicts before tasks, profiles or devices
             // can be changed; development lab mode remains externally owned.
-            if (!DS4Windows.PortableLabContext.IsActive)
+            if (!FUT404DS.PortableLabContext.IsActive)
             {
                 try
                 {
-                    DS4Windows.PortableBrokerContext.Initialize(
-                        Path.GetDirectoryName(DS4Windows.Global.exelocation));
+                    FUT404DS.PortableBrokerContext.Initialize(
+                        Path.GetDirectoryName(FUT404DS.Global.exelocation));
                 }
-                catch (DS4Windows.PortableBrokerStartupException exception)
+                catch (FUT404DS.PortableBrokerStartupException exception)
                 {
                     CancelPortableStartup(exception.Message);
                     return;
@@ -249,7 +249,7 @@ namespace DS4WinWPF
 
             // Preserve legacy startup retargeting before the instance probe,
             // but a marked portable package must leave installed tasks alone.
-            if (!DS4Windows.PortableBrokerContext.IsActive)
+            if (!FUT404DS.PortableBrokerContext.IsActive)
                 StartupMethods.RetargetExistingTaskToCurrentExecutable();
 
             try
@@ -261,13 +261,13 @@ namespace DS4WinWPF
 
             // Force Normal IO Priority
             IntPtr ioPrio = new IntPtr(2);
-            DS4Windows.Util.NtSetInformationProcess(Process.GetCurrentProcess().Handle,
-                DS4Windows.Util.PROCESS_INFORMATION_CLASS.ProcessIoPriority, ref ioPrio, 4);
+            FUT404DS.Util.NtSetInformationProcess(Process.GetCurrentProcess().Handle,
+                FUT404DS.Util.PROCESS_INFORMATION_CLASS.ProcessIoPriority, ref ioPrio, 4);
 
             // Force Normal Page Priority
             IntPtr pagePrio = new IntPtr(5);
-            DS4Windows.Util.NtSetInformationProcess(Process.GetCurrentProcess().Handle,
-                DS4Windows.Util.PROCESS_INFORMATION_CLASS.ProcessPagePriority, ref pagePrio, 4);
+            FUT404DS.Util.NtSetInformationProcess(Process.GetCurrentProcess().Handle,
+                FUT404DS.Util.PROCESS_INFORMATION_CLASS.ProcessPagePriority, ref pagePrio, 4);
 
             // another instance is already running if TryOpenExisting returns true.
             try
@@ -277,16 +277,16 @@ namespace DS4WinWPF
                 EventWaitHandleRights.Modify,
                 out EventWaitHandle tempComEvent))
                 {
-                    if (!DS4Windows.PortableLabContext.IsActive)
+                    if (!FUT404DS.PortableLabContext.IsActive)
                         tempComEvent.Set();  // signal the other instance.
                     tempComEvent.Close();
 
-                    if (DS4Windows.PortableLabContext.IsActive)
-                        MessageBox.Show("Another DS4Windows instance owns the controllers. Close it before starting this portable lab. No existing instance was activated or changed.",
+                    if (FUT404DS.PortableLabContext.IsActive)
+                        MessageBox.Show("Another FUT404DS instance owns the controllers. Close it before starting this portable lab. No existing instance was activated or changed.",
                             "Portable controller lab", MessageBoxButton.OK, MessageBoxImage.Information);
 
                     runShutdown = false;
-                    Current.Shutdown(DS4Windows.PortableLabContext.IsActive ? 1 : 0);
+                    Current.Shutdown(FUT404DS.PortableLabContext.IsActive ? 1 : 0);
                     return;
                 }
             }
@@ -297,23 +297,23 @@ namespace DS4WinWPF
                 // but never make the new process appear to do nothing.
                 ShowSingleInstanceAccessError();
                 runShutdown = false;
-                Current.Shutdown(DS4Windows.PortableLabContext.IsActive ? 1 : 0);
+                Current.Shutdown(FUT404DS.PortableLabContext.IsActive ? 1 : 0);
                 return;
             }
 
             // Allow sleep time durations less than 16 ms
-            DS4Windows.Util.timeBeginPeriod(1);
+            FUT404DS.Util.timeBeginPeriod(1);
 
             // Create the Event handle
             try
             {
                 threadComEvent = CreateSingleAppComEvent(SingleAppComEventName,
-                    requireNew: DS4Windows.PortableLabContext.IsActive ||
-                        DS4Windows.PortableBrokerContext.IsActive);
+                    requireNew: FUT404DS.PortableLabContext.IsActive ||
+                        FUT404DS.PortableBrokerContext.IsActive);
                 if (threadComEvent == null)
                 {
-                    MessageBox.Show("Another DS4Windows instance started first. This startup was cancelled.",
-                        "DS4Windows", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Another FUT404DS instance started first. This startup was cancelled.",
+                        "FUT404DS", MessageBoxButton.OK, MessageBoxImage.Information);
                     runShutdown = false;
                     Current.Shutdown(1);
                     return;
@@ -324,7 +324,7 @@ namespace DS4WinWPF
                 // Another elevated instance can win the race with older event security.
                 ShowSingleInstanceAccessError();
                 runShutdown = false;
-                Current.Shutdown(DS4Windows.PortableLabContext.IsActive ? 1 : 0);
+                Current.Shutdown(FUT404DS.PortableLabContext.IsActive ? 1 : 0);
                 return;
             }
 
@@ -333,16 +333,16 @@ namespace DS4WinWPF
 
             CreateTempWorkerThread();
 
-            DS4Windows.Global.FindConfigLocation();
-            bool firstRun = DS4Windows.Global.firstRun;
+            FUT404DS.Global.FindConfigLocation();
+            bool firstRun = FUT404DS.Global.firstRun;
 
             // Could not find unique profile location; does not exist or multiple places.
-            // Advise user to specify where DS4Windows should save its configuation files
+            // Advise user to specify where FUT404DS should save its configuation files
             // and profiles
-            if (firstRun && !DS4Windows.PortableLabContext.IsActive)
+            if (firstRun && !FUT404DS.PortableLabContext.IsActive)
             {
                 DS4Forms.SaveWhere savewh =
-                    new DS4Forms.SaveWhere(DS4Windows.Global.multisavespots);
+                    new DS4Forms.SaveWhere(FUT404DS.Global.multisavespots);
                 ShowStartupDialog(savewh);
                 if (!savewh.ChoiceMade)
                 {
@@ -355,8 +355,8 @@ namespace DS4WinWPF
             // Exit if base configuration could not be generated
             if (firstRun && !CreateConfDirSkeleton())
             {
-                MessageBox.Show($"Cannot create config folder structure in {DS4Windows.Global.appdatapath}. Exiting",
-                    "DS4Windows", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Cannot create config folder structure in {FUT404DS.Global.appdatapath}. Exiting",
+                    "FUT404DS", MessageBoxButton.OK, MessageBoxImage.Error);
                 Current.Shutdown(1);
                 return;
             }
@@ -375,26 +375,26 @@ namespace DS4WinWPF
 
             logHolder = new LoggerHolder(rootHub);
             Logger logger = logHolder.Logger;
-            string version = DS4Windows.Global.exeDisplayVersion;
-            logger.Info($"DS4Windows version {version}");
-            logger.Info($"DS4Windows exe file: {DS4Windows.Global.exeFileName}");
-            logger.Info($"DS4Windows Assembly Architecture: {(Environment.Is64BitProcess ? "x64" : "x86")}");
+            string version = FUT404DS.Global.exeDisplayVersion;
+            logger.Info($"FUT404DS version {version}");
+            logger.Info($"FUT404DS exe file: {FUT404DS.Global.exeFileName}");
+            logger.Info($"FUT404DS Assembly Architecture: {(Environment.Is64BitProcess ? "x64" : "x86")}");
             logger.Info($"OS Version: {Environment.OSVersion}");
-            logger.Info($"OS Product Name: {DS4Windows.Util.GetOSProductName()}");
-            logger.Info($"OS Release ID: {DS4Windows.Util.GetOSReleaseId()}");
+            logger.Info($"OS Product Name: {FUT404DS.Util.GetOSProductName()}");
+            logger.Info($"OS Release ID: {FUT404DS.Util.GetOSReleaseId()}");
             logger.Info($"System Architecture: {(Environment.Is64BitOperatingSystem ? "x64" : "x86")}");
             logger.Info("Logger created");
-            if (DS4Windows.PortableLabContext.Current is { } lab)
+            if (FUT404DS.PortableLabContext.Current is { } lab)
                 logger.Info($"Portable controller lab: data={lab.DataPath}; VIIPER SHA256={lab.ExpectedSha256}. Startup maintenance, installation, updates, HidHide policy changes and legacy IPC are disabled. The backend is externally managed.");
-            StartupDiag(logger, $"App bootstrap pid={Environment.ProcessId} admin={DS4Windows.Global.IsAdministrator()} cwd=\"{Environment.CurrentDirectory}\" cmd=\"{Environment.CommandLine}\"");
-            StartupDiag(logger, $"Exe location=\"{DS4Windows.Global.exelocation}\" configPath=\"{DS4Windows.Global.appdatapath}\" firstRun={firstRun}");
+            StartupDiag(logger, $"App bootstrap pid={Environment.ProcessId} admin={FUT404DS.Global.IsAdministrator()} cwd=\"{Environment.CurrentDirectory}\" cmd=\"{Environment.CommandLine}\"");
+            StartupDiag(logger, $"Exe location=\"{FUT404DS.Global.exelocation}\" configPath=\"{FUT404DS.Global.appdatapath}\" firstRun={firstRun}");
 
             StartupDiag(logger, "Global.Load begin");
-            bool readAppConfig = DS4Windows.Global.Load();
+            bool readAppConfig = FUT404DS.Global.Load();
             StartupDiag(logger, $"Global.Load end readAppConfig={readAppConfig}");
             if (!firstRun && !readAppConfig)
             {
-                logger.Info($@"Profiles.xml not read at location ${DS4Windows.Global.appdatapath}\Profiles.xml. Using default app settings");
+                logger.Info($@"Profiles.xml not read at location ${FUT404DS.Global.appdatapath}\Profiles.xml. Using default app settings");
             }
 
             // Ask user which devices the mapper should attempt to open when detected.
@@ -403,9 +403,9 @@ namespace DS4WinWPF
             if (firstRun)
             {
                 DS4Forms.FirstLaunchUtilWindow firstLaunchUtilWin =
-                    new DS4Forms.FirstLaunchUtilWindow(DS4Windows.Global.DeviceOptions);
+                    new DS4Forms.FirstLaunchUtilWindow(FUT404DS.Global.DeviceOptions);
                 ShowStartupDialog(firstLaunchUtilWin);
-                DS4Windows.Global.Save();
+                FUT404DS.Global.Save();
             }
 
             if (firstRun)
@@ -413,10 +413,10 @@ namespace DS4WinWPF
                 logger.Info("No config found. Creating default config");
                 AttemptSave();
 
-                DS4Windows.Global.SaveAsNewProfile(0, "Default");
-                for (int i = 0; i < DS4Windows.ControlService.MAX_DS4_CONTROLLER_COUNT; i++)
+                FUT404DS.Global.SaveAsNewProfile(0, "Default");
+                for (int i = 0; i < FUT404DS.ControlService.MAX_DS4_CONTROLLER_COUNT; i++)
                 {
-                    DS4Windows.Global.ProfilePath[i] = DS4Windows.Global.OlderProfilePath[i] = "Default";
+                    FUT404DS.Global.ProfilePath[i] = FUT404DS.Global.OlderProfilePath[i] = "Default";
                 }
 
                 logger.Info("Default config created");
@@ -425,38 +425,38 @@ namespace DS4WinWPF
             // Apply the saved theme before showing any startup UI. This keeps
             // prerequisite prompts consistent with the main application in
             // both explicit and Windows-following theme modes.
-            SetUICulture(DS4Windows.Global.UseLang);
-            ChangeTheme(DS4Windows.Global.UseCurrentTheme, false);
+            SetUICulture(FUT404DS.Global.UseLang);
+            ChangeTheme(FUT404DS.Global.UseCurrentTheme, false);
 
             // VIIPER is the only virtual-controller backend. Make a missing
             // backend actionable at startup instead of letting profile output
             // fail later with an opaque device error. The installer requests
-            // elevation itself, so DS4Windows does not need to stay elevated.
+            // elevation itself, so FUT404DS does not need to stay elevated.
             if (Environment.Is64BitProcess)
             {
-                DS4Windows.ViiperSetupManager.
+                FUT404DS.ViiperSetupManager.
                     RefreshSelectedStartupTaskOnLaunch();
                 // Keep the UI and repair diagnostics available when the
                 // backend is unhealthy. Virtual output already fails closed
                 // at its own readiness gate; exiting here made an install
                 // problem indistinguishable from an application crash.
-                DS4Windows.ViiperSetupManager.EnsureReadyWithPrompt(null);
+                FUT404DS.ViiperSetupManager.EnsureReadyWithPrompt(null);
             }
             else
             {
                 MessageBox.Show(
-                    "This build cannot create VIIPER virtual controllers. Install the x64 DS4Windows build on 64-bit Windows.",
-                    "DS4Windows virtual controller setup",
+                    "This build cannot create VIIPER virtual controllers. Install the x64 FUT404DS build on 64-bit Windows.",
+                    "FUT404DS virtual controller setup",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
             skipSave = false;
 
             StartupDiag(logger, "Global.LoadActions begin");
-            if (!DS4Windows.Global.LoadActions())
+            if (!FUT404DS.Global.LoadActions())
             {
                 StartupDiag(logger, "Global.LoadActions failed; CreateStdActions begin");
-                DS4Windows.Global.CreateStdActions();
+                FUT404DS.Global.CreateStdActions();
                 StartupDiag(logger, "CreateStdActions end");
             }
             else
@@ -465,7 +465,7 @@ namespace DS4WinWPF
             }
 
             StartupDiag(logger, "LoadLinkedProfiles begin");
-            DS4Windows.Global.LoadLinkedProfiles();
+            FUT404DS.Global.LoadLinkedProfiles();
             StartupDiag(logger, "LoadLinkedProfiles end");
             StartupDiag(logger, "MainWindow ctor begin");
             DS4Forms.MainWindow window = new DS4Forms.MainWindow(parser);
@@ -485,10 +485,10 @@ namespace DS4WinWPF
 
             window.CheckMinStatus();
 
-            bool runningAsAdmin = DS4Windows.Global.IsAdministrator();
+            bool runningAsAdmin = FUT404DS.Global.IsAdministrator();
             rootHub.LogDebug($"Running as {(runningAsAdmin ? "Admin" : "User")}");
 
-            if (DS4Windows.Global.hidHideInstalled)
+            if (FUT404DS.Global.hidHideInstalled)
             {
                 StartupDiag(logger, "CheckHidHidePresence begin");
                 rootHub.CheckHidHidePresence();
@@ -505,7 +505,7 @@ namespace DS4WinWPF
 
         private void CancelPortableStartup(string message)
         {
-            MessageBox.Show(message, "DS4Windows portable",
+            MessageBox.Show(message, "FUT404DS portable",
                 MessageBoxButton.OK, MessageBoxImage.Warning);
             runShutdown = false;
             Current.Shutdown(1);
@@ -513,8 +513,8 @@ namespace DS4WinWPF
 
         private bool StartPortableBroker()
         {
-            DS4Windows.PortableBrokerContext portable =
-                DS4Windows.PortableBrokerContext.Current;
+            FUT404DS.PortableBrokerContext portable =
+                FUT404DS.PortableBrokerContext.Current;
             if (portable == null) return true;
             try
             {
@@ -525,22 +525,22 @@ namespace DS4WinWPF
                 while (startup.ElapsedMilliseconds < startupBudgetMilliseconds)
                 {
                     if (!portable.InspectOwnedProcess(out bool running, out string failure) || !running)
-                        throw new DS4Windows.PortableBrokerStartupException(failure ??
-                            "The portable VIIPER process stopped before it was ready. Check that USB/IP 0.9.7.7 is installed and available, then restart DS4Windows.");
+                        throw new FUT404DS.PortableBrokerStartupException(failure ??
+                            "The portable VIIPER process stopped before it was ready. Check that USB/IP 0.9.7.7 is installed and available, then restart FUT404DS.");
 
                     int remaining = startupBudgetMilliseconds - (int)startup.ElapsedMilliseconds;
-                    if (DS4Windows.ViiperSetupManager.ProbeServer(
-                            DS4Windows.ViiperSetupManager.ApiHost,
-                            DS4Windows.ViiperSetupManager.ApiPort, authenticated: true,
+                    if (FUT404DS.ViiperSetupManager.ProbeServer(
+                            FUT404DS.ViiperSetupManager.ApiHost,
+                            FUT404DS.ViiperSetupManager.ApiPort, authenticated: true,
                             out lastProbeFailure, totalTimeoutMilliseconds: Math.Max(1, Math.Min(1000, remaining))) &&
                         portable.InspectOwnedProcess(out running, out _) && running)
                         return true;
                     Thread.Sleep(50);
                 }
-                throw new DS4Windows.PortableBrokerStartupException(
-                    DS4Windows.PortableBrokerContext.DescribeReadinessFailure(lastProbeFailure));
+                throw new FUT404DS.PortableBrokerStartupException(
+                    FUT404DS.PortableBrokerContext.DescribeReadinessFailure(lastProbeFailure));
             }
-            catch (DS4Windows.PortableBrokerStartupException exception)
+            catch (FUT404DS.PortableBrokerStartupException exception)
             {
                 // No controller lifetime has started yet. Retire only our own
                 // child before showing a modal dialog; otherwise its ports stay
@@ -571,9 +571,9 @@ namespace DS4WinWPF
             try
             {
                 MessageBox.Show(
-                    "Another DS4Windows instance is already running under a different permission level. " +
-                    "Open it from the notification area, or close the existing DS4Windows.exe in Task Manager and try again.",
-                    "DS4Windows is already running", MessageBoxButton.OK,
+                    "Another FUT404DS instance is already running under a different permission level. " +
+                    "Open it from the notification area, or close the existing FUT404DS.exe in Task Manager and try again.",
+                    "FUT404DS is already running", MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             catch { }
@@ -581,7 +581,7 @@ namespace DS4WinWPF
 
         private static void StartupDiag(Logger logger, string message)
         {
-            if (!DS4Windows.Global.VerboseStartupLogging)
+            if (!FUT404DS.Global.VerboseStartupLogging)
             {
                 return;
             }
@@ -615,7 +615,7 @@ namespace DS4WinWPF
             {
                 StartupFailureReporter.Write(exception,
                     "background startup thread",
-                    DS4Windows.Global.appdatapath);
+                    FUT404DS.Global.appdatapath);
             }
 
             if (e.IsTerminating)
@@ -667,13 +667,13 @@ namespace DS4WinWPF
             try
             {
                 logHolder?.Logger?.Fatal(exception,
-                    $"DS4Windows failed during {phase}");
+                    $"FUT404DS failed during {phase}");
                 LogManager.Flush(TimeSpan.FromSeconds(1));
             }
             catch { }
 
             string logPath = StartupFailureReporter.Write(exception, phase,
-                DS4Windows.Global.appdatapath);
+                FUT404DS.Global.appdatapath);
             if (Interlocked.Exchange(ref startupFailureShown, 1) != 0)
             {
                 return;
@@ -683,7 +683,7 @@ namespace DS4WinWPF
             {
                 MessageBox.Show(
                     StartupFailureReporter.BuildUserMessage(logPath),
-                    "DS4Windows startup failed", MessageBoxButton.OK,
+                    "FUT404DS startup failed", MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
             catch
@@ -698,10 +698,10 @@ namespace DS4WinWPF
             bool result = true;
             try
             {
-                Directory.CreateDirectory(DS4Windows.Global.appdatapath);
-                Directory.CreateDirectory(DS4Windows.Global.appdatapath + @"\Profiles\");
-                Directory.CreateDirectory(DS4Windows.Global.appdatapath + @"\Logs\");
-                //Directory.CreateDirectory(DS4Windows.Global.appdatapath + @"\Macros\");
+                Directory.CreateDirectory(FUT404DS.Global.appdatapath);
+                Directory.CreateDirectory(FUT404DS.Global.appdatapath + @"\Profiles\");
+                Directory.CreateDirectory(FUT404DS.Global.appdatapath + @"\Logs\");
+                //Directory.CreateDirectory(FUT404DS.Global.appdatapath + @"\Macros\");
             }
             catch (UnauthorizedAccessException)
             {
@@ -714,9 +714,9 @@ namespace DS4WinWPF
 
         private void AttemptSave()
         {
-            if (!DS4Windows.Global.Save()) //if can't write to file
+            if (!FUT404DS.Global.Save()) //if can't write to file
             {
-                if (DS4Windows.PortableLabContext.IsActive)
+                if (FUT404DS.PortableLabContext.IsActive)
                 {
                     skipSave = true;
                     MessageBox.Show("Cannot save portable lab settings. No settings were copied to AppData.",
@@ -724,33 +724,33 @@ namespace DS4WinWPF
                     Current.Shutdown(1);
                     return;
                 }
-                if (MessageBox.Show("Cannot write at current location\nCopy Settings to appdata?", "DS4Windows",
+                if (MessageBox.Show("Cannot write at current location\nCopy Settings to appdata?", "FUT404DS",
                     MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     try
                     {
-                        Directory.CreateDirectory(DS4Windows.Global.appDataPpath);
-                        File.Copy(DS4Windows.Global.exedirpath + "\\Profiles.xml",
-                            DS4Windows.Global.appDataPpath + "\\Profiles.xml");
-                        File.Copy(DS4Windows.Global.exedirpath + "\\Auto Profiles.xml",
-                            DS4Windows.Global.appDataPpath + "\\Auto Profiles.xml");
-                        Directory.CreateDirectory(DS4Windows.Global.appDataPpath + "\\Profiles");
-                        foreach (string s in Directory.GetFiles(DS4Windows.Global.exedirpath + "\\Profiles"))
+                        Directory.CreateDirectory(FUT404DS.Global.appDataPpath);
+                        File.Copy(FUT404DS.Global.exedirpath + "\\Profiles.xml",
+                            FUT404DS.Global.appDataPpath + "\\Profiles.xml");
+                        File.Copy(FUT404DS.Global.exedirpath + "\\Auto Profiles.xml",
+                            FUT404DS.Global.appDataPpath + "\\Auto Profiles.xml");
+                        Directory.CreateDirectory(FUT404DS.Global.appDataPpath + "\\Profiles");
+                        foreach (string s in Directory.GetFiles(FUT404DS.Global.exedirpath + "\\Profiles"))
                         {
-                            File.Copy(s, DS4Windows.Global.appDataPpath + "\\Profiles\\" + Path.GetFileName(s));
+                            File.Copy(s, FUT404DS.Global.appDataPpath + "\\Profiles\\" + Path.GetFileName(s));
                         }
                     }
                     catch { }
-                    MessageBox.Show("Copy complete, please relaunch DS4Windows and remove settings from Program Directory",
-                        "DS4Windows");
+                    MessageBox.Show("Copy complete, please relaunch FUT404DS and remove settings from Program Directory",
+                        "FUT404DS");
                 }
                 else
                 {
-                    MessageBox.Show("DS4Windows cannot edit settings here, This will now close",
-                        "DS4Windows");
+                    MessageBox.Show("FUT404DS cannot edit settings here, This will now close",
+                        "FUT404DS");
                 }
 
-                DS4Windows.Global.appdatapath = null;
+                FUT404DS.Global.appdatapath = null;
                 skipSave = true;
                 Current.Shutdown();
                 return;
@@ -767,15 +767,15 @@ namespace DS4WinWPF
             }
             else if (parser.Driverinstall)
             {
-                // Load DS4Windows config if it exists
-                DS4Windows.Global.FindConfigLocation();
-                bool readAppConfig = DS4Windows.Global.Load();
+                // Load FUT404DS config if it exists
+                FUT404DS.Global.FindConfigLocation();
+                bool readAppConfig = FUT404DS.Global.Load();
                 if (readAppConfig)
                 {
                     // Have app use selected culture
-                    SetUICulture(DS4Windows.Global.UseLang);
-                    DS4Windows.AppThemeChoice themeChoice = DS4Windows.Global.UseCurrentTheme;
-                    ChangeTheme(DS4Windows.Global.UseCurrentTheme, false);
+                    SetUICulture(FUT404DS.Global.UseLang);
+                    FUT404DS.AppThemeChoice themeChoice = FUT404DS.Global.UseCurrentTheme;
+                    ChangeTheme(FUT404DS.Global.UseCurrentTheme, false);
                 }
 
                 CreateBaseThread();
@@ -787,7 +787,7 @@ namespace DS4WinWPF
             }
             else if (parser.ReenableDevice)
             {
-                DS4Windows.DS4Devices.reEnableDevice(parser.DeviceInstanceId);
+                FUT404DS.DS4Devices.reEnableDevice(parser.DeviceInstanceId);
                 runShutdown = false;
                 exitApp = true;
                 Current.Shutdown();
@@ -801,9 +801,9 @@ namespace DS4WinWPF
             }
             else if (parser.Command)
             {
-                IntPtr hWndDS4WindowsForm = IntPtr.Zero;
-                hWndDS4WindowsForm = FindWindow(ReadIPCClassNameMMF(), "DS4Windows");
-                if (hWndDS4WindowsForm != IntPtr.Zero)
+                IntPtr hWndFUT404DSForm = IntPtr.Zero;
+                hWndFUT404DSForm = FindWindow(ReadIPCClassNameMMF(), "FUT404DS");
+                if (hWndFUT404DSForm != IntPtr.Zero)
                 {
                     bool bDoSendMsg = true;
                     bool bWaitResultData = false;
@@ -818,10 +818,10 @@ namespace DS4WinWPF
                     {
                         if (parser.CommandArgs.ToLower().StartsWith("query."))
                         {
-                            // Query.device# (1..4) command returns a string result via memory mapped file. The cmd is sent to the background DS4Windows 
+                            // Query.device# (1..4) command returns a string result via memory mapped file. The cmd is sent to the background FUT404DS 
                             // process (via WM_COPYDATA wnd msg), then this client process waits for the availability of the result and prints it to console output pipe.
                             // Use mutex obj to make sure that concurrent client calls won't try to write and read the same MMF result file at the same time.
-                            ipcSingleTaskMutex = new Mutex(false, "DS4Windows_IPCResultData_SingleTaskMtx");
+                            ipcSingleTaskMutex = new Mutex(false, "FUT404DS_IPCResultData_SingleTaskMtx");
                             try
                             {
                                 bOwnsMutex = ipcSingleTaskMutex.WaitOne(10000);
@@ -836,7 +836,7 @@ namespace DS4WinWPF
                                 // This process owns the inter-process sync mutex obj. Let's proceed with creating the output MMF file and waiting for a result.
                                 bWaitResultData = true;
                                 CreateIPCResultDataMMF();
-                                ipcNotifyEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "DS4Windows_IPCResultData_ReadyEvent");
+                                ipcNotifyEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "FUT404DS_IPCResultData_ReadyEvent");
                             }
                             else
                                 // If the mtx failed then something must be seriously wrong. Cannot do anything in that case because MMF file may be modified by concurrent processes.
@@ -848,7 +848,7 @@ namespace DS4WinWPF
                             cds.dwData = IntPtr.Zero;
                             cds.cbData = parser.CommandArgs.Length;
                             cds.lpData = Marshal.StringToHGlobalAnsi(parser.CommandArgs);
-                            SendMessage(hWndDS4WindowsForm, DS4Forms.MainWindow.WM_COPYDATA, IntPtr.Zero, ref cds);
+                            SendMessage(hWndFUT404DSForm, DS4Forms.MainWindow.WM_COPYDATA, IntPtr.Zero, ref cds);
 
                             if (bWaitResultData)
                                 Console.WriteLine(WaitAndReadIPCResultDataMMF(ipcNotifyEvent));
@@ -879,11 +879,11 @@ namespace DS4WinWPF
         {
             controlThread = new Thread(() =>
             {
-                rootHub = new DS4Windows.ControlService(parser);
+                rootHub = new FUT404DS.ControlService(parser);
 
-                DS4Windows.Program.rootHub = rootHub;
+                FUT404DS.Program.rootHub = rootHub;
                 requestClient = new HttpClient();
-                requestClient.DefaultRequestHeaders.Add("User-Agent", "DS4Windows");
+                requestClient.DefaultRequestHeaders.Add("User-Agent", "FUT404DS");
             });
             controlThread.Priority = ThreadPriority.Normal;
             controlThread.IsBackground = true;
@@ -896,9 +896,9 @@ namespace DS4WinWPF
         {
             controlThread = new Thread(() =>
             {
-                DS4Windows.Program.rootHub = rootHub;
+                FUT404DS.Program.rootHub = rootHub;
                 requestClient = new HttpClient();
-                requestClient.DefaultRequestHeaders.Add("User-Agent", "DS4Windows");
+                requestClient.DefaultRequestHeaders.Add("User-Agent", "FUT404DS");
             });
             controlThread.Priority = ThreadPriority.Normal;
             controlThread.IsBackground = true;
@@ -977,9 +977,9 @@ namespace DS4WinWPF
                 // a null MainWindow dereference and killing the hidden process.
                 StartupFailureReporter.Write(
                     new InvalidOperationException(
-                        "A second launch signaled DS4Windows before any startup window existed."),
+                        "A second launch signaled FUT404DS before any startup window existed."),
                     "single-instance activation",
-                    DS4Windows.Global.appdatapath);
+                    FUT404DS.Global.appdatapath);
                 return;
             }
 
@@ -1010,7 +1010,7 @@ namespace DS4WinWPF
                 {
                     byte[] buffer = ASCIIEncoding.ASCII.GetBytes(wndClassNameStr.ToString());
 
-                    ipcClassNameMMF = MemoryMappedFile.CreateNew("DS4Windows_IPCClassName.dat", 128);
+                    ipcClassNameMMF = MemoryMappedFile.CreateNew("FUT404DS_IPCClassName.dat", 128);
                     MemoryMappedViewAccessor ipcClassNameMMA_Now = ipcClassNameMMF.CreateViewAccessor(0, buffer.Length);
                     ipcClassNameMMA_Now.WriteArray(0, buffer, 0, buffer.Length);
                     ipcClassNameMMA_Now?.Dispose();
@@ -1031,7 +1031,7 @@ namespace DS4WinWPF
             try
             {
                 byte[] buffer = new byte[128];
-                mmf = MemoryMappedFile.OpenExisting("DS4Windows_IPCClassName.dat");
+                mmf = MemoryMappedFile.OpenExisting("FUT404DS_IPCClassName.dat");
                 mma = mmf.CreateViewAccessor(0, 128);
                 mma.ReadArray(0, buffer, 0, buffer.Length);
                 return ASCIIEncoding.ASCII.GetString(buffer);
@@ -1051,13 +1051,13 @@ namespace DS4WinWPF
 
         private void CreateIPCResultDataMMF()
         {
-            // Cmdline client process calls this to create the MMF file used in inter-process-communications. The background DS4Windows process 
+            // Cmdline client process calls this to create the MMF file used in inter-process-communications. The background FUT404DS process 
             // uses WriteIPCResultDataMMF method to write a command result and the client process reads the result from the same MMF file.
             if (ipcResultDataMMF != null) return; // Already holding a handle to MMF file. No need to re-write the data
 
             try
             {
-                ipcResultDataMMF = MemoryMappedFile.CreateNew("DS4Windows_IPCResultData.dat", 256);
+                ipcResultDataMMF = MemoryMappedFile.CreateNew("FUT404DS_IPCResultData.dat", 256);
                 // The MMF file is alive as long this process holds the file handle open
             }
             catch (Exception)
@@ -1095,18 +1095,18 @@ namespace DS4WinWPF
 
         public void WriteIPCResultDataMMF(string dataStr)
         {
-            // The background DS4Windows process calls this method to write out the result of "-command QueryProfile.device#" command.
-            // The cmdline client process reads the result from the DS4Windows_IPCResultData.dat MMF file and sends the result to console output pipe.
+            // The background FUT404DS process calls this method to write out the result of "-command QueryProfile.device#" command.
+            // The cmdline client process reads the result from the FUT404DS_IPCResultData.dat MMF file and sends the result to console output pipe.
             MemoryMappedFile mmf = null;
             MemoryMappedViewAccessor mma = null;
             EventWaitHandle ipcNotifyEvent = null;
 
             try
             {
-                ipcNotifyEvent = EventWaitHandle.OpenExisting("DS4Windows_IPCResultData_ReadyEvent");
+                ipcNotifyEvent = EventWaitHandle.OpenExisting("FUT404DS_IPCResultData_ReadyEvent");
 
                 byte[] buffer = ASCIIEncoding.ASCII.GetBytes(dataStr);
-                mmf = MemoryMappedFile.OpenExisting("DS4Windows_IPCResultData.dat");
+                mmf = MemoryMappedFile.OpenExisting("FUT404DS_IPCResultData.dat");
                 mma = mmf.CreateViewAccessor(0, 256);
                 mma.WriteArray(0, buffer, 0, (buffer.Length >= 256 ? 256 : buffer.Length));
             }
@@ -1134,23 +1134,23 @@ namespace DS4WinWPF
                 // fixes the culture in threads
                 CultureInfo.DefaultThreadCurrentCulture = ci;
                 CultureInfo.DefaultThreadCurrentUICulture = ci;
-                //DS4WinWPF.Properties.Resources.Culture = ci;
+                //FUT404DSWPF.Properties.Resources.Culture = ci;
                 Thread.CurrentThread.CurrentCulture = ci;
                 Thread.CurrentThread.CurrentUICulture = ci;
             }
             catch (CultureNotFoundException) { /* Skip setting culture that we cannot set */ }
         }
 
-        public void ChangeTheme(DS4Windows.AppThemeChoice themeChoice,
+        public void ChangeTheme(FUT404DS.AppThemeChoice themeChoice,
             bool fireChanged = true)
         {
-            if (themeChoice == DS4Windows.AppThemeChoice.Default)
+            if (themeChoice == FUT404DS.AppThemeChoice.Default)
             {
                 Application.Current.Resources.MergedDictionaries.Clear();
 
                 // Attempt to switch theme based on currently selected Windows apps theme mode
-                DS4Windows.AppThemeChoice implicitTheme = DS4Windows.Util.SystemAppsUsingDarkTheme() ?
-                    DS4Windows.AppThemeChoice.Dark : DS4Windows.AppThemeChoice.Light;
+                FUT404DS.AppThemeChoice implicitTheme = FUT404DS.Util.SystemAppsUsingDarkTheme() ?
+                    FUT404DS.AppThemeChoice.Dark : FUT404DS.AppThemeChoice.Light;
                 themeLocs.TryGetValue(implicitTheme, out string loc);
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri(loc, uriKind: UriKind.Relative) });
                 Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary()
@@ -1191,8 +1191,8 @@ namespace DS4WinWPF
             }
             finally
             {
-                DS4Windows.PortableBrokerContext.Current?.Dispose();
-                DS4Windows.PortableLabContext.Current?.Dispose();
+                FUT404DS.PortableBrokerContext.Current?.Dispose();
+                FUT404DS.PortableLabContext.Current?.Dispose();
             }
         }
 
@@ -1238,7 +1238,7 @@ namespace DS4WinWPF
             }
 
             bool shutdownTimedOut = false;
-            DS4Windows.ControlService shutdownHub = rootHub;
+            FUT404DS.ControlService shutdownHub = rootHub;
             if (shutdownHub != null)
             {
                 Task shutdownTask = Task.Run(() =>
@@ -1272,7 +1272,7 @@ namespace DS4WinWPF
             {
                 try
                 {
-                    DS4Windows.Global.Save();
+                    FUT404DS.Global.Save();
                 }
                 catch (Exception ex)
                 {
@@ -1284,7 +1284,7 @@ namespace DS4WinWPF
             // Reset timer
             try
             {
-                DS4Windows.Util.timeEndPeriod(1);
+                FUT404DS.Util.timeEndPeriod(1);
             }
             catch { }
 
@@ -1325,7 +1325,7 @@ namespace DS4WinWPF
             {
                 // Environment.Exit bypasses the outer Application_Exit
                 // finally. Retire only our child after the attempted drain.
-                DS4Windows.PortableBrokerContext.Current?.Dispose();
+                FUT404DS.PortableBrokerContext.Current?.Dispose();
                 Environment.Exit(0);
             }
         }

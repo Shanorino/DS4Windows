@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 // A lifecycle-only observer: no per-report callback, packet logging or I/O.
 // Immutable evidence is captured before queuing and is safe after teardown.

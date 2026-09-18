@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Fixed latest-value handoff from the physical input owner to the

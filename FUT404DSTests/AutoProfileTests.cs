@@ -1,8 +1,8 @@
-using DS4Windows.InputDevices;
-using DS4WinWPF;
+using FUT404DS.InputDevices;
+using FUT404DSWPF;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class AutoProfileTests

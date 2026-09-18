@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-// Offline hypotheses only. This file is not compiled into DS4Windows: a new
+// Offline hypotheses only. This file is not compiled into FUT404DS: a new
 // envelope can be tested on the already-running opaque packet-plan bridge.
 internal static class PlanFramer
 {

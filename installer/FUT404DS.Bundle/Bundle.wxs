@@ -2,17 +2,17 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
   <Bundle
-      Name="DS4Windows"
-      Manufacturer="DS4Windows"
+      Name="FUT404DS"
+      Manufacturer="FUT404DS"
       Version="$(var.BundleVersion)"
       UpgradeCode="BC70CCB1-AD65-42A0-B468-8A7278A37A62"
-      Tag="DS4WindowsManagedV2"
-      IconSourceFile="$(var.ExtrasRoot)\..\DS4Windows\DS4W.ico"
+      Tag="FUT404DSManagedV2"
+      IconSourceFile="$(var.ExtrasRoot)\..\FUT404DS\DS4W.ico"
       Compressed="yes"
-      AboutUrl="https://github.com/hbashton/DS4Windows"
-      HelpUrl="https://github.com/hbashton/DS4Windows/issues">
+      AboutUrl="https://github.com/hbashton/FUT404DS"
+      HelpUrl="https://github.com/hbashton/FUT404DS/issues">
 
-    <BootstrapperApplication SourceFile="$(var.BootstrapperRoot)\DS4Windows.Bootstrapper.exe" />
+    <BootstrapperApplication SourceFile="$(var.BootstrapperRoot)\FUT404DS.Bootstrapper.exe" />
 
     <Variable Name="CreateDesktopShortcut" Type="numeric" Value="1" />
     <Variable Name="InstallHidHide" Type="numeric" Value="1" />
@@ -27,7 +27,7 @@
         Id="InfrastructureMarkerSearch"
         Variable="InfrastructureInstalled"
         Root="HKLM"
-        Key="SOFTWARE\DS4Windows"
+        Key="SOFTWARE\FUT404DS"
         Value="InfrastructureVersion"
         Result="value"
         Bitness="always64" />
@@ -35,14 +35,14 @@
         Id="ManagedInstallRegistrationSearch"
         Variable="ManagedInstallRegistered"
         Root="HKLM"
-        Key="SOFTWARE\DS4Windows"
+        Key="SOFTWARE\FUT404DS"
         Value="InstallPath"
         Result="exists"
         Bitness="always64" />
     <util:FileSearch
         Id="ManagedViiperExecutableSearch"
         Variable="ManagedViiperPresent"
-        Path="[ProgramFiles64Folder]DS4Windows\VIIPER\viiper.exe"
+        Path="[ProgramFiles64Folder]FUT404DS\VIIPER\viiper.exe"
         Result="exists" />
     <util:RegistrySearch
         Id="HidHideSearch"
@@ -64,22 +64,22 @@
            user or third-party content left under the install root. -->
       <ExePackage
           Id="PostUninstallCleanup"
-          CacheId="DS4WindowsSetupActionsPostUninstall-$(var.SetupActionsHash)"
-          Name="DS4Windows.SetupActions.PostUninstall.exe"
+          CacheId="FUT404DSSetupActionsPostUninstall-$(var.SetupActionsHash)"
+          Name="FUT404DS.SetupActions.PostUninstall.exe"
           SourceFile="$(var.SetupActionsPath)"
           PerMachine="yes"
           Permanent="yes"
           Vital="yes"
           DetectCondition="0"
-          InstallArguments="postuninstall --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]DS4Windows&quot;">
+          InstallArguments="postuninstall --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]FUT404DS&quot;">
         <ExitCode Value="0" Behavior="success" />
         <ExitCode Behavior="error" />
       </ExePackage>
 
       <ExePackage
           Id="CloseRunningApplications"
-          CacheId="DS4WindowsSetupActionsPreflight-$(var.SetupActionsHash)"
-          Name="DS4Windows.SetupActions.Preflight.exe"
+          CacheId="FUT404DSSetupActionsPreflight-$(var.SetupActionsHash)"
+          Name="FUT404DS.SetupActions.Preflight.exe"
           SourceFile="$(var.SetupActionsPath)"
           PerMachine="yes"
           Permanent="yes"
@@ -91,22 +91,22 @@
       </ExePackage>
 
       <MsiPackage
-          Id="DS4WindowsMsi"
+          Id="FUT404DSMsi"
           SourceFile="$(var.MsiPath)"
           Visible="no"
           Vital="yes" />
 
       <ExePackage
           Id="ViiperUsbipSetup"
-          CacheId="DS4WindowsSetupActionsInfrastructure-$(var.SetupActionsHash)"
+          CacheId="FUT404DSSetupActionsInfrastructure-$(var.SetupActionsHash)"
           SourceFile="$(var.SetupActionsPath)"
           PerMachine="yes"
           Permanent="yes"
           Vital="yes"
           DetectCondition="InfrastructureInstalled = &quot;VIIPER-0.1.5-rc4.6+USBIP-0.9.7.7&quot; OR ManagedInstallRegistered OR ManagedViiperPresent"
-          InstallArguments="install --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]DS4Windows&quot; --bundle-id &quot;[WixBundleProviderKey]&quot; --desktop-shortcut &quot;[CreateDesktopShortcut]&quot; --target-user-sid &quot;[TargetUserSid]&quot; --target-user-name &quot;[TargetUserName]&quot; --target-local-appdata &quot;[TargetLocalAppData]&quot; --target-roaming-appdata &quot;[TargetRoamingAppData]&quot;"
-          RepairArguments="repair --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]DS4Windows&quot; --bundle-id &quot;[WixBundleProviderKey]&quot; --desktop-shortcut &quot;[CreateDesktopShortcut]&quot; --target-user-sid &quot;[TargetUserSid]&quot; --target-user-name &quot;[TargetUserName]&quot; --target-local-appdata &quot;[TargetLocalAppData]&quot; --target-roaming-appdata &quot;[TargetRoamingAppData]&quot;"
-          UninstallArguments="uninstall --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]DS4Windows&quot;">
+          InstallArguments="install --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]FUT404DS&quot; --bundle-id &quot;[WixBundleProviderKey]&quot; --desktop-shortcut &quot;[CreateDesktopShortcut]&quot; --target-user-sid &quot;[TargetUserSid]&quot; --target-user-name &quot;[TargetUserName]&quot; --target-local-appdata &quot;[TargetLocalAppData]&quot; --target-roaming-appdata &quot;[TargetRoamingAppData]&quot;"
+          RepairArguments="repair --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]FUT404DS&quot; --bundle-id &quot;[WixBundleProviderKey]&quot; --desktop-shortcut &quot;[CreateDesktopShortcut]&quot; --target-user-sid &quot;[TargetUserSid]&quot; --target-user-name &quot;[TargetUserName]&quot; --target-local-appdata &quot;[TargetLocalAppData]&quot; --target-roaming-appdata &quot;[TargetRoamingAppData]&quot;"
+          UninstallArguments="uninstall --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]FUT404DS&quot;">
         <ExitCode Value="0" Behavior="success" />
         <ExitCode Value="3010" Behavior="scheduleReboot" />
         <ExitCode Behavior="error" />
@@ -140,14 +140,14 @@
            A direct uninstall explicitly plans this one-shot action instead. -->
       <ExePackage
           Id="ViiperUsbipUninstall"
-          CacheId="DS4WindowsSetupActionsInfrastructureUninstall-$(var.SetupActionsHash)"
-          Name="DS4Windows.SetupActions.InfrastructureUninstall.exe"
+          CacheId="FUT404DSSetupActionsInfrastructureUninstall-$(var.SetupActionsHash)"
+          Name="FUT404DS.SetupActions.InfrastructureUninstall.exe"
           SourceFile="$(var.SetupActionsPath)"
           PerMachine="yes"
           Permanent="yes"
           Vital="yes"
           DetectCondition="0"
-          InstallArguments="uninstall --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]DS4Windows&quot;">
+          InstallArguments="uninstall --correlation-id &quot;[SetupCorrelationId]&quot; --install-root &quot;[ProgramFiles64Folder]FUT404DS&quot;">
         <ExitCode Value="0" Behavior="success" />
         <ExitCode Value="3010" Behavior="scheduleReboot" />
         <ExitCode Behavior="error" />
@@ -155,12 +155,12 @@
 
       <!-- Burn removes packages in reverse chain order. Keep a second,
            install-only invocation of the verified preflight helper at the
-           tail so uninstall quiesces DS4Windows and VIIPER before any owned
+           tail so uninstall quiesces FUT404DS and VIIPER before any owned
            package is removed. The BA plans exactly one of the two preflights. -->
       <ExePackage
           Id="CloseRunningApplicationsForUninstall"
-          CacheId="DS4WindowsSetupActionsUninstallPreflight-$(var.SetupActionsHash)"
-          Name="DS4Windows.SetupActions.UninstallPreflight.exe"
+          CacheId="FUT404DSSetupActionsUninstallPreflight-$(var.SetupActionsHash)"
+          Name="FUT404DS.SetupActions.UninstallPreflight.exe"
           SourceFile="$(var.SetupActionsPath)"
           PerMachine="yes"
           Permanent="yes"

@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ GNU General Public License for more details.
 using System;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Complete normalized actuator state used between a protocol decoder and
@@ -835,7 +835,7 @@ namespace DS4Windows
     }
 
     /// <summary>
-    /// Exact DS4Windows adapter for VIIPER's versioned Xbox 360 server-to-
+    /// Exact FUT404DS adapter for VIIPER's versioned Xbox 360 server-to-
     /// client feedback payload: byte zero is the low/heavy body motor and byte
     /// one is the high/light body motor. The scale x*257 is bijective for all
     /// byte values, so projecting back to the legacy physical path is exact.

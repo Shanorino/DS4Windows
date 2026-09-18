@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,14 +11,14 @@ Axis orientation and native sensor scales are adapted from the GPL-3.0
 Switch2Connect project, commit 61ac6642ce12fe7217e38a860b14863b18ca7e28,
 src/virtual_controller.py native DS report projection (3750-3756) and
 src/controller.py Pro gyro scale. The report basis also agrees with SDL's
-physical Switch 2 sensor projection. The result enters DS4Windows' existing
+physical Switch 2 sensor projection. The result enters FUT404DS' existing
 SixAxis mapping path; Cemuhook's semantic axes are not DS report axes.
 */
 
 using System;
 using System.Numerics;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Allocation-free Switch 2 Pro motion projection for one serialized runtime

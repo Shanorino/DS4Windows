@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// Slowly steers DualSense media-report cadence from the controller's

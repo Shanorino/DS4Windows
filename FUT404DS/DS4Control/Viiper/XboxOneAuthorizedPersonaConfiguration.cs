@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Explicit deployment-owned identity for the VIIPER Xbox One persona.
@@ -83,9 +83,9 @@ namespace DS4Windows
             {
                 throw new IOException(
                     "Xbox One output requires an explicitly authorized USB identity. " +
-                    $"Place {PortableFileName} beside DS4Windows or set " +
+                    $"Place {PortableFileName} beside FUT404DS or set " +
                     $"{PathEnvironmentVariable} to an authorized identity bundle. " +
-                    "DS4Windows does not impersonate a Microsoft VID/PID by default.");
+                    "FUT404DS does not impersonate a Microsoft VID/PID by default.");
             }
 
             try

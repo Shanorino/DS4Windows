@@ -13,7 +13,7 @@ This directory contains the Windows-used portion of `fyne.io/systray` v1.12.1:
 
 ## Why this patch exists
 
-[DS4Windows issue #69](https://github.com/hbashton/DS4Windows/issues/69)
+[FUT404DS issue #69](https://github.com/hbashton/FUT404DS/issues/69)
 reports a blank, noninteractive VIIPER icon during scheduled startup. In the
 pinned dependency, `initInstance` created the HWND and a notification record
 containing only `NIF_MESSAGE`, then returned an initial `NIM_ADD` failure.

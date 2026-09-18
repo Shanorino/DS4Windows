@@ -1,5 +1,5 @@
-using DS4Windows.InputDevices;
-using DS4WindowsTests;
+using FUT404DS.InputDevices;
+using FUT404DSTests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class DualSenseBluetoothNativeWriteCreditTests

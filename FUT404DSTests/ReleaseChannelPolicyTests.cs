@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4WinWPF.ApiDTO;
+using FUT404DS;
+using FUT404DSWPF.ApiDTO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ReleaseChannelPolicyTests

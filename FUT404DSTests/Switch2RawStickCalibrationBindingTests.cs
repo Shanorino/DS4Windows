@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
-using Source = DS4WindowsTests.Switch2RawStickCalibrationCollectorTests.Fixture;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
+using Source = FUT404DSTests.Switch2RawStickCalibrationCollectorTests.Fixture;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2RawStickCalibrationBindingTests

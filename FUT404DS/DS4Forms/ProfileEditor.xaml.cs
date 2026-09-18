@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,8 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NonFormTimer = System.Timers.Timer;
-using DS4WinWPF.DS4Forms.ViewModels;
-using DS4Windows;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using FUT404DS;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
@@ -25,10 +25,10 @@ using MessageBox = System.Windows.MessageBox;
 using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using UserControl = System.Windows.Controls.UserControl;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for ProfileEditor.xaml
@@ -1359,18 +1359,18 @@ namespace DS4WinWPF.DS4Forms
 
         private void AssignTiltAssociation()
         {
-            gyroZNLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.GyroZNeg];
-            gyroZPLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.GyroZPos];
-            gyroXNLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.GyroXNeg];
-            gyroXLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.GyroXPos];
+            gyroZNLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.GyroZNeg];
+            gyroZPLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.GyroZPos];
+            gyroXNLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.GyroXNeg];
+            gyroXLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.GyroXPos];
         }
 
         private void AssignSwipeAssociation()
         {
-            swipeUpLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.SwipeUp];
-            swipeDownLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.SwipeDown];
-            swipeLeftLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.SwipeLeft];
-            swipeRightLb.DataContext = mappingListVM.ControlMap[DS4Windows.DS4Controls.SwipeRight];
+            swipeUpLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.SwipeUp];
+            swipeDownLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.SwipeDown];
+            swipeLeftLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.SwipeLeft];
+            swipeRightLb.DataContext = mappingListVM.ControlMap[FUT404DS.DS4Controls.SwipeRight];
         }
 
         private void AssignStickOuterBindAssociation()
@@ -2274,7 +2274,7 @@ namespace DS4WinWPF.DS4Forms
                 else
                 {
                     MessageBox.Show("The app has to be restarted for DS3 gyro simulation to work.",
-                        "DS4Windows", MessageBoxButton.OK, MessageBoxImage.Information);
+                        "FUT404DS", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
 
@@ -2301,14 +2301,14 @@ namespace DS4WinWPF.DS4Forms
                 temp.IndexOfAny(System.IO.Path.GetInvalidFileNameChars()) == -1)
             {
                 SetLateProperties(false);
-                DS4Windows.Global.ProfilePath[deviceNum] =
-                    DS4Windows.Global.OlderProfilePath[deviceNum] = temp;
+                FUT404DS.Global.ProfilePath[deviceNum] =
+                    FUT404DS.Global.OlderProfilePath[deviceNum] = temp;
 
                 if (currentProfile != null)
                 {
                     if (temp != currentProfile.Name)
                     {
-                        //File.Delete(DS4Windows.Global.appdatapath + @"\Profiles\" + currentProfile.Name + ".xml");
+                        //File.Delete(FUT404DS.Global.appdatapath + @"\Profiles\" + currentProfile.Name + ".xml");
                         currentProfile.DeleteFile();
                         currentProfile.Name = temp;
                     }
@@ -2444,7 +2444,7 @@ namespace DS4WinWPF.DS4Forms
                         var rumbleBoost = profileSettingsVM.RumbleBoost;
 
                         // Check if device is DualSense and adjust/update accordingly
-                        if (d is DS4Windows.InputDevices.DualSenseDevice dualsense)
+                        if (d is FUT404DS.InputDevices.DualSenseDevice dualsense)
                         {
                             UpdateDualSenseRumble(dualsense);
                             if (!profileSettingsVM.EnableGenericRumbleStrRescaleForDualSenseDevices)
@@ -2532,19 +2532,19 @@ namespace DS4WinWPF.DS4Forms
             profileSettingsVM.LightRumbleActive = false;
         }
 
-    private void UpdateDualSenseRumble(DS4Windows.InputDevices.DualSenseDevice dualsense)
+    private void UpdateDualSenseRumble(FUT404DS.InputDevices.DualSenseDevice dualsense)
         {
-                switch ((DS4Windows.InputDevices.DualSenseDevice.RumbleEmulationMode)profileSettingsVM.DualSenseRumbleEmulationPerIndex)
+                switch ((FUT404DS.InputDevices.DualSenseDevice.RumbleEmulationMode)profileSettingsVM.DualSenseRumbleEmulationPerIndex)
                 {
-                    case DS4Windows.InputDevices.DualSenseDevice.RumbleEmulationMode.Disabled:
+                    case FUT404DS.InputDevices.DualSenseDevice.RumbleEmulationMode.Disabled:
                         dualsense.UseRumble = false;
                         dualsense.UseAccurateRumble = false;
                         break;
-                    case DS4Windows.InputDevices.DualSenseDevice.RumbleEmulationMode.Legacy:
+                    case FUT404DS.InputDevices.DualSenseDevice.RumbleEmulationMode.Legacy:
                         dualsense.UseRumble = true;
                         dualsense.UseAccurateRumble = false;
                         break;
-                    case DS4Windows.InputDevices.DualSenseDevice.RumbleEmulationMode.Accurate:
+                    case FUT404DS.InputDevices.DualSenseDevice.RumbleEmulationMode.Accurate:
                     default:
                         dualsense.UseRumble = true;
                         dualsense.UseAccurateRumble = true;
@@ -2633,7 +2633,7 @@ namespace DS4WinWPF.DS4Forms
         {
             if (profileSettingsVM.SASteeringWheelEmulationAxisIndex > 0)
             {
-                DS4Windows.DS4Device d = App.rootHub.DS4Controllers[profileSettingsVM.FuncDevNum];
+                FUT404DS.DS4Device d = App.rootHub.DS4Controllers[profileSettingsVM.FuncDevNum];
                 if (d != null)
                 {
                     System.Drawing.Point origWheelCenterPoint = new System.Drawing.Point(d.wheelCenterPoint.X, d.wheelCenterPoint.Y);
@@ -2848,7 +2848,7 @@ namespace DS4WinWPF.DS4Forms
                 };
                 actEditor.Saved += (sender2, actionName) =>
                 {
-                    DS4Windows.SpecialAction action = DS4Windows.Global.GetAction(actionName);
+                    FUT404DS.SpecialAction action = FUT404DS.Global.GetAction(actionName);
                     SpecialActionItem newitem = specialActionsVM.CreateActionItem(action);
                     newitem.Active = item.Active;
                     newitem.Index = currentIndex;
@@ -3352,7 +3352,7 @@ namespace DS4WinWPF.DS4Forms
                 MessageBox.Show("Stick recalibration is only available if the profile editor is opened " +
                                 "with the Edit button next to the controller you want to recalibrate in the main " +
                                 "window.",
-                    "DS4Windows", MessageBoxButton.OK, MessageBoxImage.Information);
+                    "FUT404DS", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -3378,7 +3378,7 @@ namespace DS4WinWPF.DS4Forms
             dialog.AddExtension = true;
             dialog.DefaultExt = ".xml";
             dialog.FileName = "Actions";
-            dialog.Filter = "DS4Windows Special Actions (*.xml)|*.xml";
+            dialog.Filter = "FUT404DS Special Actions (*.xml)|*.xml";
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 var profileStream = new StreamReader(@$"{Global.appdatapath}\Actions.xml").BaseStream;

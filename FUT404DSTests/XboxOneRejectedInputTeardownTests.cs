@@ -1,5 +1,5 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Net;
@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -60,7 +60,7 @@ public sealed class XboxOneRejectedInputTeardownTests
         bool stopBeforeRejection, bool invalidStop, bool concurrentDisconnect,
         bool alreadyRemoved)
     {
-        ControlService oldHub = DS4Windows.Program.rootHub;
+        ControlService oldHub = FUT404DS.Program.rootHub;
         bool oldEnabled = Global.EnableOutputDataToDS4[0];
         byte oldBoost = Global.RumbleBoost[0];
         ViiperOutDevice output = null;
@@ -81,7 +81,7 @@ public sealed class XboxOneRejectedInputTeardownTests
             var target = new TestPhysicalDevice();
             var hub = (ControlService)RuntimeHelpers.GetUninitializedObject(typeof(ControlService));
             hub.DS4Controllers = new DS4Device[] { target };
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.EnableOutputDataToDS4[0] = true;
             Global.RumbleBoost[0] = 100;
             output = new ViiperOutDevice(OutContType.ViiperXboxOne, ViiperVirtualDeviceType.XboxOne);
@@ -237,7 +237,7 @@ public sealed class XboxOneRejectedInputTeardownTests
             }
             session?.TryRetire();
             broker?.Dispose();
-            DS4Windows.Program.rootHub = oldHub;
+            FUT404DS.Program.rootHub = oldHub;
             Global.EnableOutputDataToDS4[0] = oldEnabled;
             Global.RumbleBoost[0] = oldBoost;
         }

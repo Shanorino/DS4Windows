@@ -1,9 +1,9 @@
 using System.Buffers.Binary;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Control;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Control;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class DualSenseRawInputStatusTests

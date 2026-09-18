@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Semantic controls proven for Pro Controller 2 common report <c>0x05</c>.

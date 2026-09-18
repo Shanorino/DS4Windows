@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Fixed-bucket, allocation-free latency distribution for realtime paths.
@@ -11,7 +11,7 @@ namespace DS4Windows
     internal sealed class ViiperLatencyHistogram
     {
         internal const string EnvironmentVariableName =
-            "DS4WINDOWS_VIIPER_LATENCY_DIAGNOSTICS";
+            "FUT404DS_VIIPER_LATENCY_DIAGNOSTICS";
 
         private static readonly long[] BucketUpperTicks = BuildBucketTicks();
         private readonly long[] buckets = new long[BucketUpperTicks.Length];

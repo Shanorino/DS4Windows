@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// Narrow native submission seam. Tests can stall the physical boundary
@@ -408,7 +408,7 @@ namespace DS4Windows.InputDevices
 
         /// <summary>
         /// Builds the bounded writer around an already-open exclusive HID
-        /// handle. This is the only safe way to stream alongside DS4Windows'
+        /// handle. This is the only safe way to stream alongside FUT404DS'
         /// reader: opening a second handle loses to the exclusive share mode.
         /// </summary>
         public static bool TryCreate(SafeFileHandle deviceHandle, int reportLength,
@@ -1211,12 +1211,12 @@ namespace DS4Windows.InputDevices
             {
                 if (handle != IntPtr.Zero &&
                     handle != new IntPtr(-1) &&
-                    DS4Windows.NativeMethods.HidD_GetPreparsedData(handle,
+                    FUT404DS.NativeMethods.HidD_GetPreparsedData(handle,
                         ref preparsedData))
                 {
                     var capabilities =
-                        default(DS4Windows.NativeMethods.HIDP_CAPS);
-                    DS4Windows.NativeMethods.HidP_GetCaps(preparsedData,
+                        default(FUT404DS.NativeMethods.HIDP_CAPS);
+                    FUT404DS.NativeMethods.HidP_GetCaps(preparsedData,
                         ref capabilities);
                     if (capabilities.OutputReportByteLength > 0)
                     {
@@ -1229,7 +1229,7 @@ namespace DS4Windows.InputDevices
             {
                 if (preparsedData != IntPtr.Zero)
                 {
-                    DS4Windows.NativeMethods.HidD_FreePreparsedData(
+                    FUT404DS.NativeMethods.HidD_FreePreparsedData(
                         preparsedData);
                 }
             }
@@ -1363,7 +1363,7 @@ namespace DS4Windows.InputDevices
 
                 // This writer always supplies its own OVERLAPPED pointer, so
                 // targeted cancellation is safe even when the HID handle is
-                // shared with DS4Windows' input reader.
+                // shared with FUT404DS' input reader.
                 Cancel(slot.Overlapped);
                 if (WaitForEvent(slot.EventHandle, timeoutMilliseconds) !=
                     WAIT_OBJECT_0)

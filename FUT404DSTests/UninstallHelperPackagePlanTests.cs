@@ -1,8 +1,8 @@
-using DS4Windows.Bootstrapper;
+using FUT404DS.Bootstrapper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WixToolset.BootstrapperApplicationApi;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class UninstallHelperPackagePlanTests
@@ -68,7 +68,7 @@ namespace DS4Windows.Tests
         public void UnrelatedPackagesRemainUnderExistingPlannerOwnership()
         {
             foreach (string package in new[] { null, "", "ViiperUsbipSetup",
-                "CloseRunningApplications", "DS4WindowsMsi", "HidHide", "FakerInput" })
+                "CloseRunningApplications", "FUT404DSMsi", "HidHide", "FakerInput" })
                 Assert.IsFalse(UninstallHelperPackagePlan.TryGetState(package,
                     LaunchAction.Install, RelationType.None, false, out _));
         }

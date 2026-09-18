@@ -347,9 +347,9 @@ Les modifications apportées à cette option prennent effet au moment de la conn
     <value>Nom de l'exe personnalisé</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Certains jeux implémentent un script qui ignore les entrée de la manette DS4 si les processus DS4Windows.exe ou InputMapper.exe sont en cours d'exécution. Il est possible de contourner ce blocage en modifiant le nom DS4Windows.exe afin que la détection échoue. Spécifier le nom personnalisé ici permet à DS4Updater de mettre à jour automatiquement une copie personnalisée de DS4Windows avec le nom de fichier souhaité. Assurez-vous d'omettre l'extension.
+    <value>Certains jeux implémentent un script qui ignore les entrée de la manette DS4 si les processus FUT404DS.exe ou InputMapper.exe sont en cours d'exécution. Il est possible de contourner ce blocage en modifiant le nom FUT404DS.exe afin que la détection échoue. Spécifier le nom personnalisé ici permet à DS4Updater de mettre à jour automatiquement une copie personnalisée de FUT404DS avec le nom de fichier souhaité. Assurez-vous d'omettre l'extension.
 
-Exemple : tu_es_tilte_boubou_DS4Windows</value>
+Exemple : tu_es_tilte_boubou_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>Détection XInput</value>
@@ -436,13 +436,13 @@ Exemple : tu_es_tilte_boubou_DS4Windows</value>
     <value>Calibration dans le monde réel</value>
   </data>
 <data name="ViGEmPluginFailure" xml:space="preserve">
-    <value>Le plug-in de périphérique ViGEm à rencontré un problème. Probablement un problème interne à ViGEmBus. Fermeture de la connexion. Si le problème persiste, veuillez fermer DS4Windows et redémarrer windows.</value>
+    <value>Le plug-in de périphérique ViGEm à rencontré un problème. Probablement un problème interne à ViGEmBus. Fermeture de la connexion. Si le problème persiste, veuillez fermer FUT404DS et redémarrer windows.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Vérfications d'intégrité des données du périphérique échouées. Fermeture du périphérique.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>.NET 5 Runtime n'a pas été détecté sur votre système. Veuillez télécharger et installer .NET 5 Runtime pour assurer la compatibilité avec les futures versions de DS4Windows. Vous serez redirigé vers la page de téléchargement de .NET 5 Runtime à la fermeture de cette fenêtre.</value>
+    <value>.NET 5 Runtime n'a pas été détecté sur votre système. Veuillez télécharger et installer .NET 5 Runtime pour assurer la compatibilité avec les futures versions de FUT404DS. Vous serez redirigé vers la page de téléchargement de .NET 5 Runtime à la fermeture de cette fenêtre.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Veuillez mettre à jour .NET Runtime</value>
@@ -496,7 +496,7 @@ Exemple : tu_es_tilte_boubou_DS4Windows</value>
     <value>Dans certaines situations, il peut être utile de limiter la valeur de sortie maximale émise par le stick analogique. Cette fonction permet ainsi de limiter la valeur de sortie du stick analogique.</value>
   </data>
   <data name="AntiDeadzoneTooltip" xml:space="preserve">
-    <value>L'anti-zone morte agit comme un décalage à associer à un axe pour indiquer la valeur de sortie minimale générée après qu'un axe ait quitté sa zone morte assignée. Ceci vise principalement à faciliter le mappage d'une valeur de zone morte attribuée à un axe dans un jeu vidéo. Par exemple, la zone morte typique attribuée pour XInput LS dans un jeu vidéo est d'environ 8000 (25%). Sans anti-zone morte assignée, un axe devrait dépasser la zone morte assignée dans DS4Windows avec la zone morte de l'axe assignée dans le jeu.</value>
+    <value>L'anti-zone morte agit comme un décalage à associer à un axe pour indiquer la valeur de sortie minimale générée après qu'un axe ait quitté sa zone morte assignée. Ceci vise principalement à faciliter le mappage d'une valeur de zone morte attribuée à un axe dans un jeu vidéo. Par exemple, la zone morte typique attribuée pour XInput LS dans un jeu vidéo est d'environ 8000 (25%). Sans anti-zone morte assignée, un axe devrait dépasser la zone morte assignée dans FUT404DS avec la zone morte de l'axe assignée dans le jeu.</value>
   </data>
   <data name="StickInputCurveTooltip" xml:space="preserve">
     <value>ANCIEN PARAMÈTRE OBSOLÈTE. Avant d'appliquer toute information de zone morte, essayez d'utiliser une courbe basée sur les coordonnées d'entrée brutes.</value>
@@ -571,7 +571,7 @@ Le réglage de rotation est destiné à aider à corriger l'orientation d'un sti
 
 - Désactivé : la vibration sera redimensionnée nativement par le contrôleur en fonction du niveau de puissance défini (meilleure qualité)
 
-- Activé : la mise à l'échelle des vibrations natives DS4Windows et le contrôle natif de DualSense seront actifs</value>
+- Activé : la mise à l'échelle des vibrations natives FUT404DS et le contrôle natif de DualSense seront actifs</value>
   </data>
   <data name="DualSRumbleModes_Tip" xml:space="preserve">
     <value>Mode Précision (recommandé) :
@@ -654,8 +654,8 @@ Désactivé:
   <data name="SwipeTouchpadToSwitchProfiles" xml:space="preserve">
     <value>Faites glisser sur le pavé tactile pour changer de profil</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>Désactiver temporairement DS4Windows</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>Désactiver temporairement FUT404DS</value>
   </data>
   <data name="Unplug" xml:space="preserve">
     <value>Débrancher</value>

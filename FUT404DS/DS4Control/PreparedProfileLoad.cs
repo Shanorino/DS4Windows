@@ -4,9 +4,9 @@ using System.Security;
 using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4Windows.DS4Control
+namespace FUT404DS.DS4Control
 {
     internal enum ProfilePreparationFailure
     {
@@ -24,6 +24,7 @@ namespace DS4Windows.DS4Control
     /// </summary>
     internal sealed class PreparedProfileLoad
     {
+        private const string CurrentProfileRoot = "FUT404DS";
         private ProfileDTO dto;
         private Action deferredPostLoad;
 
@@ -72,12 +73,14 @@ namespace DS4Windows.DS4Control
                         // an apparently valid empty/default profile.
                         XmlReader original = migration.ProfileReader;
                         if (original == null || original.MoveToContent() != XmlNodeType.Element ||
-                            original.LocalName != "DS4Windows" || original.NamespaceURI.Length != 0)
-                            throw new XmlException("Expected a DS4Windows profile document.");
+                            original.NamespaceURI.Length != 0 ||
+                            (!string.Equals(original.LocalName, CurrentProfileRoot,
+                                StringComparison.Ordinal) && original.IsEmptyElement))
+                            throw new XmlException("Expected a FUT404DS profile document.");
                         migrated = migration.RequiresMigration();
                         if (migrated)
                             migration.Migrate();
-                        xml = migration.CurrentMigrationText;
+                        xml = NormalizeProfileRoot(migration.CurrentMigrationText);
                     }
                     finally
                     {
@@ -120,6 +123,39 @@ namespace DS4Windows.DS4Control
                 error = ex.InnerException?.Message ?? ex.Message;
             }
             return false;
+        }
+
+        private static string NormalizeProfileRoot(string xml)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(xml);
+            XmlElement root = document.DocumentElement
+                ?? throw new XmlException("The profile document has no root element.");
+            if (root.NamespaceURI.Length != 0)
+                throw new XmlException("The profile document uses an unsupported namespace.");
+
+            bool looksLikeProfile = root.HasAttribute("app_version") ||
+                root.HasAttribute("config_version") ||
+                root.SelectSingleNode("Control") != null ||
+                root.SelectSingleNode("ShiftControl") != null ||
+                root.SelectSingleNode("RumbleBoost") != null;
+            if (!string.Equals(root.LocalName, CurrentProfileRoot,
+                    StringComparison.Ordinal) && !looksLikeProfile)
+                throw new XmlException("The document root is not a profile.");
+
+            if (!string.Equals(root.LocalName, CurrentProfileRoot,
+                    StringComparison.Ordinal))
+            {
+                XmlElement normalized = document.CreateElement(CurrentProfileRoot);
+                foreach (XmlAttribute attribute in root.Attributes)
+                    normalized.SetAttribute(attribute.Name, attribute.NamespaceURI,
+                        attribute.Value);
+                while (root.HasChildNodes)
+                    normalized.AppendChild(root.FirstChild);
+                document.ReplaceChild(normalized, root);
+            }
+
+            return document.OuterXml;
         }
 
         internal void ApplyTo(BackingStore destination)

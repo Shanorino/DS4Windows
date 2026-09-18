@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,11 +11,11 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Buffers.Binary;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Versioned, transport-neutral Xbox One/Series semantic state at the
-    /// DS4Windows/VIIPER boundary. This is not a raw GIP packet: VIIPER owns
+    /// FUT404DS/VIIPER boundary. This is not a raw GIP packet: VIIPER owns
     /// GIP sequence, keep-alive, Guide-status, Share-extension, lifecycle,
     /// and endpoint-presentation policy.
     /// </summary>

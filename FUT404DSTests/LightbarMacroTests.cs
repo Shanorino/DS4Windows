@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels;
+using System.Collections.ObjectModel;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class LightbarMacroTests

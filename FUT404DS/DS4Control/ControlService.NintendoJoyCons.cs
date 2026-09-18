@@ -2,11 +2,11 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
-using static DS4Windows.Global;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
+using static FUT404DS.Global;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 public partial class ControlService
 {

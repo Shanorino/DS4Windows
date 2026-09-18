@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using DS4Windows.StickModifiers;
-using DS4Windows.Switch2;
+using FUT404DS.StickModifiers;
+using FUT404DS.Switch2;
 //using System.Diagnostics;
-using DS4WinWPF.DS4Control;
+using FUT404DSWPF.DS4Control;
 using System;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class Mouse : ITouchpadBehaviour
     {

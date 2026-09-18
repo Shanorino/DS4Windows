@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,11 +10,11 @@ the Free Software Foundation, either version 3 of the License, or
 The independent left/right stick-mouse sensitivity control is adapted from
 the GPL-3.0 licensed Switch2Connect project, commit
 61ac6642ce12fe7217e38a860b14863b18ca7e28, src/controller.py
-Controller._apply_joystick_mouse. DS4Windows applies the profile scalar at
+Controller._apply_joystick_mouse. FUT404DS applies the profile scalar at
 its existing mapped-stick mouse boundary rather than creating a second mapper.
 */
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal static class Switch2MappedStickMouseSensitivity
 {

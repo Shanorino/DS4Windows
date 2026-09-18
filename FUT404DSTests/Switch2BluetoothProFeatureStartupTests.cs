@@ -1,6 +1,6 @@
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 public sealed partial class Switch2BluetoothPlayerLedCommandChannelTests
 {

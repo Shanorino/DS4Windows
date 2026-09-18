@@ -1,7 +1,7 @@
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WinWPF.DS4Forms.ViewModels;
+namespace FUT404DSWPF.DS4Forms.ViewModels;
 
 public sealed record JoyConLinkActionView
 {

@@ -2,10 +2,10 @@ using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Reflection;
-using DS4Windows.InputDevices;
-using Fixture = DS4Windows.Tests.DualSenseBluetoothNativeIdleRetryTests.Fixture;
+using FUT404DS.InputDevices;
+using Fixture = FUT404DS.Tests.DualSenseBluetoothNativeIdleRetryTests.Fixture;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 /// <summary>
 /// Real helper threads, timers, FIFO ownership and final writer composition;

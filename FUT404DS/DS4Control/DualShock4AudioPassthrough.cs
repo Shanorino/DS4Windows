@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Owns one Bluetooth speaker worker per controller slot. Profile changes

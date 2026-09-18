@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Learns residual drift between VIIPER's direct PCM producer and the

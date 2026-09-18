@@ -1,11 +1,11 @@
-using DS4Windows;
+using FUT404DS;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
-using DS4Windows.DS4Control;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
+using FUT404DS.DS4Control;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -17,7 +17,7 @@ public class ProfileMutationBoundaryTests
     public void ExplicitUiNameSurvivesAnOlderNamedApplyBetweenSelectionAndEnqueue()
     {
         using var fixture = new Fixture();
-        File.WriteAllText(fixture.Path, "<DS4Windows config_version=\"5\"><RumbleBoost>42</RumbleBoost><Control><Key><Cross>65</Cross></Key></Control></DS4Windows>");
+        File.WriteAllText(fixture.Path, "<FUT404DS config_version=\"5\"><RumbleBoost>42</RumbleBoost><Control><Key><Cross>65</Cross></Key></Control></FUT404DS>");
         fixture.WriteOtherProfile();
         fixture.AttachSwitch2();
         fixture.EnableNamedSwitching();
@@ -194,7 +194,7 @@ public class ProfileMutationBoundaryTests
     public void NamedProfileResolvesKeyAliasesUnderStableBackend()
     {
         using var fixture = new Fixture();
-        File.WriteAllText(fixture.Path, "<DS4Windows config_version=\"5\"><Control><Key><Cross>65</Cross></Key></Control></DS4Windows>");
+        File.WriteAllText(fixture.Path, "<FUT404DS config_version=\"5\"><Control><Key><Cross>65</Cross></Key></Control></FUT404DS>");
         fixture.AttachSwitch2();
         fixture.EnableNamedSwitching();
         var result = Await(fixture.LoadNamed());
@@ -784,12 +784,12 @@ public class ProfileMutationBoundaryTests
         }
 
         internal void MakeValid(string version = "5") => File.WriteAllText(Path,
-            $"<DS4Windows config_version=\"{version}\"><RumbleBoost>42</RumbleBoost></DS4Windows>");
+            $"<FUT404DS config_version=\"{version}\"><RumbleBoost>42</RumbleBoost></FUT404DS>");
 
         internal void WriteOtherProfile()
         {
             otherPath = System.IO.Path.Combine(profiles, "Other.xml");
-            File.WriteAllText(otherPath, "<DS4Windows config_version=\"5\"><RumbleBoost>21</RumbleBoost></DS4Windows>");
+            File.WriteAllText(otherPath, "<FUT404DS config_version=\"5\"><RumbleBoost>21</RumbleBoost></FUT404DS>");
         }
 
         internal FakeSource AttachSource()
@@ -883,7 +883,7 @@ public class ProfileMutationBoundaryTests
             profiles = System.IO.Path.Combine(directory, "Profiles");
             Directory.CreateDirectory(profiles);
             Path = System.IO.Path.Combine(profiles, "Candidate.xml");
-            File.WriteAllText(Path, "<DS4Windows>");
+            File.WriteAllText(Path, "<FUT404DS>");
             Store.profilePath[Slot] = "Candidate";
             Store.rumble[Slot] = 77;
             StoreField.SetValue(null, Store);

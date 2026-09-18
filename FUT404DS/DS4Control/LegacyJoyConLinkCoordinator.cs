@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal readonly record struct LegacyJoyConProjectionInput(
     DS4State Left, DS4State Right, ulong LeftGeneration, ulong RightGeneration,

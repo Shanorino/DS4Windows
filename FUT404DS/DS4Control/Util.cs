@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Win32;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     [SuppressUnmanagedCodeSecurity]
     public class Util
@@ -247,7 +247,7 @@ namespace DS4Windows
         }
 
         /// <summary>
-        /// Launch process in Explorer to de-elevate the process if DS4Windows is running
+        /// Launch process in Explorer to de-elevate the process if FUT404DS is running
         /// as under the Admin account
         /// </summary>
         /// <param name="path">Program path or URL</param>
@@ -302,7 +302,7 @@ namespace DS4Windows
                 w.WriteLine($"@mov /Y \"{tmpUpdaterPath}\" \"{Global.exedirpath}\\DS4Updater.exe\"");
                 if (deleteUpdatesDir)
                 {
-                    w.WriteLine($"@del /S \"{Global.exedirpath}\\Update Files\\DS4Windows\"");
+                    w.WriteLine($"@del /S \"{Global.exedirpath}\\Update Files\\FUT404DS\"");
                 }
 
                 w.Close();

@@ -1,11 +1,11 @@
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2ProfileMappingSchemaTests
@@ -168,7 +168,7 @@ public sealed class Switch2ProfileMappingSchemaTests
             Assert.IsTrue(deserialized.Switch2MagnetometerYawAssistEnabled);
         }
         using (var reader = new StringReader(
-                   "<DS4Windows config_version=\"5\" />"))
+                   "<FUT404DS config_version=\"5\" />"))
         {
             var legacy = (ProfileDTO)serializer.Deserialize(reader);
             Assert.IsFalse(legacy.Switch2MagnetometerYawAssistEnabled);
@@ -247,7 +247,7 @@ public sealed class Switch2ProfileMappingSchemaTests
         StringAssert.Contains(xml,
             "<Switch2HorizonStabilizationEnabled>true</Switch2HorizonStabilizationEnabled>");
         using (var reader = new StringReader(
-                   "<DS4Windows config_version=\"5\" />"))
+                   "<FUT404DS config_version=\"5\" />"))
         {
             var legacy = (ProfileDTO)serializer.Deserialize(reader);
             Assert.IsFalse(legacy.Switch2HorizonStabilizationEnabled);
@@ -303,7 +303,7 @@ public sealed class Switch2ProfileMappingSchemaTests
             Assert.AreEqual(8, deserialized.Switch2XboxImpulseStrength);
         }
         using (var reader = new StringReader(
-                   "<DS4Windows config_version=\"5\" />"))
+                   "<FUT404DS config_version=\"5\" />"))
         {
             var legacy = (ProfileDTO)serializer.Deserialize(reader);
             Assert.IsTrue(legacy.Switch2MapXboxImpulseTriggersToHdRumble);
@@ -349,7 +349,7 @@ public sealed class Switch2ProfileMappingSchemaTests
         StringAssert.Contains(xml, "<RumbleBoost>150</RumbleBoost>");
 
         using var reader = new StringReader(
-            "<DS4Windows config_version=\"5\" />");
+            "<FUT404DS config_version=\"5\" />");
         var legacy = (ProfileDTO)serializer.Deserialize(reader);
         Assert.AreEqual(Switch2HdRumbleBodyTuning.DefaultStrengthPercent,
             legacy.RumbleBoost);
@@ -393,7 +393,7 @@ public sealed class Switch2ProfileMappingSchemaTests
             "<Switch2XboxBodyRumbleFrequency>4</Switch2XboxBodyRumbleFrequency>");
 
         using (var reader = new StringReader(
-                   "<DS4Windows config_version=\"5\" />"))
+                   "<FUT404DS config_version=\"5\" />"))
         {
             var legacy = (ProfileDTO)serializer.Deserialize(reader);
             Assert.IsFalse(legacy.Switch2XboxBodyRumbleMode);
@@ -477,10 +477,10 @@ public sealed class Switch2ProfileMappingSchemaTests
             "<Switch2DualJoyConGyroLeftActivationButton>LeftPaddle1</Switch2DualJoyConGyroLeftActivationButton>");
 
         const string legacyDirectMerge = """
-            <DS4Windows config_version="5">
+            <FUT404DS config_version="5">
               <Switch2DualJoyConGyroFusionEnabled>true</Switch2DualJoyConGyroFusionEnabled>
               <Switch2DualJoyConGyroDominantSide>None</Switch2DualJoyConGyroDominantSide>
-            </DS4Windows>
+            </FUT404DS>
             """;
         BackingStore migrated = DeserializeIntoStore(serializer,
             legacyDirectMerge);
@@ -1023,7 +1023,7 @@ public sealed class Switch2ProfileMappingSchemaTests
         }
 
         using (var reader = new StringReader(
-                   "<DS4Windows config_version=\"5\" />"))
+                   "<FUT404DS config_version=\"5\" />"))
         {
             var legacy = (ProfileDTO)serializer.Deserialize(reader);
             Assert.AreEqual(Switch2IrGyroMotionModifier.
@@ -1291,7 +1291,7 @@ public sealed class Switch2ProfileMappingSchemaTests
     public void NewControlsRoundTripByNameWithoutChangingLegacyMappings()
     {
         const string xml = """
-            <DS4Windows config_version="5">
+            <FUT404DS config_version="5">
               <Control>
                 <Button>
                   <Mute>A Button</Mute>
@@ -1309,7 +1309,7 @@ public sealed class Switch2ProfileMappingSchemaTests
                 </Button>
               </Control>
               <ShiftControl />
-            </DS4Windows>
+            </FUT404DS>
             """;
 
         XmlSerializer serializer = new(typeof(ProfileDTO),

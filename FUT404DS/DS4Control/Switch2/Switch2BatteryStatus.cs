@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,7 +10,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// The three battery bands established by Switch2Connect's GPL-3.0-or-later
@@ -27,7 +27,7 @@ public enum Switch2BatteryBand : byte
 
 /// <summary>
 /// Validated raw Switch 2 power telemetry plus the conservative compatibility
-/// projection needed by DS4Windows' legacy percent-only controller UI.
+/// projection needed by FUT404DS' legacy percent-only controller UI.
 /// Validation and band thresholds are adapted from
 /// TommyWabg/Switch2Connect@4487322a306f04efa27682e3f3a508635a84fd98,
 /// <c>src/controller.py</c>, under GPL-3.0-or-later compatibility.
@@ -40,7 +40,7 @@ public readonly struct Switch2BatteryStatus :
     public const ushort MediumThresholdMillivolts = 3125;
     public const ushort HighThresholdMillivolts = 3250;
 
-    // DS4Windows has no categorical battery API. These stable display values
+    // FUT404DS has no categorical battery API. These stable display values
     // preserve low-battery behavior and avoid claiming that the high band is
     // fully charged. They are UI compatibility markers, not chemistry/SOC.
     public const byte LowCompatibilityPercentage = 10;
@@ -74,7 +74,7 @@ public readonly struct Switch2BatteryStatus :
     public Switch2BatteryBand Band { get; }
 
     /// <summary>
-    /// A categorical marker for DS4Windows' percent-only compatibility API;
+    /// A categorical marker for FUT404DS' percent-only compatibility API;
     /// this is not an estimated physical state of charge.
     /// </summary>
     public byte CompatibilityPercentage { get; }

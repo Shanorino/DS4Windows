@@ -1,6 +1,6 @@
 using System.Runtime;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 /// <summary>
 /// Isolates a bounded, synchronous allocation-counter window from GC allocation-

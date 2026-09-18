@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@ using System.Windows.Input;
 using FakerInputWrapper;
 using MouseButton = FakerInputWrapper.MouseButton;
 
-namespace DS4Windows.DS4Control
+namespace FUT404DS.DS4Control
 {
     public class FakerInputMapping : VirtualKBMMapping
     {

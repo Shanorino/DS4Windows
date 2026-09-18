@@ -15,7 +15,7 @@ import zipfile
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 REQUIRED = (
-    "DS4Windows.exe", "coreclr.dll", "hostfxr.dll",
+    "FUT404DS.exe", "coreclr.dll", "hostfxr.dll",
     "BouncyCastle.Cryptography.dll", "Resources/BouncyCastle.NOTICE.txt",
     "Resources/DsxTriggerEffects.NOTICE.txt",
     "xbox-one-authorized-persona.json", "extras/XBOX-ONE-PERSONA-NOTICE.md",
@@ -27,11 +27,11 @@ REQUIRED = (
     "extras/FakerInput_0.1.0_x64.msi",
 )
 SATELLITES = (
-    "de/DS4Windows.resources.dll", "pt-BR/DS4Windows.resources.dll",
+    "de/FUT404DS.resources.dll", "pt-BR/FUT404DS.resources.dll",
     "de/Microsoft.Win32.TaskScheduler.resources.dll",
 )
-PORTABLE_ONLY = ("viiper.exe", "viiper.exe.sha256", "DS4Windows.portable")
-PORTABLE_MARKER = b"DS4Windows portable package v1\n"
+PORTABLE_ONLY = ("viiper.exe", "viiper.exe.sha256", "FUT404DS.portable")
+PORTABLE_MARKER = b"FUT404DS portable package v1\n"
 VALIDATOR_SPEC = importlib.util.spec_from_file_location(
     "localization_package_validator", REPOSITORY / "utils" / "validate-installer.py"
 )
@@ -53,7 +53,7 @@ class LocalizationPackageTests(unittest.TestCase):
                     path = publish / relative
                     path.parent.mkdir(parents=True, exist_ok=True)
                     path.write_bytes(("fixture:" + relative).encode("utf-8"))
-                previous = publish.parent / "DS4Windows"
+                previous = publish.parent / "FUT404DS"
                 previous.mkdir()
                 (previous / "preserve.txt").write_bytes(b"previous published output")
                 result = subprocess.run([
@@ -63,16 +63,16 @@ class LocalizationPackageTests(unittest.TestCase):
                 self.assertNotEqual(0, result.returncode, result.stdout + result.stderr)
                 self.assertIn("missing: " + missing, result.stderr)
                 self.assertEqual(b"previous published output", (previous / "preserve.txt").read_bytes())
-                self.assertFalse((publish / "DS4Windows.release").exists())
+                self.assertFalse((publish / "FUT404DS.release").exists())
                 self.assertIn(missing, VALIDATOR.REQUIRED_PUBLISH_FILES)
 
     def test_dsx_effect_notice_is_shipped_with_binary_packages(self):
         relative = "Resources/DsxTriggerEffects.NOTICE.txt"
-        notice = (REPOSITORY / "DS4Windows" / relative).read_text(encoding="utf-8")
+        notice = (REPOSITORY / "FUT404DS" / relative).read_text(encoding="utf-8")
         self.assertIn('Copyright (c) 2021-2022 John "Nielk1" Klein', notice)
         self.assertIn("Permission is hereby granted", notice)
         self.assertIn('THE SOFTWARE IS PROVIDED "AS IS"', notice)
-        project = ET.parse(REPOSITORY / "DS4Windows" / "DS4WinWPF.csproj")
+        project = ET.parse(REPOSITORY / "FUT404DS" / "FUT404DSWPF.csproj")
         entries = [entry for entry in project.findall(".//Content")
                    if entry.get("Include", "").replace("\\", "/") == relative]
         self.assertEqual(1, len(entries))
@@ -91,10 +91,10 @@ class LocalizationPackageTests(unittest.TestCase):
                 path = publish / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(("fixture:" + relative).encode("utf-8"))
-            previous = publish.parent / "DS4Windows"
+            previous = publish.parent / "FUT404DS"
             previous.mkdir()
             (previous / "preserve.txt").write_bytes(b"previous published output")
-            archive = publish.parent / "DS4Windows_missing-persona_x64.zip"
+            archive = publish.parent / "FUT404DS_missing-persona_x64.zip"
             archive.write_bytes(b"previous archive")
             result = subprocess.run([
                 sys.executable, str(REPOSITORY / "utils" / "post-build.py"),
@@ -104,7 +104,7 @@ class LocalizationPackageTests(unittest.TestCase):
             self.assertIn("missing: xbox-one-authorized-persona.json", result.stderr)
             self.assertEqual(b"previous archive", archive.read_bytes())
             self.assertEqual(b"previous published output", (previous / "preserve.txt").read_bytes())
-            self.assertFalse((publish / "DS4Windows.release").exists())
+            self.assertFalse((publish / "FUT404DS.release").exists())
 
     def test_installer_also_requires_xbox_persona_and_notice(self):
         self.assertTrue({"xbox-one-authorized-persona.json",
@@ -118,7 +118,7 @@ class LocalizationPackageTests(unittest.TestCase):
             publish.mkdir(parents=True)
             # Only the root updater manifest is synthesized. A same-named
             # nested resource remains an ordinary, shared packaged file.
-            fixture_paths = REQUIRED + SATELLITES + ("Resources/.ds4windows-managed-files.txt",)
+            fixture_paths = REQUIRED + SATELLITES + ("Resources/.fut404ds-managed-files.txt",)
             contents = {
                 relative: ("fixture:" + relative).encode("utf-8")
                 for relative in fixture_paths
@@ -137,57 +137,57 @@ class LocalizationPackageTests(unittest.TestCase):
             deps_text = json.dumps({
                 "runtimeTarget": {"name": "test"},
                 "targets": {"test": {
-                    "DS4Windows/1.0.0": {"resources": {
+                    "FUT404DS/1.0.0": {"resources": {
                         name: {"locale": name.split("/")[0]}
-                        for name in SATELLITES if name.endswith("/DS4Windows.resources.dll")
+                        for name in SATELLITES if name.endswith("/FUT404DS.resources.dll")
                     }},
                     "TaskScheduler/2.10.1": {"resources": {
                         "lib/net6.0-windows7.0/de/Microsoft.Win32.TaskScheduler.resources.dll": {"locale": "de"}
                     }},
                 }},
-                "libraries": {"DS4Windows/1.0.0": {"type": "project"}},
+                "libraries": {"FUT404DS/1.0.0": {"type": "project"}},
             })
-            (publish / "DS4Windows.deps.json").write_text(deps_text, encoding="utf-8")
-            (publish / "DS4Windows.runtimeconfig.json").write_text(
+            (publish / "FUT404DS.deps.json").write_text(deps_text, encoding="utf-8")
+            (publish / "FUT404DS.runtimeconfig.json").write_text(
                 json.dumps({"runtimeOptions": {}}), encoding="utf-8"
             )
             subprocess.run([
                 sys.executable, str(REPOSITORY / "utils" / "post-build.py"),
                 str(publish), str(REPOSITORY), "issue60-regression",
             ], cwd=root, check=True, capture_output=True, text=True)
-            package = publish.parent / "DS4Windows"
+            package = publish.parent / "FUT404DS"
             self.assertFalse((package / "Lang").exists())
-            self.assertEqual(deps_text, (package / "DS4Windows.deps.json").read_text(encoding="utf-8"))
+            self.assertEqual(deps_text, (package / "FUT404DS.deps.json").read_text(encoding="utf-8"))
             VALIDATOR.validate_localization_package(package)
-            owned = set((package / ".ds4windows-managed-files.txt").read_text(encoding="utf-8").splitlines())
+            owned = set((package / ".fut404ds-managed-files.txt").read_text(encoding="utf-8").splitlines())
             for relative in fixture_paths:
                 self.assertEqual(contents[relative], (package / relative).read_bytes())
                 self.assertIn(relative, owned)
 
-            archive = publish.parent / "DS4Windows_issue60-regression_x64.zip"
+            archive = publish.parent / "FUT404DS_issue60-regression_x64.zip"
             with zipfile.ZipFile(archive) as packaged:
                 for relative in fixture_paths:
-                    self.assertIn("DS4Windows/" + relative, packaged.namelist())
-                    self.assertEqual(contents[relative], packaged.read("DS4Windows/" + relative))
-                broker = packaged.read("DS4Windows/extras/VIIPER-0.1.5-rc4.6-x64.exe")
-                self.assertEqual(broker, packaged.read("DS4Windows/viiper.exe"))
+                    self.assertIn("FUT404DS/" + relative, packaged.namelist())
+                    self.assertEqual(contents[relative], packaged.read("FUT404DS/" + relative))
+                broker = packaged.read("FUT404DS/extras/VIIPER-0.1.5-rc4.6-x64.exe")
+                self.assertEqual(broker, packaged.read("FUT404DS/viiper.exe"))
                 broker_hash = hashlib.sha256(broker).hexdigest()
                 self.assertEqual(expected_hash, broker_hash)
-                self.assertEqual(contents[provenance_name], packaged.read("DS4Windows/" + provenance_name))
+                self.assertEqual(contents[provenance_name], packaged.read("FUT404DS/" + provenance_name))
                 self.assertIn(
                     f"Binary SHA-256: {broker_hash.upper()}\n".encode("utf-8"),
-                    packaged.read("DS4Windows/" + provenance_name),
+                    packaged.read("FUT404DS/" + provenance_name),
                 )
                 self.assertEqual(
                     f"{broker_hash} *viiper.exe\n".encode("ascii"),
-                    packaged.read("DS4Windows/viiper.exe.sha256"),
+                    packaged.read("FUT404DS/viiper.exe.sha256"),
                 )
                 self.assertEqual(
                     f"{broker_hash} *VIIPER-0.1.5-rc4.6-x64.exe\n".encode("ascii"),
-                    packaged.read("DS4Windows/extras/VIIPER-0.1.5-rc4.6-x64.exe.sha256"),
+                    packaged.read("FUT404DS/extras/VIIPER-0.1.5-rc4.6-x64.exe.sha256"),
                 )
-                self.assertEqual(PORTABLE_MARKER, packaged.read("DS4Windows/DS4Windows.portable"))
-                zip_owned = set(packaged.read("DS4Windows/.ds4windows-managed-files.txt").decode("utf-8").splitlines())
+                self.assertEqual(PORTABLE_MARKER, packaged.read("FUT404DS/FUT404DS.portable"))
+                zip_owned = set(packaged.read("FUT404DS/.fut404ds-managed-files.txt").decode("utf-8").splitlines())
                 self.assertEqual(owned | set(PORTABLE_ONLY), zip_owned)
                 names = packaged.namelist()
                 self.assertEqual(len(names), len({name.casefold() for name in names}))
@@ -227,14 +227,14 @@ class LocalizationPackageTests(unittest.TestCase):
                 path = publish / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(("fixture:" + relative).encode("utf-8"))
-            previous = publish.parent / "DS4Windows"
+            previous = publish.parent / "FUT404DS"
             previous.mkdir()
             (previous / "preserve.txt").write_bytes(b"previous published output")
-            archive = publish.parent / "DS4Windows_portable-regression_x64.zip"
+            archive = publish.parent / "FUT404DS_portable-regression_x64.zip"
             archive.write_bytes(b"previous archive")
-            marker = publish / "DS4Windows.release"
+            marker = publish / "FUT404DS.release"
             marker.write_bytes(b"original marker")
-            owned = publish / ".ds4windows-managed-files.txt"
+            owned = publish / ".fut404ds-managed-files.txt"
             owned.write_bytes(b"original manifest")
             path = publish / collision
             if reparse:
@@ -282,13 +282,13 @@ class LocalizationPackageTests(unittest.TestCase):
         self.assert_rejected_publish_preserves_existing_output("linked", reparse=True)
 
     def test_runtime_configuration_has_no_working_directory_probing(self):
-        configuration = json.loads((REPOSITORY / "DS4Windows" / "runtimeconfig.template.json").read_text(encoding="utf-8"))
+        configuration = json.loads((REPOSITORY / "FUT404DS" / "runtimeconfig.template.json").read_text(encoding="utf-8"))
         self.assertFalse(configuration.get("additionalProbingPaths"))
 
     def test_validator_rejects_working_directory_probing_before_loading_metadata(self):
         with tempfile.TemporaryDirectory(prefix="ds4w-localization-validator-") as temporary:
             package = Path(temporary)
-            (package / "DS4Windows.runtimeconfig.json").write_text(
+            (package / "FUT404DS.runtimeconfig.json").write_text(
                 json.dumps({"runtimeOptions": {"additionalProbingPaths": ["./Lang/"]}}),
                 encoding="utf-8",
             )
@@ -298,10 +298,10 @@ class LocalizationPackageTests(unittest.TestCase):
     def test_validator_rejects_missing_resource_metadata(self):
         with tempfile.TemporaryDirectory(prefix="ds4w-localization-validator-") as temporary:
             package = Path(temporary)
-            (package / "DS4Windows.runtimeconfig.json").write_text(
+            (package / "FUT404DS.runtimeconfig.json").write_text(
                 json.dumps({"runtimeOptions": {}}), encoding="utf-8"
             )
-            (package / "DS4Windows.deps.json").write_text(
+            (package / "FUT404DS.deps.json").write_text(
                 json.dumps({"targets": {}}), encoding="utf-8"
             )
             with self.assertRaisesRegex(SystemExit, "omits application or TaskScheduler"):
@@ -311,13 +311,13 @@ class LocalizationPackageTests(unittest.TestCase):
 class SetupActionValidationTests(unittest.TestCase):
     @staticmethod
     def sources():
-        root = REPOSITORY / "installer" / "DS4Windows.SetupActions"
+        root = REPOSITORY / "installer" / "FUT404DS.SetupActions"
         return ((root / "Program.cs").read_text(encoding="utf-8"),
                 (root / "SetupMutationOwnership.cs").read_text(encoding="utf-8"))
 
     def test_actual_setup_actions_and_extracted_ownership_helper_pass(self):
         program, helper = self.sources()
-        self.assertNotIn(r'@"Global\DS4Windows-VIIPER-Setup"', program)
+        self.assertNotIn(r'@"Global\FUT404DS-VIIPER-Setup"', program)
         VALIDATOR.validate_setup_actions(program, helper)
 
     def test_installer_uses_the_validated_setup_action_entrypoint(self):
@@ -327,7 +327,7 @@ class SetupActionValidationTests(unittest.TestCase):
 
     def test_wrong_mutex_name_is_rejected_in_actual_helper(self):
         program, helper = self.sources()
-        original = r'@"Global\DS4Windows-VIIPER-Setup"'
+        original = r'@"Global\FUT404DS-VIIPER-Setup"'
         self.assertIn(original, helper)
         with self.assertRaisesRegex(SystemExit, "Setup mutation ownership contract missing"):
             VALIDATOR.validate_setup_actions(program, helper.replace(original, r'@"Local\Different-Setup"'))
@@ -356,7 +356,7 @@ class SetupActionValidationTests(unittest.TestCase):
     def test_custom_hklm_runonce_remains_forbidden(self):
         program, helper = self.sources()
         with self.assertRaisesRegex(SystemExit, "custom HKLM RunOnce"):
-            VALIDATOR.validate_setup_actions(program + '\nSetValue("DS4WindowsSetupResume", "unsafe")', helper)
+            VALIDATOR.validate_setup_actions(program + '\nSetValue("FUT404DSSetupResume", "unsafe")', helper)
 
 
 class StartupResumeValidationTests(unittest.TestCase):

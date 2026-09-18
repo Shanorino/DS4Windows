@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Control.DTOXml
+namespace FUT404DSWPF.DS4Control.DTOXml
 {
     [XmlRoot("Actions")]
     public class ActionsDTO : IDTO<BackingStore>

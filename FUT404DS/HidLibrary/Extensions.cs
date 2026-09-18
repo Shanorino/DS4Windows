@@ -1,6 +1,6 @@
-﻿using System.Text;
+using System.Text;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public static class Extensions
     {

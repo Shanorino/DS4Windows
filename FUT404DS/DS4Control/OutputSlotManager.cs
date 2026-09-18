@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -25,9 +25,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
-using DS4WinWPF.DS4Control;
+using FUT404DSWPF.DS4Control;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class OutputSlotManager
     {

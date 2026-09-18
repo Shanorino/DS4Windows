@@ -1,7 +1,7 @@
 # Bounded, no-restart Switch 2 Bluetooth header observer
 
 Research utility, **not production audio**. It observes a live portable
-DS4Windows session using real-time Windows ETW. It never opens a Bluetooth
+FUT404DS session using real-time Windows ETW. It never opens a Bluetooth
 service, restarts either app, toggles the radio, changes pairing or loads a
 driver. It invokes the existing, current-user-only lab client for all probes.
 

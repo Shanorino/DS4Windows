@@ -1,4 +1,4 @@
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>
 /// Presents ordinary held body rumble with one active subframe, following

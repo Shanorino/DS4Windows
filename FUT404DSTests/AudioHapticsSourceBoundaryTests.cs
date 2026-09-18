@@ -6,11 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NintendoFixture = DS4WindowsTests.Switch2AudioHapticsOutputTests.RuntimeFixture;
+using NintendoFixture = FUT404DSTests.Switch2AudioHapticsOutputTests.RuntimeFixture;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 [DoNotParallelize]

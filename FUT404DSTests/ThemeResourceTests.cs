@@ -1,11 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DS4WinWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms;
 using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ThemeResourceTests
@@ -25,13 +25,13 @@ namespace DS4WindowsTests
                     var defaultTheme = new ResourceDictionary();
                     application.Resources.MergedDictionaries.Add(defaultTheme);
                     defaultTheme.Source = new Uri(
-                        "/DS4Windows;component/DS4Forms/Themes/DefaultTheme.xaml",
+                        $"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/DefaultTheme.xaml",
                         UriKind.Relative);
 
                     var bridgeStyles = new ResourceDictionary();
                     application.Resources.MergedDictionaries.Add(bridgeStyles);
                     bridgeStyles.Source = new Uri(
-                        "/DS4Windows;component/DS4Forms/Themes/BridgeShellStyles.xaml",
+                        $"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/BridgeShellStyles.xaml",
                         UriKind.Relative);
 
                     Assert.IsNotNull(application.TryFindResource(
@@ -86,7 +86,7 @@ namespace DS4WindowsTests
                     var setupProgress = new ViiperSetupProgress(
                         System.IO.Path.Combine(
                             System.IO.Path.GetTempPath(),
-                            "ds4windows-missing-setup-log.txt"));
+                            "fut404ds-missing-setup-log.txt"));
                     Assert.AreEqual("Setting up VIIPER",
                         ((TextBlock)setupProgress.FindName(
                             "headingText")).Text);

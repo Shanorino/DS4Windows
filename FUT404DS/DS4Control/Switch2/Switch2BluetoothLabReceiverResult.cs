@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>Validates operation completion, not physical audio playback.</summary>
 internal static class Switch2BluetoothLabReceiverResult

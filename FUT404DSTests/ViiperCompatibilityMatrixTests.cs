@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Linq;
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ViiperCompatibilityMatrixTests
@@ -148,7 +148,7 @@ namespace DS4WindowsTests
             DS4State state)
         {
             Type builder = typeof(ViiperVirtualDeviceType).Assembly.GetType(
-                "DS4Windows.ViiperStatePacketBuilder", true);
+                "FUT404DS.ViiperStatePacketBuilder", true);
             MethodInfo method = builder.GetMethod("Build",
                 BindingFlags.Public | BindingFlags.Static);
             return (byte[])method.Invoke(null, new object[] { type, state, -1 });

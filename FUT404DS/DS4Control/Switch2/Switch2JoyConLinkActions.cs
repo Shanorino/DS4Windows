@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>A single-use cold-path reservation of an existing virtual pad.</summary>
 internal interface ISwitch2JoyConOutputHandoff : IDisposable

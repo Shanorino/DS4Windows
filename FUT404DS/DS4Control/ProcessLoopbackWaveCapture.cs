@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Presents Windows process-loopback capture as an NAudio IWaveIn source so
@@ -16,9 +16,9 @@ namespace DS4Windows
     /// </summary>
     internal sealed class ProcessLoopbackWaveCapture : IWaveIn
     {
-        public const string EndpointPrefix = "DS4Windows:AudioHapticsApp:";
+        public const string EndpointPrefix = "FUT404DS:AudioHapticsApp:";
         public const string AutomaticEndpointPrefix =
-            "DS4Windows:AudioHapticsAuto:";
+            "FUT404DS:AudioHapticsAuto:";
         private const int CapturePollMilliseconds = 4;
         internal const int ProcessLoopbackStallMilliseconds = 750;
         internal const int ProcessedRouteStallMilliseconds = 750;

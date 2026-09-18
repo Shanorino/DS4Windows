@@ -7,9 +7,9 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class FlickStickCalibrationLayoutTests
@@ -213,7 +213,7 @@ public class FlickStickCalibrationLayoutTests
         var host = (Border)XamlReader.Parse(markup.ToString());
         host.Resources.MergedDictionaries.Add(new ResourceDictionary
         {
-            Source = new Uri($"/DS4Windows;component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
+            Source = new Uri($"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
         });
         host.Background = (Brush)host.FindResource("BackgroundColor");
         TextElement.SetForeground(host, theme == "DefaultTheme" ? SystemColors.WindowTextBrush :
@@ -294,7 +294,7 @@ public class FlickStickCalibrationLayoutTests
     }
 
     private static string FormPath(string name, [CallerFilePath] string caller = "") =>
-        Path.Combine(Path.GetDirectoryName(caller)!, "..", "DS4Windows", "DS4Forms", name);
+        Path.Combine(Path.GetDirectoryName(caller)!, "..", "FUT404DS", "DS4Forms", name);
 
     private static void RunSta(Action action)
     {

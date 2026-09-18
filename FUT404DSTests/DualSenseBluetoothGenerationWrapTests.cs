@@ -2,11 +2,11 @@ using System;
 using System.Buffers.Binary;
 using System.Reflection;
 using System.Threading;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Fixture = DS4Windows.Tests.DualSenseBluetoothNativeIdleRetryTests.Fixture;
+using Fixture = FUT404DS.Tests.DualSenseBluetoothNativeIdleRetryTests.Fixture;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 [DoNotParallelize]

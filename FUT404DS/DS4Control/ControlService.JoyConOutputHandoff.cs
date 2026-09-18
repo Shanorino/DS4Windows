@@ -1,8 +1,8 @@
 using System;
-using DS4Windows.Switch2;
-using static DS4Windows.Global;
+using FUT404DS.Switch2;
+using static FUT404DS.Global;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 public partial class ControlService
 {

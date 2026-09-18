@@ -1,7 +1,7 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     internal enum ControllerMicrophoneUiStatus
     {
@@ -128,11 +128,11 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         internal bool ShowUsbDualSenseSpeakerSelector => IsDualSense &&
             PhysicalIdentityKnown && IsGenuineSonyController &&
-            ConnectionType == DS4Windows.ConnectionType.USB;
+            ConnectionType == FUT404DS.ConnectionType.USB;
 
         internal bool ShowLegacyMicrophoneRouting => DeviceType == null ||
             IsDualSense && PhysicalIdentityKnown && IsGenuineSonyController &&
-            ConnectionType == DS4Windows.ConnectionType.USB;
+            ConnectionType == FUT404DS.ConnectionType.USB;
 
         internal ControllerMicrophoneUiState GetMicrophoneUiState(
             OutContType outputType, bool activeStreamSupportsMicrophone,
@@ -156,7 +156,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
             }
 
             if (IsDualSense &&
-                ConnectionType == DS4Windows.ConnectionType.USB)
+                ConnectionType == FUT404DS.ConnectionType.USB)
             {
                 return new ControllerMicrophoneUiState(
                     ControllerMicrophoneUiStatus.UsbLegacyRoute,
@@ -164,7 +164,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                     "USB DualSense microphone routing uses the capture and virtual-output endpoints in Advanced audio.");
             }
 
-            if (ConnectionType != DS4Windows.ConnectionType.BT)
+            if (ConnectionType != FUT404DS.ConnectionType.BT)
             {
                 return new ControllerMicrophoneUiState(
                     ControllerMicrophoneUiStatus.RequiresBluetooth,

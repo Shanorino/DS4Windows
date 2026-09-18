@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -12,7 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal readonly record struct ViiperNativeCommandContext(
         object Target, long BindingRevision, long ProfileRevision,

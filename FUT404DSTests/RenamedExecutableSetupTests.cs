@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using DS4Windows;
+using FUT404DS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class RenamedExecutableSetupTests
@@ -16,32 +16,32 @@ public class RenamedExecutableSetupTests
     [TestInitialize]
     public void Initialize()
     {
-        root = Path.Combine(Path.GetTempPath(), "DS4WindowsTests", Guid.NewGuid().ToString("N"));
+        root = Path.Combine(Path.GetTempPath(), "FUT404DSTests", Guid.NewGuid().ToString("N"));
         package = Directory.CreateDirectory(Path.Combine(root, "portable")).FullName;
         extras = Directory.CreateDirectory(Path.Combine(package, "extras")).FullName;
         setup = Directory.CreateDirectory(Path.Combine(root, "protected-fixture")).FullName;
         // Sentinel files are never executed; exercise the real staging loop only.
-        File.WriteAllText(Path.Combine(package, "DS4Windows.runtimeconfig.json"), "config");
-        File.WriteAllText(Path.Combine(package, "DS4Windows.deps.json"), "deps");
-        File.WriteAllText(Path.Combine(package, ".ds4windows-managed-files.txt"),
-            "DS4Windows.exe\nDS4Windows.runtimeconfig.json\nDS4Windows.deps.json\n");
+        File.WriteAllText(Path.Combine(package, "FUT404DS.runtimeconfig.json"), "config");
+        File.WriteAllText(Path.Combine(package, "FUT404DS.deps.json"), "deps");
+        File.WriteAllText(Path.Combine(package, ".fut404ds-managed-files.txt"),
+            "FUT404DS.exe\nFUT404DS.runtimeconfig.json\nFUT404DS.deps.json\n");
     }
 
     [TestCleanup]
     public void Cleanup() => Directory.Delete(root, recursive: true);
 
     [DataTestMethod]
-    [DataRow("DS4Windows.exe")]
+    [DataRow("FUT404DS.exe")]
     [DataRow("My Controller.exe")]
     public void StagesTheExactAdjacentHostUnderCanonicalPackageName(string hostName)
     {
         string host = Path.Combine(package, hostName);
         File.WriteAllText(host, "same apphost bytes");
         string staged = ViiperSetupManager.StageInstallerPackageFiles(extras, setup, host);
-        Assert.AreEqual("same apphost bytes", File.ReadAllText(Path.Combine(staged, "DS4Windows.exe")));
+        Assert.AreEqual("same apphost bytes", File.ReadAllText(Path.Combine(staged, "FUT404DS.exe")));
         Assert.IsTrue(File.Exists(host), "Staging must not rename or delete the user's executable.");
-        CollectionAssert.AreEqual(new[] { "DS4Windows.exe", "DS4Windows.runtimeconfig.json", "DS4Windows.deps.json" },
-            File.ReadAllLines(Path.Combine(staged, ".ds4windows-managed-files.txt")));
+        CollectionAssert.AreEqual(new[] { "FUT404DS.exe", "FUT404DS.runtimeconfig.json", "FUT404DS.deps.json" },
+            File.ReadAllLines(Path.Combine(staged, ".fut404ds-managed-files.txt")));
     }
 
     [DataTestMethod]
@@ -51,16 +51,16 @@ public class RenamedExecutableSetupTests
     {
         string host = Path.Combine(package, "My Controller.exe");
         File.WriteAllText(host, "verified custom apphost");
-        string canonical = Path.Combine(package, "DS4Windows.exe");
+        string canonical = Path.Combine(package, "FUT404DS.exe");
         if (unrelatedCanonicalExists) File.WriteAllText(canonical, "unowned canonical, never stage");
-        string manifest = Path.Combine(package, ".ds4windows-managed-files.txt");
-        string ownership = "My Controller.exe\nDS4Windows.runtimeconfig.json\nDS4Windows.deps.json\n";
+        string manifest = Path.Combine(package, ".fut404ds-managed-files.txt");
+        string ownership = "My Controller.exe\nFUT404DS.runtimeconfig.json\nFUT404DS.deps.json\n";
         File.WriteAllText(manifest, ownership);
         string staged = ViiperSetupManager.StageInstallerPackageFiles(extras, setup, host);
-        Assert.AreEqual("verified custom apphost", File.ReadAllText(Path.Combine(staged, "DS4Windows.exe")));
+        Assert.AreEqual("verified custom apphost", File.ReadAllText(Path.Combine(staged, "FUT404DS.exe")));
         Assert.IsFalse(File.Exists(Path.Combine(staged, "My Controller.exe")));
-        CollectionAssert.AreEqual(new[] { "DS4Windows.exe", "DS4Windows.runtimeconfig.json", "DS4Windows.deps.json" },
-            File.ReadAllLines(Path.Combine(staged, ".ds4windows-managed-files.txt")));
+        CollectionAssert.AreEqual(new[] { "FUT404DS.exe", "FUT404DS.runtimeconfig.json", "FUT404DS.deps.json" },
+            File.ReadAllLines(Path.Combine(staged, ".fut404ds-managed-files.txt")));
         Assert.AreEqual(ownership, File.ReadAllText(manifest));
         Assert.AreEqual("verified custom apphost", File.ReadAllText(host));
         Assert.AreEqual(unrelatedCanonicalExists, File.Exists(canonical));
@@ -73,17 +73,17 @@ public class RenamedExecutableSetupTests
         string host = Path.Combine(package, "My Controller.exe");
         File.WriteAllText(host, "not manifest owned");
         File.WriteAllText(Path.Combine(package, "Other.exe"), "unrelated apphost");
-        File.WriteAllText(Path.Combine(package, ".ds4windows-managed-files.txt"),
-            "Other.exe\nDS4Windows.runtimeconfig.json\nDS4Windows.deps.json\n");
+        File.WriteAllText(Path.Combine(package, ".fut404ds-managed-files.txt"),
+            "Other.exe\nFUT404DS.runtimeconfig.json\nFUT404DS.deps.json\n");
         Assert.ThrowsException<InvalidOperationException>(() =>
             ViiperSetupManager.StageInstallerPackageFiles(extras, setup, host));
-        Assert.IsFalse(File.Exists(Path.Combine(setup, "package", "DS4Windows.exe")));
+        Assert.IsFalse(File.Exists(Path.Combine(setup, "package", "FUT404DS.exe")));
     }
 
     [TestMethod]
     public void AliasCreationUsesNormalDotnetSidecarNames()
     {
-        string executable = Path.Combine(package, "DS4Windows.exe");
+        string executable = Path.Combine(package, "FUT404DS.exe");
         File.WriteAllText(executable, "apphost");
         ExecutableAliasFiles.Create(executable, "Controller Companion");
         Assert.AreEqual("apphost", File.ReadAllText(Path.Combine(package, "Controller Companion.exe")));
@@ -94,9 +94,9 @@ public class RenamedExecutableSetupTests
     [TestMethod]
     public void MissingSidecarDoesNotLeaveAPartialAlias()
     {
-        string executable = Path.Combine(package, "DS4Windows.exe");
+        string executable = Path.Combine(package, "FUT404DS.exe");
         File.WriteAllText(executable, "apphost");
-        File.Delete(Path.Combine(package, "DS4Windows.deps.json"));
+        File.Delete(Path.Combine(package, "FUT404DS.deps.json"));
         Assert.ThrowsException<FileNotFoundException>(() => ExecutableAliasFiles.Create(executable, "Alias"));
         Assert.IsFalse(File.Exists(Path.Combine(package, "Alias.exe")));
         Assert.IsFalse(File.Exists(Path.Combine(package, "Alias.runtimeconfig.json")));
@@ -107,9 +107,9 @@ public class RenamedExecutableSetupTests
     {
         string host = Path.Combine(package, "Alias.exe");
         File.WriteAllText(host, "different bytes");
-        File.WriteAllText(Path.Combine(package, "DS4Windows.exe"), "canonical bytes");
+        File.WriteAllText(Path.Combine(package, "FUT404DS.exe"), "canonical bytes");
         string staged = ViiperSetupManager.StageInstallerPackageFiles(extras, setup, host);
-        Assert.AreEqual("canonical bytes", File.ReadAllText(Path.Combine(staged, "DS4Windows.exe")),
+        Assert.AreEqual("canonical bytes", File.ReadAllText(Path.Combine(staged, "FUT404DS.exe")),
             "The later exact hash check must reject mismatched hosts, not silently replace the canonical package.");
     }
 
@@ -118,10 +118,10 @@ public class RenamedExecutableSetupTests
     {
         string host = Path.Combine(package, "Alias.exe");
         File.WriteAllText(host, "apphost");
-        File.AppendAllText(Path.Combine(package, ".ds4windows-managed-files.txt"), "DS4Windows.dll\n");
+        File.AppendAllText(Path.Combine(package, ".fut404ds-managed-files.txt"), "FUT404DS.dll\n");
         Assert.ThrowsException<InvalidOperationException>(() =>
             ViiperSetupManager.StageInstallerPackageFiles(extras, setup, host));
-        Assert.IsFalse(File.Exists(Path.Combine(setup, "package", "DS4Windows.dll")));
+        Assert.IsFalse(File.Exists(Path.Combine(setup, "package", "FUT404DS.dll")));
     }
 
     [TestMethod]
@@ -136,13 +136,13 @@ public class RenamedExecutableSetupTests
 
     [DataTestMethod]
     [DataRow("../escaped.exe")]
-    [DataRow("DS4Windows.exe\nDS4Windows.exe")]
+    [DataRow("FUT404DS.exe\nFUT404DS.exe")]
     [DataRow("C:/escaped.exe")]
     public void RenamedHostDoesNotRelaxManifestPathValidation(string entries)
     {
         string host = Path.Combine(package, "Alias.exe");
         File.WriteAllText(host, "apphost");
-        File.WriteAllText(Path.Combine(package, ".ds4windows-managed-files.txt"), entries);
+        File.WriteAllText(Path.Combine(package, ".fut404ds-managed-files.txt"), entries);
         Assert.ThrowsException<InvalidOperationException>(() =>
             ViiperSetupManager.StageInstallerPackageFiles(extras, setup, host));
     }
@@ -151,7 +151,7 @@ public class RenamedExecutableSetupTests
     [DataRow("../escape")]
     [DataRow("C:\\escape")]
     [DataRow("safe:stream")]
-    [DataRow("DS4Windows")]
+    [DataRow("FUT404DS")]
     [DataRow("con")]
     [DataRow("NUL.txt")]
     [DataRow("LPT1")]
@@ -160,7 +160,7 @@ public class RenamedExecutableSetupTests
     [DataRow("")]
     public void InvalidOrReservedAliasNeverCreatesFiles(string name)
     {
-        string executable = Path.Combine(package, "DS4Windows.exe");
+        string executable = Path.Combine(package, "FUT404DS.exe");
         File.WriteAllText(executable, "apphost");
         string[] before = Directory.GetFiles(package);
         Assert.ThrowsException<ArgumentException>(() => ExecutableAliasFiles.Create(executable, name));
@@ -170,7 +170,7 @@ public class RenamedExecutableSetupTests
     [TestMethod]
     public void AliasCollisionPreservesAllPreexistingFiles()
     {
-        string executable = Path.Combine(package, "DS4Windows.exe");
+        string executable = Path.Combine(package, "FUT404DS.exe");
         File.WriteAllText(executable, "apphost");
         string collision = Path.Combine(package, "Alias.exe");
         File.WriteAllText(collision, "user-owned file");
@@ -193,7 +193,7 @@ public class RenamedExecutableSetupTests
     [TestMethod]
     public void AliasCleanupOnlyRemovesMatchingCopies()
     {
-        string executable = Path.Combine(package, "DS4Windows.exe");
+        string executable = Path.Combine(package, "FUT404DS.exe");
         File.WriteAllText(executable, "apphost");
         ExecutableAliasFiles.Create(executable, "Alias");
         Assert.IsTrue(ExecutableAliasFiles.RemoveOwned(executable, "Alias"));
@@ -206,13 +206,13 @@ public class RenamedExecutableSetupTests
     [TestMethod]
     public void ChangedAliasOrCurrentExecutableIsNeverCleanedUp()
     {
-        string executable = Path.Combine(package, "DS4Windows.exe");
+        string executable = Path.Combine(package, "FUT404DS.exe");
         File.WriteAllText(executable, "apphost");
         ExecutableAliasFiles.Create(executable, "Alias");
         File.WriteAllText(Path.Combine(package, "Alias.deps.json"), "user change");
         Assert.IsFalse(ExecutableAliasFiles.RemoveOwned(executable, "Alias"));
         Assert.IsTrue(File.Exists(Path.Combine(package, "Alias.exe")));
-        Assert.IsFalse(ExecutableAliasFiles.RemoveOwned(executable, "DS4Windows"));
+        Assert.IsFalse(ExecutableAliasFiles.RemoveOwned(executable, "FUT404DS"));
         Assert.IsTrue(File.Exists(executable));
         Assert.IsFalse(ExecutableAliasFiles.RemoveOwned(Path.Combine(package, "Alias.exe"), "Alias"));
     }

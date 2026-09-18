@@ -1,9 +1,9 @@
-using DS4Windows;
-using DS4Windows.InputDevices;
+using FUT404DS;
+using FUT404DS.InputDevices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class XboxOnePhysicalFeedbackWatchdogTests
@@ -359,7 +359,7 @@ public sealed class XboxOnePhysicalFeedbackWatchdogTests
     public void ProductionOwnerExpiryAndOldReaderRetirementCannotTouchSuccessor()
     {
         const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
-        ControlService previousHub = DS4Windows.Program.rootHub;
+        ControlService previousHub = FUT404DS.Program.rootHub;
         byte previousBoost = Global.RumbleBoost[0];
         XboxOnePhysicalFeedbackSession predecessor = null;
         XboxOnePhysicalFeedbackSession successor = null;
@@ -369,7 +369,7 @@ public sealed class XboxOnePhysicalFeedbackWatchdogTests
             var target = new TestDevice();
             var hub = (ControlService)RuntimeHelpers.GetUninitializedObject(typeof(ControlService));
             hub.DS4Controllers = new DS4Device[] { target };
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.RumbleBoost[0] = 100;
             var output = new ViiperOutDevice(OutContType.ViiperXboxOne, ViiperVirtualDeviceType.XboxOne);
             typeof(ViiperOutDevice).GetField("lastInputDeviceIndex", fields).SetValue(output, 0);
@@ -410,7 +410,7 @@ public sealed class XboxOnePhysicalFeedbackWatchdogTests
         {
             predecessor?.TryRetire();
             successor?.TryRetire();
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
             Global.RumbleBoost[0] = previousBoost;
         }
     }
@@ -420,7 +420,7 @@ public sealed class XboxOnePhysicalFeedbackWatchdogTests
     public void ProductionWatchdogNeverWritesToAReplacementControllerInTheSameSlot()
     {
         const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
-        ControlService previousHub = DS4Windows.Program.rootHub;
+        ControlService previousHub = FUT404DS.Program.rootHub;
         byte previousBoost = Global.RumbleBoost[0];
         XboxOnePhysicalFeedbackSession session = null;
         try
@@ -430,7 +430,7 @@ public sealed class XboxOnePhysicalFeedbackWatchdogTests
             var replacement = new TestDevice();
             var hub = (ControlService)RuntimeHelpers.GetUninitializedObject(typeof(ControlService));
             hub.DS4Controllers = new DS4Device[] { target };
-            DS4Windows.Program.rootHub = hub;
+            FUT404DS.Program.rootHub = hub;
             Global.RumbleBoost[0] = 100;
             var output = new ViiperOutDevice(OutContType.ViiperXboxOne, ViiperVirtualDeviceType.XboxOne);
             typeof(ViiperOutDevice).GetField("lastInputDeviceIndex", fields).SetValue(output, 0);
@@ -449,7 +449,7 @@ public sealed class XboxOnePhysicalFeedbackWatchdogTests
         finally
         {
             session?.TryRetire();
-            DS4Windows.Program.rootHub = previousHub;
+            FUT404DS.Program.rootHub = previousHub;
             Global.RumbleBoost[0] = previousBoost;
         }
     }

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Threading;
 
-namespace DS4Windows.InputDevices;
+namespace FUT404DS.InputDevices;
 
 public partial class JoyConDevice
 {

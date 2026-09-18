@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows.InputDevices;
+namespace FUT404DS.InputDevices;
 
 public partial class JoyConDevice : INintendoMousePresentation
 {

@@ -1,11 +1,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DS4WinWPF;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DSWPF;
+using FUT404DSWPF.DS4Forms.ViewModels;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class ProfileSwipeGestureTests
@@ -109,7 +109,7 @@ namespace DS4Windows.Tests
         public void SwipeApplicationDoesNotDependOnRealizedComboBox()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "MainWindow.xaml.cs"));
+                "FUT404DS", "DS4Forms", "MainWindow.xaml.cs"));
             string processSwipe = Extract(source,
                 "private void ProcessProfileSwipeHotkeys()",
                 "private void ApplyProfileSelection");
@@ -125,7 +125,7 @@ namespace DS4Windows.Tests
         public void ProfileSelectionCoordinatorFlushesOnceBeforeApplication()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "MainWindow.xaml.cs"));
+                "FUT404DS", "DS4Forms", "MainWindow.xaml.cs"));
             string coordinator = Extract(source,
                 "private void ApplyProfileSelection",
                 "/// <summary>");
@@ -151,7 +151,7 @@ namespace DS4Windows.Tests
         public void DirectSwipeApplicationFencesBindingReentry()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "ViewModels",
+                "FUT404DS", "DS4Forms", "ViewModels",
                 "ControllerListViewModel.cs"));
             string apply = Extract(source,
                 "public void SelectAndApplyProfile(int profileIndex)",
@@ -177,7 +177,7 @@ namespace DS4Windows.Tests
         public void RealizedBindingDoesNotFlushDuringDirectApply()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "MainWindow.xaml.cs"));
+                "FUT404DS", "DS4Forms", "MainWindow.xaml.cs"));
             string handler = Extract(source,
                 "private void SelectProfCombo_SelectionChanged",
                 "private void CustomColorPick_SelectedColorChanged");
@@ -199,7 +199,7 @@ namespace DS4Windows.Tests
         public void NamedProfileApplicationUsesDirectModelPath()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "ViewModels",
+                "FUT404DS", "DS4Forms", "ViewModels",
                 "ControllerListViewModel.cs"));
             string namedApply = Extract(source,
                 "public void ChangeSelectedProfile(string loadprofile)",
@@ -216,7 +216,7 @@ namespace DS4Windows.Tests
         public void TrayAndCreatedProfileEntrypointsUseCoordinator()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "MainWindow.xaml.cs"));
+                "FUT404DS", "DS4Forms", "MainWindow.xaml.cs"));
             string tray = Extract(source,
                 "private void TrayIconVM_ProfileSelected",
                 "private void ShowNotification");
@@ -238,7 +238,7 @@ namespace DS4Windows.Tests
         public void IpcLoadProfileEntrypointUsesCoordinator()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "MainWindow.xaml.cs"));
+                "FUT404DS", "DS4Forms", "MainWindow.xaml.cs"));
             string windowMessages = Extract(source,
                 "private IntPtr WndProc",
                 "private void InnerHotplug2()");
@@ -291,7 +291,7 @@ namespace DS4Windows.Tests
         public void PermanentDeletionFlushesBeforeFallbackAndRefreshesAfter()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "MainWindow.xaml.cs"));
+                "FUT404DS", "DS4Forms", "MainWindow.xaml.cs"));
             string deletion = Extract(source,
                 "private void DeleteProfBtn_Click",
                 "private void SelectProfCombo_KeyDown");
@@ -324,7 +324,7 @@ namespace DS4Windows.Tests
         public void PermanentDeletionUsesDirectModelFallbackOrBlankState()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "ViewModels",
+                "FUT404DS", "DS4Forms", "ViewModels",
                 "ControllerListViewModel.cs"));
             string deleted = Extract(source,
                 "internal void ApplyProfileDeletionFallback",
@@ -340,7 +340,7 @@ namespace DS4Windows.Tests
         public void RenameDoesNotTriggerPermanentDeletionFallback()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Forms", "ViewModels",
+                "FUT404DS", "DS4Forms", "ViewModels",
                 "ControllerListViewModel.cs"));
             string hooks = Extract(source,
                 "private void HookEvents(bool state)",

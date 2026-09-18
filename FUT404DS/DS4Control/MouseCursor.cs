@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 using System;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class MouseCursor
     {
@@ -270,7 +270,7 @@ namespace DS4Windows
             {
                 // The scheduler owns fractional presentation while active. A
                 // below-threshold vector remains here so the established
-                // DS4Windows minimum-motion policy can still accumulate it.
+                // FUT404DS minimum-motion policy can still accumulate it.
                 hRemainder = thresholdPassed ? 0.0 : xMotion;
                 vRemainder = thresholdPassed ? 0.0 : yMotion;
                 if (!thresholdPassed)

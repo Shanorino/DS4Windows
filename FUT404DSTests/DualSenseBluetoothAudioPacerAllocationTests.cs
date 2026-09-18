@@ -1,10 +1,10 @@
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class DualSenseBluetoothAudioPacerAllocationTests
@@ -366,7 +366,7 @@ namespace DS4Windows.Tests
         private static DualSenseRealtimeHapticsSharedRing CreateSharedRing(
             int capacity, out DualSenseRealtimeHapticsSharedRing consumer)
         {
-            string prefix = "DS4Windows.Tests.PacerAllocations." +
+            string prefix = "FUT404DS.Tests.PacerAllocations." +
                 Guid.NewGuid().ToString("N");
             DualSenseRealtimeHapticsSharedRing producer =
                 DualSenseRealtimeHapticsSharedRing.CreateOwner(prefix,

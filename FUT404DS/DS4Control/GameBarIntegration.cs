@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ using Windows.Foundation.Metadata;
 using Windows.Gaming.UI;
 using WinRect = System.Windows.Rect;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public class GameBarIntegration
     {
@@ -54,7 +54,7 @@ namespace DS4Windows
         // into continuous process churn: the controller-routing requirement
         // permits a one-second hidden-to-visible transition, and HWND
         // enumeration still detects a visible overlay on the 100 ms service
-        // tick. At 150 ms an elevated DS4Windows launched several full WPF
+        // tick. At 150 ms an elevated FUT404DS launched several full WPF
         // helper processes per second, visibly busying the cursor and
         // correlating with otherwise unexplained physical-audio stalls.
         private const int LiveGameBarApiPollMs = 1000;
@@ -62,7 +62,7 @@ namespace DS4Windows
         private const int LiveGameBarApiHangMs = 2500;
         private const int LiveAutomationPollMs = 1000;
         private const int LiveAutomationCacheMs = 3000;
-        public const string ProbeArgument = "--ds4windows-gamebar-probe";
+        public const string ProbeArgument = "--fut404ds-gamebar-probe";
         private static readonly object detectionStatusLock = new object();
         private static readonly object gameBarApiPollLock = new object();
         private static bool gameBarApiPollRunning;
@@ -288,7 +288,7 @@ namespace DS4Windows
                 return;
             }
 
-            const string message = "Xbox Game Bar is not installed or its ms-gamebar protocol handler is not registered. Install or repair Xbox Game Bar from the Microsoft Store, then restart DS4Windows to use Game Bar profile support.";
+            const string message = "Xbox Game Bar is not installed or its ms-gamebar protocol handler is not registered. Install or repair Xbox Game Bar from the Microsoft Store, then restart FUT404DS to use Game Bar profile support.";
             AppLogger.LogToGui(message, true);
             AppLogger.LogToTray(message, true, true);
         }
@@ -454,7 +454,7 @@ namespace DS4Windows
                     });
 
                     worker.IsBackground = true;
-                    worker.Name = "DS4Windows Game Bar API Poll";
+                    worker.Name = "FUT404DS Game Bar API Poll";
                     worker.Priority = ThreadPriority.BelowNormal;
                     worker.Start();
                 }
@@ -559,7 +559,7 @@ namespace DS4Windows
                     });
 
                     worker.IsBackground = true;
-                    worker.Name = "DS4Windows Game Bar UIA Poll";
+                    worker.Name = "FUT404DS Game Bar UIA Poll";
                     worker.SetApartmentState(ApartmentState.STA);
                     worker.Start();
                 }
@@ -834,7 +834,7 @@ namespace DS4Windows
                 return false;
             }
 
-            string resultPath = Path.Combine(Path.GetTempPath(), "DS4Windows.GameBarProbe." + Guid.NewGuid().ToString("N") + ".txt");
+            string resultPath = Path.Combine(Path.GetTempPath(), "FUT404DS.GameBarProbe." + Guid.NewGuid().ToString("N") + ".txt");
             try
             {
                 if (!TryRunProbeProcess(exePath, resultPath, timeoutMs, out int exitCode, out string launchStatus))
@@ -1119,7 +1119,7 @@ namespace DS4Windows
                 processName.Equals("brave", StringComparison.OrdinalIgnoreCase) ||
                 processName.Equals("Code", StringComparison.OrdinalIgnoreCase) ||
                 processName.Equals("Codex", StringComparison.OrdinalIgnoreCase) ||
-                processName.Equals("DS4Windows", StringComparison.OrdinalIgnoreCase);
+                processName.Equals("FUT404DS", StringComparison.OrdinalIgnoreCase);
         }
 
         private static string TruncateDiagnosticText(string text)

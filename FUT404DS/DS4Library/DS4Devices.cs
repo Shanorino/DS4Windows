@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -22,9 +22,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     // VidPidFeatureSet feature bit-flags (the default in VidPidInfo is zero value = standard DS4 behavior):
     //
@@ -137,7 +137,7 @@ namespace DS4Windows
         internal const int JOYCON_CHARGING_GRIP_PRODUCT_ID = 0x200E;
 
         // https://support.steampowered.com/kb_article.php?ref=5199-TOKV-4426&l=english web site has a list of other PS4 compatible device VID/PID values and brand names. 
-        // However, not all those are guaranteed to work with DS4Windows app so support is added case by case when users of DS4Windows app tests non-official DS4 gamepads.
+        // However, not all those are guaranteed to work with FUT404DS app so support is added case by case when users of FUT404DS app tests non-official DS4 gamepads.
 
         private static VidPidInfo[] knownDevices =
         {
@@ -186,7 +186,7 @@ namespace DS4Windows
         };
 
 
-        // Registry of Sony HID paths created by DS4Windows through VIIPER. These
+        // Registry of Sony HID paths created by FUT404DS through VIIPER. These
         // complete USB/IP devices look physical to Windows and must never be
         // re-ingested as input, regardless of the selected virtual Sony persona.
         private static readonly object ownVirtualLock = new object();
@@ -348,7 +348,7 @@ namespace DS4Windows
             })
             {
                 IsBackground = true,
-                Name = "DS4Windows VIIPER Sony HID registration",
+                Name = "FUT404DS VIIPER Sony HID registration",
                 Priority = System.Threading.ThreadPriority.BelowNormal,
             };
 
@@ -604,7 +604,7 @@ namespace DS4Windows
                                 DevicePaths.Add(hDevice.DevicePath);
                                 deviceSerials.Add(serial);
                                 serialDevices.Add(serial, ds4Device);
-                                AppLogger.LogToGui($"{DS4WinWPF.Properties.Resources.FoundController} {ds4Device.getMacAddress()} ({ds4Device.getConnectionType()}) ({ds4Device.DisplayName}).",false);
+                                AppLogger.LogToGui($"{FUT404DSWPF.Properties.Resources.FoundController} {ds4Device.getMacAddress()} ({ds4Device.getConnectionType()}) ({ds4Device.DisplayName}).",false);
                             }
                         }
                     }

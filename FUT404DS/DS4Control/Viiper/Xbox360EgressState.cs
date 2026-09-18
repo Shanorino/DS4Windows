@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,10 +11,10 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Buffers.Binary;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
-    /// Immutable, value-owned Xbox 360 state at the DS4Windows/VIIPER
+    /// Immutable, value-owned Xbox 360 state at the FUT404DS/VIIPER
     /// boundary. Its scalar fields map one-to-one to VIIPER's canonical
     /// 20-byte standard-controller payload; no reserved bytes are semantic
     /// state and every serialization writes them as zero.

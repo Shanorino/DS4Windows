@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 
-namespace DS4WinWPF;
+namespace FUT404DSWPF;
 
 internal static class StartupRegistrationPolicy
 {
-    internal const string ManagedTaskDescription = "DS4Windows managed startup task v1";
+    internal const string ManagedTaskDescription = "FUT404DS managed startup task v1";
 
     internal static bool ShouldRepairTask(bool exists, bool enabled,
         bool owned, bool matchesCurrentConfiguration, bool requested = true,
@@ -100,15 +100,15 @@ internal readonly record struct StartupRegistrationState(bool Program, bool Task
     });
 
     internal string StatusText => ReadError != null
-        ? "Automatic startup could not be checked. Restart DS4Windows to try again; details are in the Log tab. You can still open DS4Windows manually."
+        ? "Automatic startup could not be checked. Restart FUT404DS to try again; details are in the Log tab. You can still open FUT404DS manually."
         : !RunAtStartupRequested && Enabled
-        ? "Your choice to turn off automatic startup is saved, but Windows may still open DS4Windows when you sign in. Select Install / Repair VIIPER below to finish turning it off."
+        ? "Your choice to turn off automatic startup is saved, but Windows may still open FUT404DS when you sign in. Select Install / Repair VIIPER below to finish turning it off."
         : !RunAtStartupRequested || Enabled ? string.Empty
         : DeferredReason switch
         {
-            "RestartRequired" => "Automatic startup is waiting for setup to finish. Save your work, restart Windows, and approve DS4Windows setup if prompted. You can still open DS4Windows manually.",
-            "AdministratorRequired" => "Automatic startup could not be enabled because setup used a different administrator account. Ask your administrator to review startup access for this Windows account, or open DS4Windows manually.",
-            _ => "Automatic startup is saved but not active yet. Select Install / Repair VIIPER below to finish setup. You can still open DS4Windows manually.",
+            "RestartRequired" => "Automatic startup is waiting for setup to finish. Save your work, restart Windows, and approve FUT404DS setup if prompted. You can still open FUT404DS manually.",
+            "AdministratorRequired" => "Automatic startup could not be enabled because setup used a different administrator account. Ask your administrator to review startup access for this Windows account, or open FUT404DS manually.",
+            _ => "Automatic startup is saved but not active yet. Select Install / Repair VIIPER below to finish setup. You can still open FUT404DS manually.",
         };
 }
 

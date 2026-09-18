@@ -1,6 +1,6 @@
 using System;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Fixed-storage copy of one borrowed state and at most one previous motion

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Finds the render endpoint carrying only the selected application.
@@ -267,7 +267,7 @@ namespace DS4Windows
             try
             {
                 using Process process = Process.GetProcessById(processId);
-                return process.ProcessName.StartsWith("DS4Windows",
+                return process.ProcessName.StartsWith("FUT404DS",
                     StringComparison.OrdinalIgnoreCase);
             }
             catch

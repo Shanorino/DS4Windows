@@ -1,6 +1,6 @@
 using Concentus;
 using Concentus.Enums;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
@@ -11,12 +11,12 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Opt-in diagnostic WAV sink used to split virtual-USB discontinuities
     /// from the Bluetooth presentation path. It is never constructed unless
-    /// DS4WINDOWS_DUALSENSE_PCM_TRACE_DIRECTORY is set for the process.
+    /// FUT404DS_DUALSENSE_PCM_TRACE_DIRECTORY is set for the process.
     /// </summary>
     internal sealed class Pcm16WaveTraceWriter : IDisposable
     {
@@ -677,7 +677,7 @@ namespace DS4Windows
         private void TryCreateDirectPcmTraces()
         {
             string directory = Environment.GetEnvironmentVariable(
-                "DS4WINDOWS_DUALSENSE_PCM_TRACE_DIRECTORY");
+                "FUT404DS_DUALSENSE_PCM_TRACE_DIRECTORY");
             if (string.IsNullOrWhiteSpace(directory))
             {
                 return;

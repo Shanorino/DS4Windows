@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Client half of VIIPER's documented authenticated transport. The wire

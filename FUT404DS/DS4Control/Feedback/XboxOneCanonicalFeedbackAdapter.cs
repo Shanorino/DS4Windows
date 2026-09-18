@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,7 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// One immutable Xbox CFBK target binding. It admits only the exact source,

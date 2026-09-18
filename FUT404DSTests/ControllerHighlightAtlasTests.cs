@@ -1,9 +1,9 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DS4WinWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ControllerHighlightAtlasTests
@@ -466,7 +466,7 @@ namespace DS4WindowsTests
         private static BitmapSource LoadResource(string resourceName)
         {
             var uri = new Uri(
-                $"/DS4Windows;component/Resources/{resourceName}",
+                $"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/Resources/{resourceName}",
                 UriKind.Relative);
             System.Windows.Resources.StreamResourceInfo resource =
                 Application.GetResourceStream(uri);

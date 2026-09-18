@@ -13,7 +13,7 @@ descriptors and an explicit deployment authorization decision, not a password,
 cryptographic key or real Xbox console-authentication credential. Its inclusion
 does not establish USB VID/PID allocation rights or Microsoft certification.
 
-Keep the JSON beside DS4Windows: selecting Xbox One/Series output needs it.
+Keep the JSON beside FUT404DS: selecting Xbox One/Series output needs it.
 `derivePerRegistrationIdentity` remains enabled to distinguish simultaneous and
 recreated virtual devices. This creates new Windows per-device associations
 when a virtual device is recreated rather than promising a persistent identity.

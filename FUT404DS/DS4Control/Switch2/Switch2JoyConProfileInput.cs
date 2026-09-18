@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -11,7 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
 using System;
 using System.Numerics;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 public enum Switch2JoyConProfileMode : byte
 {
@@ -287,7 +287,7 @@ public readonly struct Switch2JoyConProfileMapperState
 }
 
 /// <summary>
-/// High-resolution Joy-Con 2 state at DS4Windows' existing profile boundary.
+/// High-resolution Joy-Con 2 state at FUT404DS' existing profile boundary.
 /// This type performs no discovery, association, I/O, registration, output, or
 /// publication. Paddle/rail controls and C stay explicit and are not aliased to
 /// unrelated legacy controls.
@@ -381,7 +381,7 @@ public readonly struct Switch2JoyConProfileInputFrame
     public bool RightPaddle2 => Has(Switch2JoyConProfileButton.RightPaddle2);
 
     /// <summary>
-    /// Explicit compatibility projection into the one existing DS4Windows
+    /// Explicit compatibility projection into the one existing FUT404DS
     /// mapping state. Unsupported controls are cleared on every write. C and
     /// the four paddle/rail semantics remain only in the dedicated sidecar.
     /// </summary>

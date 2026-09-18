@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace DS4WinWPF.DS4Control
+namespace FUT404DSWPF.DS4Control
 {
     /// <summary>
     /// Serializes DS4 Bluetooth audio lane changes and the control write which

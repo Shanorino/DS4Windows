@@ -13,7 +13,7 @@ Switch2Connect exposes five sensitivity levels and applies
 only to the yaw value serialized into its DSU/Cemuhook packet. The exact level
 multipliers are 1, 13/12, 7/6, 5/4, and 4/3. Pitch and roll are unchanged.
 
-DS4Windows applies the same multiplier after its existing optional DSU
+FUT404DS applies the same multiplier after its existing optional DSU
 One-Euro smoothing and immediately before `UdpServer.NewReportIncoming`.
 Unlike the donor, it does not apply a separate Joy-Con or Pro raw-gyro scale:
 the canonical `SixAxis` state already contains degrees per second. Copying the

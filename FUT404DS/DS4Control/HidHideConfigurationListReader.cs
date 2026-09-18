@@ -2,9 +2,9 @@ using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Control
+namespace FUT404DSWPF.DS4Control
 {
     /// <summary>
     /// Strict reads for the cold configuration-repair workflow. Existing input

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Explicit development launch policy, not an installer or a security sandbox.

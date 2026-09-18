@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -9,9 +9,9 @@ the Free Software Foundation, either version 3 of the License, or
 */
 
 using System.Text.Json.Serialization;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
 /// Versioned, out-of-band VIIPER power snapshot for a virtual Switch 2 Pro

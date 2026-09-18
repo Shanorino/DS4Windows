@@ -1,6 +1,6 @@
 /*
-DS4Windows
-Copyright (C) 2026 DS4Windows contributors
+FUT404DS
+Copyright (C) 2026 FUT404DS contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     internal enum GameDetectionEvidence
     {
@@ -66,7 +66,7 @@ namespace DS4Windows
             StringComparer.OrdinalIgnoreCase)
         {
             "applicationframehost", "audiodg", "brave", "cef", "chrome",
-            "crashreportclient", "discord", "ds4windows", "eadesktop",
+            "crashreportclient", "discord", "fut404ds", "eadesktop",
             "epicgameslauncher", "firefox",
             "explorer", "gamebar", "gamebarftserver", "gamingservices",
             "msedge", "obs32", "obs64", "opera", "overwolf", "rundll32",

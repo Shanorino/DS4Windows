@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <AssemblyName>FUT404DSTests</AssemblyName>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
@@ -19,12 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DS4Windows\DS4WinWPF.csproj" />
+    <ProjectReference Include="..\FUT404DS\FUT404DSWPF.csproj" />
     <Reference Include="FakerInputWrapper">
-      <HintPath>..\DS4Windows\libs\$(Platform)\FakerInputWrapper\FakerInputWrapper.dll</HintPath>
+      <HintPath>..\FUT404DS\libs\$(Platform)\FakerInputWrapper\FakerInputWrapper.dll</HintPath>
     </Reference>
-    <Compile Include="..\installer\DS4Windows.Bootstrapper\UninstallHelperPackagePlan.cs" Link="UninstallHelperPackagePlan.cs" />
-    <Compile Include="..\installer\DS4Windows.SetupActions\SetupMutationOwnership.cs" Link="SetupMutationOwnership.cs" />
+    <Compile Include="..\installer\FUT404DS.Bootstrapper\UninstallHelperPackagePlan.cs" Link="UninstallHelperPackagePlan.cs" />
+    <Compile Include="..\installer\FUT404DS.SetupActions\SetupMutationOwnership.cs" Link="SetupMutationOwnership.cs" />
     <Compile Include="..\installer\InstallerStartupTaskPolicy.cs" Link="InstallerStartupTaskPolicy.cs" />
     <Compile Include="..\installer\SetupResumeBundleSource.cs" Link="SetupResumeBundleSource.cs" />
     <Compile Include="..\utils\Switch2BluetoothAudioProbe\ProbeProtocol.cs" Link="ProbeProtocol.cs" />

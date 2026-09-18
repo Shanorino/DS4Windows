@@ -1,8 +1,8 @@
-﻿using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
+using System.Xml.Serialization;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     //[TestClass]
     public class MappingTests
@@ -13,10 +13,10 @@ namespace DS4WindowsTests
         {
             #region ProfileXml
             testProfileXml = @"<?xml version=""1.0"" encoding=""utf-8""?>
-<!-- DS4Windows Configuration Data. 12/08/2023 14:26:24 -->
-<!-- Made with DS4Windows version 3.2.21 -->
+<!-- FUT404DS Configuration Data. 12/08/2023 14:26:24 -->
+<!-- Made with FUT404DS version 3.2.21 -->
 
-<DS4Windows app_version=""3.2.21"" config_version=""5"">
+<FUT404DS app_version=""3.2.21"" config_version=""5"">
   <touchToggle>True</touchToggle>
   <idleDisconnectTimeout>0</idleDisconnectTimeout>
   <outputDataToDS4>True</outputDataToDS4>
@@ -288,7 +288,7 @@ namespace DS4WindowsTests
     </Button>
   </Control>
   <ShiftControl />
-</DS4Windows>";
+</FUT404DS>";
             #endregion
         }
 

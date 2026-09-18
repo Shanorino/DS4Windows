@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -12,7 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace DS4Windows.InputDevices
+namespace FUT404DS.InputDevices
 {
     /// <summary>
     /// Estimates the DualSense oscillator rate from its 3 MHz sensor clock.

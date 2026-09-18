@@ -2,7 +2,7 @@ using NAudio.CoreAudioApi;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using SBC;
-using DS4WinWPF.DS4Control;
+using FUT404DSWPF.DS4Control;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Stateful converter for VIIPER's 48 kHz stereo DualSense speaker pair.
@@ -225,13 +225,13 @@ namespace DS4Windows
         private const int CancelledWorkerStopMilliseconds = 2000;
         private static readonly bool EnableDiagnosticCapture =
             string.Equals(Environment.GetEnvironmentVariable(
-                "DS4WINDOWS_DS4_AUDIO_DIAGNOSTIC_CAPTURE"), "1",
+                "FUT404DS_DS4_AUDIO_DIAGNOSTIC_CAPTURE"), "1",
                 StringComparison.Ordinal);
         // Keep one bounded, in-memory diagnostic sample from the direct VIIPER
         // lane. Disk I/O never runs on either real-time path: after both sides
         // cover the same interval, a ThreadPool worker writes the codec-rate
         // stereo PCM and concatenated 109-byte SBC frames beside the normal
-        // DS4Windows log. This lets an audible cut be located before or after
+        // FUT404DS log. This lets an audible cut be located before or after
         // the encoder without changing presentation timing.
         private const int DiagnosticCaptureSeconds = 30;
         private const int DiagnosticPcmBytes = SpeakerSampleRate * Channels *
@@ -3691,7 +3691,7 @@ namespace DS4Windows
             int crcOffset = report.Length - sizeof(uint);
             report[1] = (byte)(report[1] & 0xC0);
             // SynchronousDs4Audio can use A2 because it owns the physical pad by
-            // itself. DS4Windows must preserve the mode selected by the shared
+            // itself. FUT404DS must preserve the mode selected by the shared
             // protocol builder: A0 keeps ordinary HID input alive for
             // speaker-only playback and A1 keeps HID + microphone input alive
             // during duplex playback. Replacing either with A2 on every audio
@@ -4108,7 +4108,7 @@ namespace DS4Windows
                         ? Path.Combine(lab.DataPath, "Logs") : Path.Combine(
                         Environment.GetFolderPath(
                             Environment.SpecialFolder.ApplicationData),
-                        "DS4Windows", "Logs");
+                        "FUT404DS", "Logs");
                     Directory.CreateDirectory(logDirectory);
                     string stem = Path.Combine(logDirectory,
                         $"ds4-bt-audio-{startedUtc:yyyyMMdd-HHmmss}");
@@ -4931,7 +4931,7 @@ namespace DS4Windows
         /// Dedicated audio session. The one-shot 0x11 control report and the
         /// realtime 0x12/0x17 stream use this same overlapped handle. Input
         /// remains
-        /// exclusively owned by DS4Windows' primary HID session, as in the
+        /// exclusively owned by FUT404DS' primary HID session, as in the
         /// independently verified MeasuredTransport transport architecture.
         /// </summary>
         private sealed class NativeOverlappedWritePool : IDisposable

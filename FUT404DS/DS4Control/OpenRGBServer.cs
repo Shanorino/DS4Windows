@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -22,13 +22,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WinWPF.DS4Control
+namespace FUT404DSWPF.DS4Control
 {
     // Lightweight OpenRGB SDK server (protocol v4).
     //
-    // Add DS4Windows as a target in OpenRGB via Settings > SDK Client tab,
+    // Add FUT404DS as a target in OpenRGB via Settings > SDK Client tab,
     // entering host=localhost port=6743. DS4 controller slots appear as
     // gamepad devices; OpenRGB can set lightbar colours which DS4LightBar
     // reads via TryGetColor(slot, out color).

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -156,7 +156,7 @@
     <value>Updates ophalen</value>
   </data>
   <data name="CheckUpdateStartup" xml:space="preserve">
-    <value>Updates ophalen bij opstarten DS4Windows</value>
+    <value>Updates ophalen bij opstarten FUT404DS</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Leegmaken</value>
@@ -347,9 +347,9 @@ Wijzigen op deze instellingen hebben effect op de verbindingssnelheid van de con
     <value>Aangepaste exe naam</value>
   </data>
   <data name="CustomExeNameInfo" xml:space="preserve">
-    <value>Sommige spellen blokkeren de invoer van DS4 als ze DS4Windows.exe of InputMapper.exe zien. Een oplossing is om DS4Windows.exe te hernoemen zodat de check faalt en de game normaal werkt. Hier een aangepaste exe naam invullen staat DS4Updater toe om automatisch een aangepaste kopie van DS4Windows te maken met de gewenste naam. Zorg ervoor dat je geen bestandextensie toevoegt.
+    <value>Sommige spellen blokkeren de invoer van DS4 als ze FUT404DS.exe of InputMapper.exe zien. Een oplossing is om FUT404DS.exe te hernoemen zodat de check faalt en de game normaal werkt. Hier een aangepaste exe naam invullen staat DS4Updater toe om automatisch een aangepaste kopie van FUT404DS te maken met de gewenste naam. Zorg ervoor dat je geen bestandextensie toevoegt.
 
-Voorbeeld: waaromik_DS4Windows</value>
+Voorbeeld: waaromik_FUT404DS</value>
   </data>
   <data name="XInputChecker" xml:space="preserve">
     <value>XInputChecker</value>
@@ -459,13 +459,13 @@ Verbind gewoon je DualShock 4 en PC met een micro-USB kabel.
     <value>Gedeelde toegang</value>
   </data>
   <data name="ViGEmPluginFailure" xml:space="preserve">
-    <value>ViGEm apparaatplugin gefaald. Error Code {0}. Waarschijnlijk een intern ViGEmBus probleem. Connectie afsluiten. Als het probleem zich blijft voordoen, sluit dan DS4Windows en herstart Windows.</value>
+    <value>ViGEm apparaatplugin gefaald. Error Code {0}. Waarschijnlijk een intern ViGEmBus probleem. Connectie afsluiten. Als het probleem zich blijft voordoen, sluit dan FUT404DS en herstart Windows.</value>
   </data>
   <data name="CRC32Fail" xml:space="preserve">
     <value>Data-integriteit checks gefaald voor draadloos apparaat. Apparaat afsluiten.</value>
   </data>
   <data name="FutureNetNotInstalled" xml:space="preserve">
-    <value>.NET 5 Runtime niet gevonden op je systeem. Download en installeer .NET 5 Runtime om compatibiliteit te verzekeren met toekomstige versies van DS4Windows. Je zal doorgestuurd worden naar de .NET 5 Runtime download pagina bij het sluiten van dit venster.</value>
+    <value>.NET 5 Runtime niet gevonden op je systeem. Download en installeer .NET 5 Runtime om compatibiliteit te verzekeren met toekomstige versies van FUT404DS. Je zal doorgestuurd worden naar de .NET 5 Runtime download pagina bij het sluiten van dit venster.</value>
   </data>
   <data name="UpgradeNetCaption" xml:space="preserve">
     <value>Update .NET Runtime a.u.b.</value>
@@ -558,7 +558,7 @@ Verbind gewoon je DualShock 4 en PC met een micro-USB kabel.
     <value>Check batterij</value>
   </data>
   <data name="Welcome.WinTitle" xml:space="preserve">
-    <value>Welkom bij DS4Windows</value>
+    <value>Welkom bij FUT404DS</value>
   </data>
   <data name="Welcome.Step5Text" xml:space="preserve">
     <value>(Optioneel) Stap 5: Installeer FakerInput Stuurprogramma</value>
@@ -576,7 +576,7 @@ Verbind gewoon je DualShock 4 en PC met een micro-USB kabel.
     <value>Beperkt de maximale uitvoerwaarde van de analoge stick door alle hogere invoerwaarden te verlagen tot de maximum waarde.</value>
   </data>
   <data name="AntiDeadzoneTooltip" xml:space="preserve">
-    <value>Een anti-deadzone geeft de minimum uitvoerwaarde die wordt gegenereerd als een as de toegewezen deadzone heeft verlaten. Als er geen anti-deadzone is toegewezen, zou een as voorbij de toegewezen deadzone in DS4Windows moeten bewegen en dan nog eens voorbij de toegewezen deadzone van het spel. De typische toegewezen deadzone voor XInput LS in een videogame is ongeveer 8000 (25%). 
+    <value>Een anti-deadzone geeft de minimum uitvoerwaarde die wordt gegenereerd als een as de toegewezen deadzone heeft verlaten. Als er geen anti-deadzone is toegewezen, zou een as voorbij de toegewezen deadzone in FUT404DS moeten bewegen en dan nog eens voorbij de toegewezen deadzone van het spel. De typische toegewezen deadzone voor XInput LS in een videogame is ongeveer 8000 (25%). 
 </value>
   </data>
   <data name="StickInputCurveTooltip" xml:space="preserve">
@@ -670,7 +670,7 @@ Verbind gewoon je DualShock 4 en PC met een micro-USB kabel.
     <value>Program Folder</value>
   </data>
   <data name="SaveWhere.AppDataDescText" xml:space="preserve">
-    <value>Voor wie een normale installatie wil. Instellingen worden opgeslagen in %appdata%\DS4Windows</value>
+    <value>Voor wie een normale installatie wil. Instellingen worden opgeslagen in %appdata%\FUT404DS</value>
   </data>
   <data name="SaveWhere.DontDelete" xml:space="preserve">
     <value>Verwijder de andere instellingen nog niet</value>
@@ -710,7 +710,7 @@ Let op: deze optie werkt niet in een admin map zonder gebruikersaccountbeheer</v
     <value>Gebruik HidHide om controllers in te stellen en te verbergen van andere apps op je systeem. Sommige games vertonen afwijkend gedrag wanneer meerdere controllers tegelijk verbonden zijn.</value>
   </data>
   <data name="Welcome.Step5HelpText" xml:space="preserve">
-    <value>Gebruik FakerInput om voor het hele systeem het virtuele toetsenbord, relatieve muis en absolute muis beschikbaar te maken. Staat toe om virtuele toetsenbord en muis acties uit te voeren wanneer SendInput niet werkt. Bijvoorbeeld bij processen en games die hogere bevoegdheid nodig hebben, gebruikersaccountbeheer en anti-cheat systemen die SendInput blokkeren. Gebruik van FakerInput is nodig om DS4Windows te laten werken met bepaalde games , zoals Valorant.</value>
+    <value>Gebruik FakerInput om voor het hele systeem het virtuele toetsenbord, relatieve muis en absolute muis beschikbaar te maken. Staat toe om virtuele toetsenbord en muis acties uit te voeren wanneer SendInput niet werkt. Bijvoorbeeld bij processen en games die hogere bevoegdheid nodig hebben, gebruikersaccountbeheer en anti-cheat systemen die SendInput blokkeren. Gebruik van FakerInput is nodig om FUT404DS te laten werken met bepaalde games , zoals Valorant.</value>
   </data>
   <data name="SpecialActionEdit.RunTriggerRelease" xml:space="preserve">
     <value>Voer uit bij loslaten trigger</value>
@@ -1061,7 +1061,7 @@ De rotatie-instelling is bedoeld om de oriëntatie van een analoge stick te help
 
 - Uitgeschakeld: vibratie wordt geschaald door de controller volgens het gedefinieerde krachtniveau (betere kwaliteit)
 
-- Ingeschakeld: zowel DS4Windows algemene vibratie schaling en DualSense ingebouwde controle zijn actief</value>
+- Ingeschakeld: zowel FUT404DS algemene vibratie schaling en DualSense ingebouwde controle zijn actief</value>
   </data>
   <data name="DualSRumbleModes_Tip" xml:space="preserve">
     <value>Accurate modus (aangeraden):
@@ -1107,8 +1107,8 @@ Uitgeschakeld:
   <data name="SwipeTouchpadToSwitchProfiles" xml:space="preserve">
     <value>Swipe touchpad om tussen profielen te wisselen</value>
   </data>
-  <data name="TurnOffDS4WindowsTemporarily" xml:space="preserve">
-    <value>Schakel DS4Windows tijdelijk uit</value>
+  <data name="TurnOffFUT404DSTemporarily" xml:space="preserve">
+    <value>Schakel FUT404DS tijdelijk uit</value>
   </data>
   <data name="Plug" xml:space="preserve">
     <value>Aansluiten</value>
@@ -1201,7 +1201,7 @@ Uitgeschakeld:
     <value>Wakker worden van sluimeren</value>
   </data>
   <data name="FirstLaunch.DeviceIntroText" xml:space="preserve">
-    <value>Omdat andere mappers standaard ondersteuning bieden voor meerdere apparaattypen (Steam Input), schakelt DS4Windows standaard alleen ondersteuning in voor het lezen van DS4-controllers. U kunt hier ondersteuning voor andere ondersteunde apparaattypen kiezen. Let op als u DS4Windows gebruikt terwijl andere mappers tegelijkertijd actief zijn.</value>
+    <value>Omdat andere mappers standaard ondersteuning bieden voor meerdere apparaattypen (Steam Input), schakelt FUT404DS standaard alleen ondersteuning in voor het lezen van DS4-controllers. U kunt hier ondersteuning voor andere ondersteunde apparaattypen kiezen. Let op als u FUT404DS gebruikt terwijl andere mappers tegelijkertijd actief zijn.</value>
   </data>
   <data name="FirstLaunch.DS3EnableCkbLabel" xml:space="preserve">
     <value>DS3 apparaat ondersteuning</value>

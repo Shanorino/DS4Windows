@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -138,7 +138,7 @@ public sealed class Switch2ProfileOutputOwnershipTests
         var slot = fixture.Manager.GetOutSlotDevice(fixture.Replacement);
         slot.CurrentInputBoundChanged += (_, _) =>
         {
-            if (slot.CurrentInputBound == DS4WinWPF.DS4Control.OutSlotDevice.InputBound.Bound)
+            if (slot.CurrentInputBound == FUT404DSWPF.DS4Control.OutSlotDevice.InputBound.Bound)
                 throw new IOException("Synthetic observer failure after binding publication.");
         };
         Assert.ThrowsException<IOException>(() =>

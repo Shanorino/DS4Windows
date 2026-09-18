@@ -21,7 +21,7 @@
             "* **Clearer startup recovery (#77)** - preserve requested startup intent, original task names and opt-outs; stage protected next-logon recovery after a required reboot",
             "* **Shift extras reliability (#46)** - retain extras-only activation through save/load, preserve normal button actions, and clear held extras when released",
             "* **Broader regression coverage** - integrate settings, culture-independent date, macro value-band and historical profile migration tests",
-            "* **Complete packages** - DS4Windows 5.0.8.0, unchanged VIIPER 0.1.5-rc4.6 and Xbox identity, with companion DS4Updater 2.0.7"
+            "* **Complete packages** - FUT404DS 5.0.8.0, unchanged VIIPER 0.1.5-rc4.6 and Xbox identity, with companion DS4Updater 2.0.7"
           ],
           "editor": "hbashton",
           "editors_note": ["Unsigned release candidate. DSX support is local trigger/light compatibility, not full protocol parity or audio/PCM transport. Automated tests preserve strict allocation checks; physical mod acceptance and full reboot/logon/UAC acceptance remain outstanding. No Nintendo rumble gain/cadence or PCM encoding retuning. Thanks to Gabarsolon and anagnorisis2peripeteia / Cameron Beeley for their contributions."],
@@ -39,13 +39,13 @@
           "code": "en",
           "header": "Release Candidate 4.6.1 Hotfix — Dial In Your Aim, Safer HidHide",
           "log_text": [
-            "* **Startup-task recovery (#98/#103)** - retain RunVIIPER and RunDS4Windows, back up existing definitions before repair, and recover from registration or verification errors with a startup warning and verified direct launch instead of aborting setup",
+            "* **Startup-task recovery (#98/#103)** - retain RunVIIPER and RunFUT404DS, back up existing definitions before repair, and recover from registration or verification errors with a startup warning and verified direct launch instead of aborting setup",
             "* **360-degree flick-stick calibration** - choose a test button in Axis Config beside either stick's Real World Calibration, save, and tap it in-game to check one full turn",
             "* **Predictable calibration** - holds do not repeat, taps do not queue, and profile, mode, button or connection changes cancel unfinished turns; normal bindings are preserved when unassigned",
             "* **Cleaner trigger settings** - remove the legacy effect, start and strength controls from Axis Config; use Trigger Lab while saved effects and native game feedback remain intact",
             "* **HidHide crash safeguard** - reject Windows app-execution aliases during registration and check the Applications list before opening the configuration client",
             "* **Targeted HidHide recovery** - with confirmation, back up and remove only identified unsafe aliases while preserving other application permissions and hidden-device rules",
-            "* **Complete matching packages** - DS4Windows 5.0.7.0 includes unchanged VIIPER 0.1.5-rc4.6 and Xbox output identity; DS4Updater 2.0.6 remains compatible"
+            "* **Complete matching packages** - FUT404DS 5.0.7.0 includes unchanged VIIPER 0.1.5-rc4.6 and Xbox output identity; DS4Updater 2.0.6 remains compatible"
           ],
           "editor": "hbashton",
           "editors_note": ["Unsigned release candidate. The complete local x64 suite passed 5,991 tests with zero failures and 11 opt-in skips. Calibration UI layouts were checked in light and dark themes at normal and 150% scale. Calibration requires mouse look and depends on in-game sensitivity. The HidHide safeguard covers the confirmed app-alias crash, not unrelated client failures. No audio, haptics, adaptive-trigger transport or Nintendo rumble retuning."],
@@ -70,10 +70,10 @@
             "* **VIIPER feedback safety** - reserve a virtual DS4 stop slot for V3 speaker framing, reject full distinct queues truthfully, and preserve feedback ownership across reader reconnects",
             "* **Bluetooth disconnect cleanup** - remove controller-list and tray-disconnected devices without relying on a later HID failure",
             "* **Game Bar profile safeguard** - reject delayed compatibility activation when the current profile no longer allows it",
-            "* **Complete matching packages** - DS4Windows 5.0.6.0 includes VIIPER 0.1.5-rc4.6 and Xbox output identity; DS4Updater 2.0.6 remains compatible"
+            "* **Complete matching packages** - FUT404DS 5.0.6.0 includes VIIPER 0.1.5-rc4.6 and Xbox output identity; DS4Updater 2.0.6 remains compatible"
           ],
           "editor": "hbashton",
-          "editors_note": ["Unsigned release candidate. Rebuilt local x64 validation passed 5,717 tests with zero failures, including eight isolated DS4Windows-to-VIIPER process tests; three live-audio cases remain gated. Allocation assertions remain strict. Final hardware listening and gameplay acceptance remain outstanding. The rare movement interruption remains unattributed, and the Game Bar safeguard is not proof that incident is solved. No Nintendo rumble gain/cadence retuning or claim of unlimited actuator throughput."],
+          "editors_note": ["Unsigned release candidate. Rebuilt local x64 validation passed 5,717 tests with zero failures, including eight isolated FUT404DS-to-VIIPER process tests; three live-audio cases remain gated. Allocation assertions remain strict. Final hardware listening and gameplay acceptance remain outstanding. The rare movement interruption remains unattributed, and the Game Bar safeguard is not proof that incident is solved. No Nintendo rumble gain/cadence retuning or claim of unlimited actuator throughput."],
           "updated_at": "2026-09-14T14:32:00+0000"
         }
       ]
@@ -92,7 +92,7 @@
             "* **Preserved effects and stops** - changed rumble and trigger commands retain their order; only exact, known state-setting repeats at an unclaimed pending queue tail may share an entry",
             "* **Adaptive-trigger delivery** - the faster path also carries trigger updates, with full payload, A-to-B-to-A, release and unknown-byte preservation tested; in-game trigger feel still needs confirmation",
             "* **No gain or Nintendo retuning** - PCM samples, audio cadence, rumble-mode ownership, per-trigger Trigger Lab priority and Nintendo HD-rumble behavior remain unchanged",
-            "* **Complete matching packages** - DS4Windows 5.0.5.9 includes unchanged VIIPER 0.1.4-rc4.5.6 and the Xbox output identity; DS4Updater 2.0.6 remains compatible"
+            "* **Complete matching packages** - FUT404DS 5.0.5.9 includes unchanged VIIPER 0.1.4-rc4.5.6 and the Xbox output identity; DS4Updater 2.0.6 remains compatible"
           ],
           "editor": "hbashton",
           "editors_note": ["Unsigned release candidate. Automated x64 validation passed 5,539 tests with zero failures and 11 gated skips, with allocation checks enabled. Three 250 Hz Bluetooth body-rumble bursts preserved every change and stop at the physical writer. Final-stop submission delay improved from 252 ms in RC4.5.8 to 0.15-0.18 ms in the candidate. These are host-side measurements, not actuator latency or a guarantee of all-game behavior. GTA gameplay and adaptive-trigger hardware acceptance remain pending."],
@@ -114,7 +114,7 @@
             "* **Safe feedback ownership** - later local trigger or LED updates do not cancel native rumble, and older templates cannot overwrite a newer accepted motor command; trigger and LED one-shot updates remain one-shot",
             "* **Disconnect recovery** - queued Bluetooth disconnects hand off to the lifecycle owner without a circular shutdown wait, preserving final output retirement and external completion waits",
             "* **Later improvements retained** - native command ordering, busy retry, audio cadence, per-trigger Trigger Lab ownership, Nintendo feedback and allocation-sensitive paths remain intact; this is not a rollback or gain boost",
-            "* **Matching packages** - DS4Windows 5.0.5.8 reuses the unchanged VIIPER 0.1.4-rc4.5.6 package; DS4Updater 2.0.6 remains compatible"
+            "* **Matching packages** - FUT404DS 5.0.5.8 reuses the unchanged VIIPER 0.1.4-rc4.5.6 package; DS4Updater 2.0.6 remains compatible"
           ],
           "editor": "hbashton",
           "editors_note": ["Unsigned release candidate. Automated x64 validation passed 5,413 tests with zero failures and 11 gated skips, including 2,646 Nintendo tests. Allocation checks remained enabled and passed. The private candidate connected a Bluetooth DualSense and started virtual output and speaker passthrough; in-game haptics and adaptive-trigger feel still require confirmation."],
@@ -190,11 +190,11 @@
             "* **Lifecycle and setup fixes** - corrected output-slot collisions, stale controller rows, legacy calibration and profile-loading faults, preview restoration, and uninstall-helper caching; the bundled VIIPER tray can recover when Explorer is not ready at login",
             "* **USB headphone output, with clear limits** - Switch 2 Pro's native USB headphone output has physical left/right and start/stop evidence; microphone capture is not verified, and Bluetooth headphone/microphone audio remains unsupported",
             "* **Matching offline backend included** - installer and portable packages pin VIIPER 0.1.3-rc4.5, include complete license/build notices, and use forward-only ordering for known release-candidate updates",
-            "* **A self-starting portable broker** - the portable ZIP includes viiper.exe beside DS4Windows, starts it when needed and reuses a verified matching instance; conflicting brokers produce a clear close-and-relaunch message instead of being terminated",
+            "* **A self-starting portable broker** - the portable ZIP includes viiper.exe beside FUT404DS, starts it when needed and reuses a verified matching instance; conflicting brokers produce a clear close-and-relaunch message instead of being terminated",
             "* **Tester candidate, not a latency promise** - the shipping backend remains VIIPER plus USB/IP; native-driver completion, 0.125 ms controller-to-game latency, Joy-Con 2 USB support and a complete controller/game compatibility matrix are not claimed"
           ],
           "editor": "hbashton",
-          "editors_note": ["RC4.5 pairs DS4Windows 5.0.5.0 with VIIPER 0.1.3-rc4.5. See the RC4.5 assessment for cumulative changes since RC4.3, physical evidence and remaining tester acceptance."],
+          "editors_note": ["RC4.5 pairs FUT404DS 5.0.5.0 with VIIPER 0.1.3-rc4.5. See the RC4.5 assessment for cumulative changes since RC4.3, physical evidence and remaining tester acceptance."],
           "updated_at": "2026-09-09T01:58:01+0000"
         }
       ]
@@ -216,13 +216,13 @@
             "* **Profile mute controls** - a master Mute Button Mutes Input/Output option can target the controller microphone and built-in speaker independently, keeps the mute LED on only while muted, and is mutually exclusive with mute-button profile switching",
             "* **Fenced profile-lightbar recovery** - a confirmed exit can restore only profile lightbar/player LEDs after an exact running-process visual association and a final nonvisual report, while target, stream, admission, and newest revision still match; newer or unverified visual output wins, Game Bar foreground ambiguity safely leaves LEDs alone, and no trigger, rumble, haptics, audio, or mute state is released",
             "* **Quieter routine logs** - native-session, idle-report hex, foreground-association, and normal process-exit diagnostics no longer crowd the GUI log",
-            "* **Reliable wired HidHide reconnects** - DS4Windows tracks the live HID generation and releases only rules it inserted, allowing a wired controller whose instance identity changes to enumerate and be hidden again",
+            "* **Reliable wired HidHide reconnects** - FUT404DS tracks the live HID generation and releases only rules it inserted, allowing a wired controller whose instance identity changes to enumerate and be hidden again",
             "* **More compatible startup repair** - exact-SID Task Scheduler XML avoids ambiguous local-account normalization, ordinary missing tasks and Run values no longer become errors, and foreign same-name tasks remain protected",
             "* **VIIPER 0.1.2 included** - the standard installer and portable package pin the same production backend build for supported virtual-controller and PlayStation media paths",
             "* **Release validation** - transport, audio, mute, lightbar, HidHide, startup-task, installer-state, payload-integrity, build, and regression gates are exercised before public assets are published"
           ],
           "editor": "hbashton",
-          "editors_note": ["RC4.4 pairs DS4Windows 5.0.4.0 with VIIPER 0.1.2 and focuses on faithful low-latency input, bounded audio ownership, explicit mute behavior, and reconnect-safe lifecycle handling."],
+          "editors_note": ["RC4.4 pairs FUT404DS 5.0.4.0 with VIIPER 0.1.2 and focuses on faithful low-latency input, bounded audio ownership, explicit mute behavior, and reconnect-safe lifecycle handling."],
           "updated_at": "2026-08-27T00:00:00+0000"
         }
       ]
@@ -238,14 +238,14 @@
           "header": "Release Candidate 4.3 - Installer Reliability",
           "log_text": [
             "* **VIIPER 0.1.0 included** - the tray, executable metadata, API version, standard installer, portable repair path, and release package now agree on one production backend build",
-            "* **Verified portable VIIPER** - DS4Windows can use VIIPER from any location when its executable exactly matches the SHA-256 pinned by this release",
+            "* **Verified portable VIIPER** - FUT404DS can use VIIPER from any location when its executable exactly matches the SHA-256 pinned by this release",
             "* **Fast deterministic upgrades** - stale historical installer registrations are ignored instead of being launched, retried, or allowed to block the current update",
             "* **Safe shared infrastructure lifecycle** - updates preserve healthy VIIPER and USB-IP infrastructure while direct uninstall removes only installer-owned components",
             "* **Fail-closed backend validation** - missing, mismatched, or outdated VIIPER packages are repaired from the exact bundled offline payload before virtual controllers can start",
             "* **Expanded release validation** - clean install, upgrade, repair, internal VIIPER repair, USB-IP removal/recovery, uninstall, reinstall, package integrity, and startup paths are exercised before release"
           ],
           "editor": "hbashton",
-          "editors_note": ["RC4.3 pairs DS4Windows 5.0.3.0 with VIIPER 0.1.0 and focuses on predictable offline installation, exact portable compatibility, and safe upgrades."],
+          "editors_note": ["RC4.3 pairs FUT404DS 5.0.3.0 with VIIPER 0.1.0 and focuses on predictable offline installation, exact portable compatibility, and safe upgrades."],
           "updated_at": "2026-08-08T00:00:00+0000"
         }
       ]
@@ -289,8 +289,8 @@
           "header": "Release Candidate 4.1 - Bugfixes and Lower-Latency Audio/Vibration",
           "log_text": [
             "* **Lower-latency DualSense media** - game haptics, Audio Haptics, speaker audio, and state updates share one preallocated real-time path with fewer handoffs and no deadline-based frame discard",
-            "* **Faster fresh input delivery** - the virtual DualSense ceiling is now 1,000 Hz while DS4Windows submits only fresh mapped reports, removing the old 200/250 Hz cap without manufacturing duplicate input",
-            "* **Atomic game feedback** - native haptics, lightbar/player LEDs, triggers, rumble, speaker media, and DS4Windows overrides are merged without replaying stale state or losing a concurrent update",
+            "* **Faster fresh input delivery** - the virtual DualSense ceiling is now 1,000 Hz while FUT404DS submits only fresh mapped reports, removing the old 200/250 Hz cap without manufacturing duplicate input",
+            "* **Atomic game feedback** - native haptics, lightbar/player LEDs, triggers, rumble, speaker media, and FUT404DS overrides are merged without replaying stale state or losing a concurrent update",
             "* **Clean game handoff** - meaningful game output owns feedback for the game process lifetime; closing the game immediately restores profile lightbar, player LEDs, triggers, and rumble",
             "* **Thread-safe rumble** - preview and game vibration no longer miss beats, remain stuck, or race their stop/start updates across the real-time workers",
             "* **Reliable per-app capture** - application audio and Audio Haptics recover after source changes, process restarts, speaker/headset switches, and stalled loopback sessions; the source list includes Refresh",
@@ -299,7 +299,7 @@
             "* **Clean first launch** - light/default-theme installs no longer crash because the Overview page requested a dark-theme-only InverseBoolConverter resource",
             "* **Profile-transition crash fixed** - VIIPER microphone monitoring owns its connection timeout until completion instead of disposing a wait handle under an active callback",
             "* **Safer controls** - closed dropdowns no longer change profile, audio, or haptics settings while scrolling; Game Audio now identifies the active virtual playback endpoint",
-            "* **Complete offline setup** - the x64 installer bundles DS4Windows, .NET, VIIPER 0.0.8, and USB-IP 0.9.7.7, with optional HidHide and FakerInput checkboxes",
+            "* **Complete offline setup** - the x64 installer bundles FUT404DS, .NET, VIIPER 0.0.8, and USB-IP 0.9.7.7, with optional HidHide and FakerInput checkboxes",
             "* **Mandatory backend repair** - mismatched VIIPER, unsupported USB-IP, incorrect driver hashes, ABI failures, and unsafe Citrix filters cannot be hidden by a saved prompt preference",
             "* **Safe USB-IP correction** - 0.9.7.8 is removed before reboot and bundled 0.9.7.7 installs only after the next boot proves the old driver is gone; startup tasks remain disabled until verification passes",
             "* **Single-owner installation** - install, update, repair, uninstall, process preflight, and in-app VIIPER repair are mutexed; duplicate Plan requests are ignored and competing transactions fail closed with error 1618",
@@ -323,10 +323,10 @@
           "code": "en",
           "header": "Version 5.0.0.0 - The Parity Patch (Release Candidate 4)",
           "log_text": [
-            "* **New all-in-one installer** - the offline 5.0.0.0 setup EXE installs or updates DS4Windows, VIIPER 0.0.7, and usbip-win2 0.9.7.7, with optional HidHide and FakerInput checkboxes, payload verification, repair support, and restart recovery",
+            "* **New all-in-one installer** - the offline 5.0.0.0 setup EXE installs or updates FUT404DS, VIIPER 0.0.7, and usbip-win2 0.9.7.7, with optional HidHide and FakerInput checkboxes, payload verification, repair support, and restart recovery",
             "* **One production backend** - VIIPER drives Xbox 360, DualShock 4, DualSense, DualSense Edge, and Switch 2 Pro output; legacy profile selections migrate automatically",
             "* **PlayStation speaker and AUX fixes** - rebuilt Bluetooth media scheduling, separate speaker/headset routing, clean reconnect and source-switch recovery, persistent per-controller endpoints, and low-latency operation across every emulated output",
-            "* **Native DualSense game parity** - game input, advanced haptics, speaker data, adaptive triggers, lightbar, player LEDs, rumble, and DS4Windows overrides are merged atomically without replaying stale state",
+            "* **Native DualSense game parity** - game input, advanced haptics, speaker data, adaptive triggers, lightbar, player LEDs, rumble, and FUT404DS overrides are merged atomically without replaying stale state",
             "* **Microphone and lifecycle reliability** - microphone capture, duplex playback, controller reconnects, service restarts, suspend/resume, and hibernation recovery no longer strand audio lanes or virtual devices",
             "* **Audio Haptics made independent** - system and per-app capture can stay active without audible speaker playback, automatically recover from process/session changes, and Mix or Replace native game haptics per profile",
             "* **Trigger Lab completed** - linked or split L2/R2 effects, presets, per-trigger arming, full-pull actions, previews, and optional game-rumble-to-trigger vibration are saved with the active profile",
@@ -335,7 +335,7 @@
             "* **Safer startup and updates** - exact VIIPER hash/version enforcement, guided standard or portable repair, startup tasks that respect Run at Startup, scoped cleanup, Citrix/USB-IP safeguards, and self-contained x64 packaging"
           ],
           "editor": "hbashton",
-          "editors_note": ["The Parity Patch pairs DS4Windows 5.0.0.0 with VIIPER 0.0.7 and the new all-in-one installer."],
+          "editors_note": ["The Parity Patch pairs FUT404DS 5.0.0.0 with VIIPER 0.0.7 and the new all-in-one installer."],
           "updated_at": "2026-08-04T00:00:00+0000"
         }
       ]
@@ -412,7 +412,7 @@
             "* Added initial unit test project to solution",
             "* Updated use of ProfileMigration class",
             "* Changed how migrated XML string is grabbed from ProfileMigration class",
-            "* Fixed issues with converting of older profiles from earlier DS4Windows versions including Jays2Kings builds",
+            "* Fixed issues with converting of older profiles from earlier FUT404DS versions including Jays2Kings builds",
             "* Force waiting for mapper routine to be over before switching profiles. Fixes BT lightbar issues",
             "* Unregister DataContext used to link VMs early. Purge memory early and reduce memory usage. Thanks to **kurtanr** for figuring out the problem",
             "* Loosen analog to mouse wheel mapping",
@@ -443,7 +443,7 @@
             "* Dutch strings update. Contribution by **DraakjeYoblama**",
             "* Updated zn-hans translation. Contribution by **CrazyHPi**",
             "* Russian translation update. Contribution by **mentalsolin**",
-            "* Attempt to load DS4Windows config when loading WelcomeDialog for a separate process. Makes sure set translation choice is used",
+            "* Attempt to load FUT404DS config when loading WelcomeDialog for a separate process. Makes sure set translation choice is used",
             "* Enable localization for LogMessageDisplay window",
             "* Added check for last check task when starting app update",
             "* Enable .NET 8 nag window"],
@@ -711,7 +711,7 @@
             "* Removed message regarding Middle Mouse closing app in tray menu. Windows 11 no longer supports this at least right now",
             "* Added DualShock 3 support using DsHidMini driver (SXS) or Sony Sixaxis driver. Contribution by **SunnyQeen**",
             "* Added logging when reading of Actions.xml fails",
-            "* Changed processing of Delay tags for Actions.xml. Fixes some cases where recent DS4Windows no longer reads Special Action files from older versions",
+            "* Changed processing of Delay tags for Actions.xml. Fixes some cases where recent FUT404DS no longer reads Special Action files from older versions",
             "* Fixed outer bounds when using smoothing for 360 Gyro Steering.",
             "* Fixed anti-dead zone interpretation for 360 Gyro Steering stick output. Applies to Xbox 360 and DS4 output (not VJoy)",
             "* Added Playmax PS4 controller. Contribution by **nzgamer41**"],
@@ -1024,7 +1024,7 @@
         {
           "code": "en",
           "header": "Version 3.1.6",
-          "log_text": ["* Updated DS4Windows.deps.json file",
+          "log_text": ["* Updated FUT404DS.deps.json file",
             "* Made sure to bundle latest Lang assembly folder"],
           "updated_at": "2022-09-23T01:54:08+0000"
         }
@@ -1048,7 +1048,7 @@
             "* Fixed Hip Fire Delay settings not saving. Contribution by **Kanuan**",
             "* Fixed preset option using wrong preset. Contribution by **Kanuan**",
             "* Fixed Flick Stick Min Angle settings not saving. Contribution by **Kanuan**",
-            "* Set DualSense's Lightbar to white when stopping DS4Windows. Contribution by **Kanuan**",
+            "* Set DualSense's Lightbar to white when stopping FUT404DS. Contribution by **Kanuan**",
             "* Added AutoProfile target EXE to Hidhide. Contribution by **Yohoki**",
             "* Added Auto-Profile Target to HidHide's Whitelist. Contribution by **Yohoki**",
             "* Fixed LF byte for rumble frequency with Switch Pro and JoyCon",
@@ -1148,8 +1148,8 @@
             "* Fixed DS4Updater download URL redirect when automatic download fails",
             "* Fixed initial data bindings for Auto Profile section",
             "* Have Full Pull Dual Stage triggers use raw input range rather than interpreted. Might have to change how Full Pull is handled later",
-            "* Changed WelcomeDialog to use Windows temp folder while downloading rather than program folder. Would mainly affect when DS4Windows is run in a read-only folder (shouldn't be the case on a proper setup)",
-            "* Removed Mastodon and Minds social media links from About window. No longer support Mastodon as a whole. DS4Windows actually got banned from Minds",
+            "* Changed WelcomeDialog to use Windows temp folder while downloading rather than program folder. Would mainly affect when FUT404DS is run in a read-only folder (shouldn't be the case on a proper setup)",
+            "* Removed Mastodon and Minds social media links from About window. No longer support Mastodon as a whole. FUT404DS actually got banned from Minds",
             "* Added extra project links and notes to About window",
             "* Allow joined JoyCons to transmit unique Gyro data to UDP server. Mimics behavior of BetterJoy for two JoyCon controllers linked together",
             "* Changed HidHide download link to point to version 1.1.50.0. Approved release",
@@ -1480,7 +1480,7 @@
             "* Updated DotNetProjects.Extended.Wpf.Toolkit to version 4.6.97",
             "* Updated MdXaml to version 1.10.0",
             "* Updated NLog to version 4.7.9",
-            "* Check if DS4Windows program folder is actually AppData subfolder when locating program config. Treat case as Program Folder option",
+            "* Check if FUT404DS program folder is actually AppData subfolder when locating program config. Treat case as Program Folder option",
             "* Added All Files option for Launch Program special action File Dialog. Use Explorer to launch associated program for an arbitrary file"],
           "editor": "ryochan7",
           "editors_note": ["I'm on break"],
@@ -1503,7 +1503,7 @@
             "* Changed ViGEmClient library to attempt to connect to newest available version of ViGEmBus on a system rather than the first version found",
             "* Set all controller slots to use the Default profile initially when making a new config",
             "* Immediately issue unplug of all virtual controllers when pressing main Stop button",
-            "* Initial implementation of HidHide integration. Display key icon for HidHide hidden device. Insert DS4Windows.exe into whitelist at startup if necessary",
+            "* Initial implementation of HidHide integration. Display key icon for HidHide hidden device. Insert FUT404DS.exe into whitelist at startup if necessary",
             "* Changed method of obtaining current executable file location. Needed due to assembly changes in .NET 5 breaking support for custom exe filenames",
             "* Added HidHide installer link to Welcome dialog window",
             "* Added HidHide Configuration Client app link in Settings tab",
@@ -1543,7 +1543,7 @@
           "code": "en",
           "header": "Version 3.0.2",
           "log_text": ["* Use UseShellExecute for ProcessStartInfo in more places for .NET 5 changes",
-            "* DS4Windows updater message update. Contribution **RedDevilus**",
+            "* FUT404DS updater message update. Contribution **RedDevilus**",
             "* German translation update. Contribution by **jmg2k**",
             "* Added Portuguese (Portugal) translation. Contribution by **joaopedrogome**",
             "* Add cmd line command for 'Change led color'. Contribution by **bernspedras**",
@@ -1589,7 +1589,7 @@
         {
           "code": "en",
           "header": "Version 3.0.0",
-          "log_text": ["* DS4Windows now targets .NET 5",
+          "log_text": ["* FUT404DS now targets .NET 5",
             "* Changed ViGEm libraries to target .NET Core 3.1",
             "* Now use MdXaml rather than Markdown.Xaml for Changelog text rendering",
             "* Removed Newtonsoft.Json library dependency",
@@ -1946,7 +1946,7 @@
               "* Now use player LEDs on Switch Pro, JoyCon, and DualSense controllers. Used to display input device slot number",
               "* Display input slot number in controller list",
               "* Now sort main controller list by device index",
-              "* Changed output device pluging routine. Stop DS4Windows service if ViGEm device connect call fails",
+              "* Changed output device pluging routine. Stop FUT404DS service if ViGEm device connect call fails",
               "* Changed default dead zone for KBM profile templates",
               "* Only output DS4 touchpad button click when in Passthru mode",
               "* Make sure to refresh gyro mouse smoothing combobox indexes after loading from a preset",
@@ -1984,7 +1984,7 @@
             "header": "Version 2.2.0",
             "log_text": ["* Import newer ViGEm.NET libraries for ViGEmBus 1.17.333.0 extended support",
               "* Allow passthru of Touchpad and Gyro to output virtual DS4. Requires ViGEmBus 1.17.333.0 and Windows 10",
-              "* Put note about DS4Windows assembly architecture in Log. Needed to diagnose Exclusive mode problems.",
+              "* Put note about FUT404DS assembly architecture in Log. Needed to diagnose Exclusive mode problems.",
               "* No longer reset X360 report data each gamepad poll",
               "* Fixed Touchpad Swipe and Gyro Tilt controls index values for Profile Editor controls",
               "* Fixed some 8 controller bugs. Make sure to save set profile and load setting",
@@ -2389,7 +2389,7 @@
             "code": "en",
             "header": "Version 2.1.6",
             "log_text": ["* Removed LBRY social link and resources",
-              "* Allow setting a custom executable file for DS4Windows.exe",
+              "* Allow setting a custom executable file for FUT404DS.exe",
               "* Changed CONFIG_VERSION to 4. Start of profile migration support",
               "* Added 1 Euro Filter smoothing for Gyro Mouse and Gyro Mouse Joystick output modes",
               "* Bump up Gyro Mouse offsets",
@@ -2401,7 +2401,7 @@
               "* Dutch translation added. Contribution by **RedDevilus**",
               "* French translation added. Contribution by **RedDevilus**",
               "* Only call RefreshVolume when the DS4Audio device is detected",
-              "* App can now find a unified USB device tied to the DS4 HID and audio devices. DS4Windows no longer relies on string name to match audio devices",
+              "* App can now find a unified USB device tied to the DS4 HID and audio devices. FUT404DS no longer relies on string name to match audio devices",
               "* Increased minimum headphone volume",
               "* Added new Chinese (Traditional, Taiwan) translation. Contribution by **SyaoranChang**",
               "* Fixed issue with wrong window position data being saved while window is minimized",
@@ -2431,7 +2431,7 @@
           {
             "code": "en",
             "header": "Version 2.1.5",
-            "log_text": ["* New 'Query' cmdline options to return profile and DS4Windows app properties to a 3rd party app or batch scripts. Contribution by **mika-n**",
+            "log_text": ["* New 'Query' cmdline options to return profile and FUT404DS app properties to a 3rd party app or batch scripts. Contribution by **mika-n**",
               "* Fixed Gyro Mouse Joystick invert options",
               "* Added OneEuroFilter class to project",
               "* Added 1 Euro Filter options to 360 Steering Wheel mode",

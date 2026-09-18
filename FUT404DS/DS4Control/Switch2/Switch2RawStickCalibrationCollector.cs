@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 Calibration workflow adapted from Switch2Connect, Copyright (C) 2026 TommyWabg,
@@ -10,7 +10,7 @@ or (at your option) any later version. See LICENSE for details.
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal enum Switch2RawStickCalibrationStage : byte
 {

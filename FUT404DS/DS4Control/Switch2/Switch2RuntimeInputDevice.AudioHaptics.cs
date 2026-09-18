@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 /// <summary>One exact local audio producer. It owns no physical writer or timer.</summary>
 internal sealed class Switch2AudioHapticsOutput : IDisposable

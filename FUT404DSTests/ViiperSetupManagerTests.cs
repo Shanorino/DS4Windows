@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 
-namespace DS4Windows.Tests
+namespace FUT404DS.Tests
 {
     [TestClass]
     public class ViiperSetupManagerTests
@@ -25,7 +25,7 @@ namespace DS4Windows.Tests
         public void InstallerFailureMessageExpandsTheLogPath()
         {
             const string logPath =
-                @"C:\Program Files\DS4Windows\VIIPER\install.log";
+                @"C:\Program Files\FUT404DS\VIIPER\install.log";
             string message = ViiperSetupManager.
                 BuildInstallerFailureMessage(1, logPath);
 
@@ -35,21 +35,21 @@ namespace DS4Windows.Tests
         }
 
         [DataTestMethod]
-        [DataRow(@"Lang\ar\DS4Windows.resources.dll", true)]
-        [DataRow(@"lang\ja\ds4windows.resources.dll", true)]
+        [DataRow(@"Lang\ar\FUT404DS.resources.dll", true)]
+        [DataRow(@"lang\ja\fut404ds.resources.dll", true)]
         [DataRow(@"Lang\cs\Microsoft.VisualBasic.Forms.resources.dll", true)]
         [DataRow(@"Lang\de\PresentationFramework.resources.dll", true)]
-        [DataRow(@"de\DS4Windows.resources.dll", true)]
-        [DataRow("zh-Hans/DS4Windows.resources.dll", true)]
+        [DataRow(@"de\FUT404DS.resources.dll", true)]
+        [DataRow("zh-Hans/FUT404DS.resources.dll", true)]
         [DataRow(@"pt-BR\Microsoft.Win32.TaskScheduler.resources.dll", true)]
         [DataRow(@"extras\plugin.resources.dll", false)]
         [DataRow(@"..\plugin.resources.dll", false)]
         [DataRow(@"Lang\..\plugin.resources.dll", false)]
-        [DataRow(@"C:\de\DS4Windows.resources.dll", false)]
+        [DataRow(@"C:\de\FUT404DS.resources.dll", false)]
         [DataRow(@"de\plugin.dll", false)]
-        [DataRow(@"DS4Windows.exe", false)]
+        [DataRow(@"FUT404DS.exe", false)]
         [DataRow(@"extras\install-viiper-backend.ps1", false)]
-        [DataRow(@"Lang\DS4Windows.resources.dll", false)]
+        [DataRow(@"Lang\FUT404DS.resources.dll", false)]
         [DataRow(@"Lang\cs\plugin.dll", false)]
         [DataRow(@"Lang\cs\nested\plugin.resources.dll", false)]
         public void OnlySatelliteLanguageResourcesAreOptionalDuringRepair(
@@ -67,11 +67,11 @@ namespace DS4Windows.Tests
             string host = ViiperSetupManager.GetInstallerHostLogPath();
 
             StringAssert.Contains(infrastructure,
-                Path.Combine("DS4Windows", "Installer"));
+                Path.Combine("FUT404DS", "Installer"));
             StringAssert.EndsWith(infrastructure,
                 "infrastructure-actions.log");
             StringAssert.Contains(host,
-                Path.Combine("DS4Windows", "Installer"));
+                Path.Combine("FUT404DS", "Installer"));
             StringAssert.EndsWith(host, "viiper-setup-host.log");
         }
 
@@ -126,7 +126,7 @@ namespace DS4Windows.Tests
 
             status.ViiperPackageCurrent = false;
             Assert.IsFalse(status.Ready,
-                "An older same-version VIIPER binary must not survive a DS4Windows update.");
+                "An older same-version VIIPER binary must not survive a FUT404DS update.");
         }
 
         [DataTestMethod]
@@ -200,7 +200,7 @@ namespace DS4Windows.Tests
         {
             string localApplicationData = Path.Combine("C:\\Users", "Tester",
                 "AppData", "Local");
-            string canonical = Path.Combine("C:\\Program Files", "DS4Windows",
+            string canonical = Path.Combine("C:\\Program Files", "FUT404DS",
                 "VIIPER", "viiper.exe");
 
             string portable = Path.Combine(localApplicationData, "VIIPER",
@@ -216,7 +216,7 @@ namespace DS4Windows.Tests
         [TestMethod]
         public void RunningVerifiedPortableRuntimeCanBeDiscoveredWithoutPreference()
         {
-            string canonical = Path.Combine("C:\\Program Files", "DS4Windows",
+            string canonical = Path.Combine("C:\\Program Files", "FUT404DS",
                 "VIIPER", "viiper.exe");
             string running = Path.Combine("D:\\Portable", "VIIPER",
                 "viiper.exe");

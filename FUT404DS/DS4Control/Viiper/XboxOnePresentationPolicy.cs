@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -12,7 +12,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
     /// Parses the operator-declared Xbox One ordered-history policy once per

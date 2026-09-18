@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 internal sealed record PortableUpdaterTicket(string Root, string FilePath,
     Version Version, string Sha256, long Size);
@@ -192,7 +192,7 @@ internal static class PortableUpdaterBootstrap
     {
         string root = PortableBrokerContext.ValidateRoot(directory);
         string marker = Path.Combine(root, PortableBrokerContext.MarkerFileName);
-        string manifest = Path.Combine(root, ".ds4windows-managed-files.txt");
+        string manifest = Path.Combine(root, ".fut404ds-managed-files.txt");
         PortableLabContext.ValidateNoReparsePoints(marker);
         PortableLabContext.ValidateNoReparsePoints(manifest);
         PortableLabContext.ValidateNoReparsePoints(Path.Combine(root, "DS4Updater.exe"));

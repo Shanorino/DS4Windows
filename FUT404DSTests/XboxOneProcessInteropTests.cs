@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -46,7 +46,7 @@ public class XboxOneProcessInteropTests
                 RedirectStandardError = true,
             }
         };
-        peer.StartInfo.ArgumentList.Add("-test.run=^TestXboxDS4WindowsInteropPeer$");
+        peer.StartInfo.ArgumentList.Add("-test.run=^TestXboxFUT404DSInteropPeer$");
         peer.StartInfo.ArgumentList.Add("-test.v");
         peer.StartInfo.ArgumentList.Add("-test.timeout=35s");
         peer.StartInfo.Environment["DS4W_XBOX_INTEROP_PEER"] = "1";

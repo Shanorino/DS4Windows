@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -12,10 +12,10 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     /// <summary>
-    /// Operator-declared Switch 2 ordered-history deadline. DS4Windows owns
+    /// Operator-declared Switch 2 ordered-history deadline. FUT404DS owns
     /// this monotonic clock domain; VIIPER still owns HID presentation time.
     /// </summary>
     internal static class Switch2PresentationPolicy

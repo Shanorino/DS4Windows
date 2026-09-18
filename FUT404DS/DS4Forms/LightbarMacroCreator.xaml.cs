@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WinWPF.DS4Forms;
+namespace FUT404DSWPF.DS4Forms;
 
 public partial class LightbarMacroCreator : Window
 {

@@ -4,11 +4,11 @@ using System.Resources;
 using System.Runtime.Loader;
 using System.Text.Json;
 
-// Resource-only child process. Never invoke the DS4Windows entry point,
+// Resource-only child process. Never invoke the FUT404DS entry point,
 // construct App/ControlService, or initialize controller access.
 Assembly application = AssemblyLoadContext.Default.LoadFromAssemblyPath(
-    Path.Combine(AppContext.BaseDirectory, "DS4Windows.dll"));
-var resources = new ResourceManager("DS4WinWPF.Translations.Strings", application);
+    Path.Combine(AppContext.BaseDirectory, "FUT404DS.dll"));
+var resources = new ResourceManager("FUT404DSWPF.Translations.Strings", application);
 string? neutral = resources.GetString("Browse", CultureInfo.InvariantCulture);
 string? german = resources.GetString("Browse", CultureInfo.GetCultureInfo("de"));
 string? regionalGerman = resources.GetString("Browse", CultureInfo.GetCultureInfo("de-DE"));
@@ -17,7 +17,7 @@ bool unrelatedRejected = false;
 try
 {
     AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(
-        "DS4Windows.UnrelatedProbe.resources, Culture=de"));
+        "FUT404DS.UnrelatedProbe.resources, Culture=de"));
 }
 catch (FileNotFoundException)
 {

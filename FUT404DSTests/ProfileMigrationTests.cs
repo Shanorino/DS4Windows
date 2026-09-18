@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,10 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Linq;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ProfileMigrationTests
@@ -38,7 +38,7 @@ namespace DS4WindowsTests
             #region TempDS4WinProfileXML
             ds4winJays2KingsOldProfile = @"<?xml version=""1.0"" encoding=""utf-8""?>
 
-<DS4Windows>
+<FUT404DS>
   <flushHIDQueue>True</flushHIDQueue>
   <idleDisconnectTimeout>0</idleDisconnectTimeout>
   <Color>0,0,255</Color>
@@ -81,11 +81,11 @@ namespace DS4WindowsTests
   <ProfileActions>Disconnect Controller</ProfileActions>
   <Control />
   <ShiftControl />
-</DS4Windows>";
+</FUT404DS>";
 
             ds4winJays2KingsExpectedMigratedProfile = @"<?xml version=""1.0"" encoding=""utf-8""?>
 
-<DS4Windows>
+<FUT404DS>
   <touchToggle>True</touchToggle>
   <idleDisconnectTimeout>0</idleDisconnectTimeout>
   <outputDataToDS4>True</outputDataToDS4>
@@ -346,7 +346,7 @@ namespace DS4WindowsTests
   <ProfileActions>Disconnect Controller</ProfileActions>
   <Control />
   <ShiftControl />
-</DS4Windows>";
+</FUT404DS>";
             #endregion
         }
 
@@ -436,8 +436,8 @@ namespace DS4WindowsTests
 
                 // Write header explicitly
                 //xmlWriter.WriteStartDocument();
-                //xmlWriter.WriteComment(string.Format(" DS4Windows Configuration Data. {0} ", DateTime.Now));
-                //xmlWriter.WriteComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+                //xmlWriter.WriteComment(string.Format(" FUT404DS Configuration Data. {0} ", DateTime.Now));
+                //xmlWriter.WriteComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
                 xmlWriter.WriteWhitespace("\r\n");
                 xmlWriter.WriteWhitespace("\r\n");
 
@@ -468,14 +468,14 @@ namespace DS4WindowsTests
         [TestMethod]
         public void RequiresMigration_ReturnsTrueForOldAndAbsentConfigVersion()
         {
-            Assert.IsTrue(new ProfileMigration(@"<DS4Windows config_version=""1""></DS4Windows>").RequiresMigration());
-            Assert.IsTrue(new ProfileMigration(@"<DS4Windows><LSAntiDeadZone>20</LSAntiDeadZone></DS4Windows>").RequiresMigration());
+            Assert.IsTrue(new ProfileMigration(@"<FUT404DS config_version=""1""></FUT404DS>").RequiresMigration());
+            Assert.IsTrue(new ProfileMigration(@"<FUT404DS><LSAntiDeadZone>20</LSAntiDeadZone></FUT404DS>").RequiresMigration());
         }
 
         [TestMethod]
         public void RequiresMigration_ReturnsFalseForCurrentVersion_AndUsedMigrationStaysFalse()
         {
-            ProfileMigration migration = new ProfileMigration($@"<DS4Windows config_version=""{Global.CONFIG_VERSION}""></DS4Windows>");
+            ProfileMigration migration = new ProfileMigration($@"<FUT404DS config_version=""{Global.CONFIG_VERSION}""></FUT404DS>");
             Assert.IsFalse(migration.RequiresMigration());
             migration.Migrate();
             Assert.IsFalse(migration.UsedMigration);
@@ -486,10 +486,10 @@ namespace DS4WindowsTests
         public void Migrate_TransformsVersion0002_DeadzoneDefaults()
         {
             string version1Profile =
-                @"<DS4Windows config_version=""1"">
+                @"<FUT404DS config_version=""1"">
                     <LSDeadZone>0</LSDeadZone>
                     <RSDeadZone>5</RSDeadZone>
-                  </DS4Windows>";
+                  </FUT404DS>";
 
             ProfileMigration migration = new ProfileMigration(version1Profile);
             migration.Migrate();
@@ -509,12 +509,12 @@ namespace DS4WindowsTests
         public void Migrate_TransformsVersion0004_GyroSmoothingGroups()
         {
             string version2Profile =
-                @"<DS4Windows config_version=""2"">
+                @"<FUT404DS config_version=""2"">
                     <GyroSmoothing>True</GyroSmoothing>
                     <GyroSmoothingWeight>15</GyroSmoothingWeight>
                     <GyroMouseStickSmoothing>False</GyroMouseStickSmoothing>
                     <GyroMouseStickSmoothingWeight>20</GyroMouseStickSmoothingWeight>
-                  </DS4Windows>";
+                  </FUT404DS>";
 
             ProfileMigration migration = new ProfileMigration(version2Profile);
             migration.Migrate();
@@ -548,9 +548,9 @@ namespace DS4WindowsTests
         public void Migrate_TransformsVersion0005_UseTPforControls()
         {
             string version4Profile =
-                @"<DS4Windows config_version=""4"">
+                @"<FUT404DS config_version=""4"">
                     <UseTPforControls>True</UseTPforControls>
-                  </DS4Windows>";
+                  </FUT404DS>";
 
             ProfileMigration migration = new ProfileMigration(version4Profile);
             migration.Migrate();
@@ -570,10 +570,10 @@ namespace DS4WindowsTests
         public void DetermineProfileVersion_DetectsVersion2ForConfigVersionAbsentWithLSAntiDeadZone()
         {
             string noVersionProfile =
-                @"<DS4Windows>
+                @"<FUT404DS>
                     <LSAntiDeadZone>20</LSAntiDeadZone>
                     <LSDeadZone>0</LSDeadZone>
-                  </DS4Windows>";
+                  </FUT404DS>";
 
             ProfileMigration migration = new ProfileMigration(noVersionProfile);
 

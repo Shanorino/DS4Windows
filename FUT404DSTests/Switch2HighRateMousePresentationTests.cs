@@ -1,9 +1,9 @@
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2HighRateMousePresentationTests
@@ -257,7 +257,7 @@ public sealed class Switch2HighRateMousePresentationTests
             "<Switch2HighRateMousePresentation>false</Switch2HighRateMousePresentation>");
 
         using var reader = new StringReader(
-            "<DS4Windows config_version=\"5\" />");
+            "<FUT404DS config_version=\"5\" />");
         var legacy = (ProfileDTO)serializer.Deserialize(reader);
         Assert.IsTrue(legacy.Switch2HighRateMousePresentation);
     }

@@ -1,7 +1,7 @@
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // These check the production markup, not a duplicate view or a rendered UI.
 // Actual navigation and layout still require the portable WPF acceptance pass.
@@ -345,7 +345,7 @@ public sealed class Switch2ProfileSectionLayoutTests
         for (var root = new DirectoryInfo(AppContext.BaseDirectory);
              root != null; root = root.Parent)
         {
-            string path = Path.Combine(new[] { root.FullName, "DS4Windows", "DS4Forms" }
+            string path = Path.Combine(new[] { root.FullName, "FUT404DS", "DS4Forms" }
                 .Concat(relative).ToArray());
             if (File.Exists(path)) return XDocument.Load(path);
         }

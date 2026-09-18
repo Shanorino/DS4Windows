@@ -40,7 +40,7 @@ the user-invoked calibration control path.
 The **Switch 2 Controls** profile section exposes Start, Complete, and Cancel
 controls for the currently selected physical Switch 2 controller. While a
 session is collecting, transport input continues to drain normally, but the
-logical DS4Windows controller publishes neutral input. This prevents the
+logical FUT404DS controller publishes neutral input. This prevents the
 figure-eight motion from driving a game and matches Switch2Connect's output
 suppression. Cancel and rejected completion immediately restore ordinary
 publication without replacing the prior fit.

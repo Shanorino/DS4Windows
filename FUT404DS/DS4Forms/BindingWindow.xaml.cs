@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -30,10 +30,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for BindingWindow.xaml
@@ -43,10 +43,10 @@ namespace DS4WinWPF.DS4Forms
         private Dictionary<Button, BindAssociation> associatedBindings =
             new Dictionary<Button, BindAssociation>();
         private Dictionary<int, Button> keyBtnMap = new Dictionary<int, Button>();
-        private Dictionary<DS4Windows.X360Controls, Button> conBtnMap =
-            new Dictionary<DS4Windows.X360Controls, Button>();
-        private Dictionary<DS4Windows.X360Controls, Button> mouseBtnMap =
-            new Dictionary<DS4Windows.X360Controls, Button>();
+        private Dictionary<FUT404DS.X360Controls, Button> conBtnMap =
+            new Dictionary<FUT404DS.X360Controls, Button>();
+        private Dictionary<FUT404DS.X360Controls, Button> mouseBtnMap =
+            new Dictionary<FUT404DS.X360Controls, Button>();
         private readonly Dictionary<Button, Geometry> outputButtonHitGeometries =
             new Dictionary<Button, Geometry>();
         private readonly Dictionary<Button, ImageSource> outputButtonRasterHighlights =
@@ -67,7 +67,7 @@ namespace DS4WinWPF.DS4Forms
             Keyboard,
         }
 
-        public BindingWindow(int deviceNum, DS4Windows.DS4ControlSettings settings,
+        public BindingWindow(int deviceNum, FUT404DS.DS4ControlSettings settings,
             ExposeMode expose = ExposeMode.Full)
         {
             InitializeComponent();
@@ -75,9 +75,9 @@ namespace DS4WinWPF.DS4Forms
             this.expose = expose;
             bindingVM = new BindingWindowViewModel(deviceNum, settings);
 
-            if (settings.control != DS4Windows.DS4Controls.None)
+            if (settings.control != FUT404DS.DS4Controls.None)
             {
-                Title = $"Select action for {DS4Windows.Global.ds4inputNames[settings.control]}";
+                Title = $"Select action for {FUT404DS.Global.ds4inputNames[settings.control]}";
             }
             else
             {
@@ -310,8 +310,8 @@ namespace DS4WinWPF.DS4Forms
         private string GetControlString(Button button)
         {
             string result;
-            DS4Windows.X360Controls xboxcontrol = associatedBindings[button].control;
-            result = DS4Windows.Global.getX360ControlString(
+            FUT404DS.X360Controls xboxcontrol = associatedBindings[button].control;
+            result = FUT404DS.Global.getX360ControlString(
                 xboxcontrol, bindingVM.OutputControllerType);
 
             return result;
@@ -342,7 +342,7 @@ namespace DS4WinWPF.DS4Forms
         private void OutputButtonBtn_Click(object sender, RoutedEventArgs e)
         {
             OutBinding binding = bindingVM.ActionBinding;
-            DS4Windows.X360Controls defaultControl = DS4Windows.Global.defaultButtonMapping[(int)binding.input];
+            FUT404DS.X360Controls defaultControl = FUT404DS.Global.defaultButtonMapping[(int)binding.input];
             Button button = sender as Button;
             if (associatedBindings.TryGetValue(button, out BindAssociation bind))
             {
@@ -386,7 +386,7 @@ namespace DS4WinWPF.DS4Forms
             OutBinding binding = bindingVM.ActionBinding;
             if (binding.outputType == OutBinding.OutType.Default)
             {
-                DS4Windows.X360Controls defaultBind = DS4Windows.Global.defaultButtonMapping[(int)binding.input];
+                FUT404DS.X360Controls defaultBind = FUT404DS.Global.defaultButtonMapping[(int)binding.input];
                 if (!OutBinding.IsMouseRange(defaultBind))
                 {
                     if (conBtnMap.TryGetValue(defaultBind, out Button tempBtn))
@@ -463,140 +463,140 @@ namespace DS4WinWPF.DS4Forms
         private void InitButtonBindings()
         {
             associatedBindings.Add(aBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.A });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.A });
             aBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(bBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.B });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.B });
             bBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(xBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.X });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.X });
             xBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(yBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.Y });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.Y });
             yBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(lbBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LB });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LB });
             lbBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(ltBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LT });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LT });
             ltBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(rbBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RB });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RB });
             rbBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(rtBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RT });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RT });
             rtBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(backBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.Back });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.Back });
             backBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(startBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.Start });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.Start });
             startBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(guideBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.Guide });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.Guide });
             guideBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(lsbBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LS });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LS });
             lsbBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(lsuBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LYNeg });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LYNeg });
             lsuBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(lsrBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LXPos });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LXPos });
             lsrBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(lsdBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LYPos });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LYPos });
             lsdBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(lslBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LXNeg });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LXNeg });
             lslBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(dpadUBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.DpadUp });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.DpadUp });
             dpadUBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(dpadRBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.DpadRight });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.DpadRight });
             dpadRBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(dpadDBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.DpadDown });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.DpadDown });
             dpadDBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(dpadLBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.DpadLeft });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.DpadLeft });
             dpadLBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(rsbBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RS });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RS });
             rsbBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(rsuBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RYNeg });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RYNeg });
             rsuBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(rsrBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RXPos });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RXPos });
             rsrBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(rsdBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RYPos });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RYPos });
             rsdBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(rslBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RXNeg });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RXNeg });
             rslBtn.Click += OutputButtonBtn_Click;
 
             associatedBindings.Add(touchpadClickBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.TouchpadClick });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.TouchpadClick });
             touchpadClickBtn.Click += OutputButtonBtn_Click;
 
             associatedBindings.Add(mouseUpBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.MouseUp });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.MouseUp });
             mouseUpBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseDownBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.MouseDown });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.MouseDown });
             mouseDownBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseLeftBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.MouseLeft });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.MouseLeft });
             mouseLeftBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseRightBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.MouseRight });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.MouseRight });
             mouseRightBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseLBBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.LeftMouse });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.LeftMouse });
             mouseLBBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseMBBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.MiddleMouse });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.MiddleMouse });
             mouseMBBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseRBBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.RightMouse });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.RightMouse });
             mouseRBBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouse4Btn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.FourthMouse });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.FourthMouse });
             mouse4Btn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouse5Btn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.FifthMouse });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.FifthMouse });
             mouse5Btn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseWheelUBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.WUP });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.WUP });
             mouseWheelUBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseWheelDBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.WDOWN });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.WDOWN });
             mouseWheelDBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseWheelLBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.WLEFT });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.WLEFT });
             mouseWheelLBtn.Click += OutputButtonBtn_Click;
             associatedBindings.Add(mouseWheelRBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.WRIGHT });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.WRIGHT });
             mouseWheelRBtn.Click += OutputButtonBtn_Click;
 
 
             associatedBindings.Add(absMouseUpBindBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.AbsMouseUp });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.AbsMouseUp });
             absMouseUpBindBtn.Click += OutputButtonBtn_Click;
 
             associatedBindings.Add(absMouseDownBindBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.AbsMouseDown });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.AbsMouseDown });
             absMouseDownBindBtn.Click += OutputButtonBtn_Click;
 
             associatedBindings.Add(absMouseLeftBindBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.AbsMouseLeft });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.AbsMouseLeft });
             absMouseLeftBindBtn.Click += OutputButtonBtn_Click;
 
             associatedBindings.Add(absMouseRightBindBtn,
-                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = DS4Windows.X360Controls.AbsMouseRight });
+                new BindAssociation() { outputType = BindAssociation.OutType.Button, control = FUT404DS.X360Controls.AbsMouseRight });
             absMouseRightBindBtn.Click += OutputButtonBtn_Click;
         }
 
@@ -946,7 +946,7 @@ namespace DS4WinWPF.DS4Forms
         {
             ImageSourceConverter sourceConverter = new ImageSourceConverter();
             return sourceConverter.ConvertFromString(
-                $"{DS4Windows.Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/{fileName}") as ImageSource;
+                $"{FUT404DS.Global.ASSEMBLY_RESOURCE_PREFIX}component/Resources/{fileName}") as ImageSource;
         }
 
         private Geometry CreateOutputHighlightGeometry(Button button,
@@ -1616,9 +1616,9 @@ namespace DS4WinWPF.DS4Forms
         private void TestRumbleBtn_Click(object sender, RoutedEventArgs e)
         {
             int deviceNum = bindingVM.DeviceNum;
-            if (deviceNum < DS4Windows.ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
+            if (deviceNum < FUT404DS.ControlService.CURRENT_DS4_CONTROLLER_LIMIT)
             {
-                DS4Windows.DS4Device d = App.rootHub.DS4Controllers[deviceNum];
+                FUT404DS.DS4Device d = App.rootHub.DS4Controllers[deviceNum];
                 if (d != null)
                 {
                     if (!bindingVM.RumbleActive)
@@ -1667,7 +1667,7 @@ namespace DS4WinWPF.DS4Forms
             if (!actBind.shiftBind)
             {
                 actBind.outputType = OutBinding.OutType.Default;
-                actBind.control = DS4Windows.Global.defaultButtonMapping[(int)actBind.input];
+                actBind.control = FUT404DS.Global.defaultButtonMapping[(int)actBind.input];
             }
             else
             {
@@ -1681,7 +1681,7 @@ namespace DS4WinWPF.DS4Forms
         {
             OutBinding actBind = bindingVM.ActionBinding;
             actBind.outputType = OutBinding.OutType.Button;
-            actBind.control = DS4Windows.X360Controls.Unbound;
+            actBind.control = FUT404DS.X360Controls.Unbound;
             Close();
         }
 
@@ -1743,9 +1743,9 @@ namespace DS4WinWPF.DS4Forms
 
     public class BindingWinResourcePaths
     {
-        public string Xbox360MapPNG { get => $"{DS4Windows.Global.RESOURCES_PREFIX}/360 map.png"; }
-        public string Xbox360HighlightPNG { get => $"{DS4Windows.Global.RESOURCES_PREFIX}/360 highlight.png"; }
-        public string MousePNG { get => $"{DS4Windows.Global.RESOURCES_PREFIX}/mouse.png"; }
+        public string Xbox360MapPNG { get => $"{FUT404DS.Global.RESOURCES_PREFIX}/360 map.png"; }
+        public string Xbox360HighlightPNG { get => $"{FUT404DS.Global.RESOURCES_PREFIX}/360 highlight.png"; }
+        public string MousePNG { get => $"{FUT404DS.Global.RESOURCES_PREFIX}/mouse.png"; }
     }
 
     [ValueConversion(typeof(int), typeof(bool))]

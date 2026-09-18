@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ using TaskLogonType = Microsoft.Win32.TaskScheduler.TaskLogonType;
 using TaskRunLevel = Microsoft.Win32.TaskScheduler.TaskRunLevel;
 using TaskService = Microsoft.Win32.TaskScheduler.TaskService;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public sealed class ViiperPrerequisiteStatus
     {
@@ -60,7 +60,7 @@ namespace DS4Windows
 
         // Runtime readiness is deliberately independent of startup-task
         // maintenance. A healthy compatible VIIPER server must remain usable
-        // when DS4Windows or VIIPER is run portably; a stale/missing task can
+        // when FUT404DS or VIIPER is run portably; a stale/missing task can
         // be repaired without preventing virtual devices from being created.
         public bool Ready => ViiperInstalled && ViiperPackageCurrent &&
             !ViiperProcessConflict && ServerRunning && UsbipInstalled &&
@@ -75,7 +75,7 @@ namespace DS4Windows
                 if (Ready)
                 {
                     if (!string.IsNullOrEmpty(StartupPreferenceReadError))
-                        return "VIIPER is ready to use. Automatic startup could not be checked; restart DS4Windows to try again";
+                        return "VIIPER is ready to use. Automatic startup could not be checked; restart FUT404DS to try again";
                     return ViiperStartupTaskReady
                         ? "VIIPER ready"
                         : "VIIPER ready; startup task needs repair";
@@ -161,7 +161,7 @@ namespace DS4Windows
         private const string InstallerHostArgument =
             "--run-embedded-viiper-installer";
         private const string InstallerResourceName =
-            "DS4Windows.install-viiper-backend.ps1";
+            "FUT404DS.install-viiper-backend.ps1";
         private const string BundledViiperName = "VIIPER-0.1.5-rc4.6-x64.exe";
         private const string BundledViiperHashName =
             BundledViiperName + ".sha256";
@@ -254,7 +254,7 @@ namespace DS4Windows
             string startupPreferenceReadError = null;
             if (lab == null && portable == null)
             {
-                try { startupRequested = DS4WinWPF.StartupMethods.IsRunAtStartupRequested(); }
+                try { startupRequested = FUT404DSWPF.StartupMethods.IsRunAtStartupRequested(); }
                 catch (Exception error)
                 {
                     // Keep inspecting the installed task when intent is unknown;
@@ -381,8 +381,8 @@ namespace DS4Windows
             {
                 if (!status.Ready || forcePrompt)
                     ShowInstallerMessage(owner, status.DisplayText +
-                        "\n\nThis portable copy uses its bundled VIIPER. It does not replace an installed broker or change its startup task. Close conflicting VIIPER instances and restart DS4Windows. If the USB/IP drivers need setup, close this portable session and use the full installer.",
-                        "DS4Windows portable", status.Ready ? MessageBoxImage.Information : MessageBoxImage.Warning);
+                        "\n\nThis portable copy uses its bundled VIIPER. It does not replace an installed broker or change its startup task. Close conflicting VIIPER instances and restart FUT404DS. If the USB/IP drivers need setup, close this portable session and use the full installer.",
+                        "FUT404DS portable", status.Ready ? MessageBoxImage.Information : MessageBoxImage.Warning);
                 return status.Ready;
             }
             if (PortableLabContext.IsActive)
@@ -421,7 +421,7 @@ namespace DS4Windows
             Interlocked.Exchange(ref promptShownThisSession, 1);
             string alternativeViiperPath =
                 FindAlternativeViiperPath(GetCanonicalViiperExePath());
-            DS4WinWPF.DS4Forms.ViiperSetupPrompt prompt = new(
+            FUT404DSWPF.DS4Forms.ViiperSetupPrompt prompt = new(
                 status.DisplayText, alternativeViiperPath,
                 status.CitrixUsbMonitorConflict,
                 verifiedUpdateRequired, usbipReplacementRequired,
@@ -467,21 +467,21 @@ namespace DS4Windows
 
             switch (prompt.Decision)
             {
-                case DS4WinWPF.DS4Forms.ViiperSetupPromptDecision.
+                case FUT404DSWPF.DS4Forms.ViiperSetupPromptDecision.
                     InstallStandard:
-                    DS4WinWPF.StartupMethods.
+                    FUT404DSWPF.StartupMethods.
                         RetargetExistingTaskToCurrentExecutable();
                     LaunchInstaller(status, owner);
                     // Do not terminate a running settings UI merely because
                     // the user selected an installation mode. The elevated
-                    // transaction closes DS4Windows only when it actually
+                    // transaction closes FUT404DS only when it actually
                     // reaches the verified mutation boundary; startup callers
                     // still fail closed through their existing return path.
                     return false;
 
-                case DS4WinWPF.DS4Forms.ViiperSetupPromptDecision.
+                case FUT404DSWPF.DS4Forms.ViiperSetupPromptDecision.
                     InstallPortable:
-                    DS4WinWPF.StartupMethods.
+                    FUT404DSWPF.StartupMethods.
                         RetargetExistingTaskToCurrentExecutable();
                     LaunchInstaller(status, owner,
                         portableInstallation: true);
@@ -539,10 +539,10 @@ namespace DS4Windows
         public static void RefreshSelectedStartupTaskAfterRunAtStartupChange()
         {
             if (PortableLabContext.IsActive || PortableBrokerContext.IsActive) return;
-            if (!DS4WinWPF.StartupMethods.IsRunAtStartupRequested())
+            if (!FUT404DSWPF.StartupMethods.IsRunAtStartupRequested())
             {
                 if (!RemoveViiperStartupTask(requestElevation: true))
-                    throw new IOException("DS4Windows startup is off, but Windows could not turn off VIIPER startup. Try again as administrator.");
+                    throw new IOException("FUT404DS startup is off, but Windows could not turn off VIIPER startup. Try again as administrator.");
                 return;
             }
             RefreshSelectedStartupTaskOnLaunch();
@@ -556,16 +556,16 @@ namespace DS4Windows
             {
                 ShowInstallerMessage(owner,
                     "Close this portable session before running the full installer. The portable broker will not replace installed components or change their startup tasks.",
-                    "DS4Windows portable", MessageBoxImage.Information);
+                    "FUT404DS portable", MessageBoxImage.Information);
                 return false;
             }
             status ??= GetStatus();
             if (!status.SetupScriptFound)
             {
                 string message =
-                    "This DS4Windows package is incomplete: the bundled " +
+                    "This FUT404DS package is incomplete: the bundled " +
                     "VIIPER setup script is missing.\n\nDownload or extract " +
-                    "the complete DS4Windows package, then try again. " +
+                    "the complete FUT404DS package, then try again. " +
                     "Setup does not download missing components.";
                 if (owner != null)
                 {
@@ -593,7 +593,7 @@ namespace DS4Windows
                 WindowsIdentity identity = WindowsIdentity.GetCurrent();
                 string targetUserSid = identity.User?.Value ?? string.Empty;
                 string targetUserName = identity.Name ?? string.Empty;
-                bool runAtStartup = DS4WinWPF.StartupMethods.
+                bool runAtStartup = FUT404DSWPF.StartupMethods.
                     IsRunAtStartupRequested();
 
                 if (string.IsNullOrWhiteSpace(targetLocalAppData) ||
@@ -602,7 +602,7 @@ namespace DS4Windows
                     string.IsNullOrWhiteSpace(Global.exelocation))
                 {
                     throw new InvalidOperationException(
-                        "DS4Windows could not determine the current Windows " +
+                        "FUT404DS could not determine the current Windows " +
                         "account required for elevated startup-task setup.");
                 }
 
@@ -619,7 +619,7 @@ namespace DS4Windows
                 startInfo.ArgumentList.Add(targetUserSid);
                 startInfo.ArgumentList.Add("--target-user-name");
                 startInfo.ArgumentList.Add(targetUserName);
-                startInfo.ArgumentList.Add("--target-ds4windows-path");
+                startInfo.ArgumentList.Add("--target-fut404ds-path");
                 startInfo.ArgumentList.Add(Global.exelocation);
                 startInfo.ArgumentList.Add("--package-extras");
                 startInfo.ArgumentList.Add(Path.Combine(Global.exedirpath,
@@ -736,7 +736,7 @@ namespace DS4Windows
                     ShowInstallerMessage(owner,
                         scheduled
                             ? "Save your work and restart Windows. Setup will continue when you sign in again; approve the Windows permission prompt if one appears."
-                            : "Save your work and restart Windows. Then open DS4Windows, go to Settings, and select Install / Repair VIIPER to finish setup.",
+                            : "Save your work and restart Windows. Then open FUT404DS, go to Settings, and select Install / Repair VIIPER to finish setup.",
                         "VIIPER setup requires a restart",
                         MessageBoxImage.Warning);
                     return;
@@ -851,15 +851,15 @@ namespace DS4Windows
             catch (Win32Exception error) when (error.NativeErrorCode == 1223)
             {
                 exitCode = 1223;
-                MessageBox.Show("Setup was canceled and is not finished yet. Open DS4Windows, go to Settings, and select Install / Repair VIIPER when you're ready.",
-                    "DS4Windows setup", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Setup was canceled and is not finished yet. Open FUT404DS, go to Settings, and select Install / Repair VIIPER when you're ready.",
+                    "FUT404DS setup", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception error)
             {
                 exitCode = 1;
                 WriteInstallerHostLog("Automatic setup resume failed: " + error);
-                MessageBox.Show("Setup could not finish automatically. Open DS4Windows, go to Settings, and select Install / Repair VIIPER. Details have been saved in the setup log.",
-                    "DS4Windows setup", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Setup could not finish automatically. Open FUT404DS, go to Settings, and select Install / Repair VIIPER. Details have been saved in the setup log.",
+                    "FUT404DS setup", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             return true;
         }
@@ -906,7 +906,7 @@ namespace DS4Windows
                     "--target-user-name");
                 string targetDs4WindowsPath =
                     resume?.TargetExecutable ?? GetRequiredInstallerArgument(args,
-                        "--target-ds4windows-path");
+                        "--target-fut404ds-path");
                 string packageExtras = resume != null ? Path.Combine(Path.GetDirectoryName(resume.Executable), "extras") : GetRequiredInstallerArgument(args,
                     "--package-extras");
                 bool portableInstallation = resume?.Portable ?? Array.Exists(args, argument =>
@@ -926,7 +926,7 @@ namespace DS4Windows
                 {
                     throw new InvalidOperationException(
                         "The elevated installer host does not match the " +
-                        "DS4Windows executable that requested setup.");
+                        "FUT404DS executable that requested setup.");
                 }
                 string expectedExtras = Path.Combine(
                     Path.GetDirectoryName(Path.GetFullPath(hostPath))!,
@@ -936,7 +936,7 @@ namespace DS4Windows
                 {
                     throw new InvalidOperationException(
                         "The setup payload is not the package adjacent to " +
-                        "the running DS4Windows executable.");
+                        "the running FUT404DS executable.");
                 }
 
                 string setupRoot = Installation.StartupSetupRecovery.EnsureProtectedStagingRoot(targetUserSid);
@@ -950,7 +950,7 @@ namespace DS4Windows
                 if (resume == null) Installation.StartupSetupRecovery.ProtectSnapshot(setupDirectory, targetUserSid);
                 string scriptPath = Path.Combine(setupDirectory,
                     InstallerScriptName);
-                DS4WinWPF.DS4Forms.ViiperSetupProgress progress = null;
+                FUT404DSWPF.DS4Forms.ViiperSetupProgress progress = null;
                 bool progressFinished = false;
                 bool keepForResume = false;
 
@@ -969,7 +969,7 @@ namespace DS4Windows
                     // Begin the cleanup boundary before constructing any WPF
                     // surface. A missing theme resource must not strand a
                     // protected staging directory on a clean installation.
-                    progress = new DS4WinWPF.DS4Forms.ViiperSetupProgress(
+                    progress = new FUT404DSWPF.DS4Forms.ViiperSetupProgress(
                         GetInfrastructureActionsLogPath());
                     progress.ShowPreparing();
                     using Stream resource = Assembly.GetExecutingAssembly()
@@ -997,7 +997,7 @@ namespace DS4Windows
                     // so another unelevated process cannot swap a DLL or
                     // rewrite the package manifest across the UAC boundary.
                     progress.SetPhase(
-                        "Verifying every packaged DS4Windows file...");
+                        "Verifying every packaged FUT404DS file...");
                     string stagedPackageRoot = resume != null ? Path.Combine(setupDirectory, "package") :
                         StageInstallerPackage(packageExtras, setupDirectory, hostPath);
                     string stagedExtras = Path.Combine(stagedPackageRoot,
@@ -1079,8 +1079,8 @@ namespace DS4Windows
                             TargetRoamingAppData = resume?.TargetRoamingAppData ??
                                 GetTargetRoamingAppData(targetUserSid),
                             TargetExecutable = portableInstallation ? targetDs4WindowsPath :
-                                Path.Combine(GetNativeProgramFilesPath(), "DS4Windows", "DS4Windows.exe"),
-                            Executable = Path.Combine(stagedPackageRoot, "DS4Windows.exe"),
+                                Path.Combine(GetNativeProgramFilesPath(), "FUT404DS", "FUT404DS.exe"),
+                            Executable = Path.Combine(stagedPackageRoot, "FUT404DS.exe"),
                             Portable = portableInstallation,
                             StartupRequested = Installation.StartupSetupStore.ReadUserPreference(targetUserSid) ??
                                 Installation.StartupSetupStore.Read(targetUserSid)?.Requested ?? !skipStartupTasks,
@@ -1168,7 +1168,7 @@ namespace DS4Windows
                 !Directory.Exists(sourceRoot))
             {
                 throw new InvalidOperationException(
-                    "The DS4Windows release package root is missing.");
+                    "The FUT404DS release package root is missing.");
             }
             EnsurePathDoesNotTraverseReparsePoints(sourceRoot,
                 requireExisting: true);
@@ -1186,7 +1186,7 @@ namespace DS4Windows
                 requireExisting: true);
 
             string manifestPath = Path.Combine(sourceRoot,
-                ".ds4windows-managed-files.txt");
+                ".fut404ds-managed-files.txt");
             EnsurePathDoesNotTraverseReparsePoints(manifestPath,
                 requireExisting: true);
             string stagedRoot = Path.Combine(setupDirectory, "package");
@@ -1214,7 +1214,7 @@ namespace DS4Windows
             if (relativePaths.Count == 0)
             {
                 throw new InvalidOperationException(
-                    "The DS4Windows managed-file manifest is empty.");
+                    "The FUT404DS managed-file manifest is empty.");
             }
 
             string sourcePrefix = Path.GetFullPath(sourceRoot)
@@ -1227,7 +1227,7 @@ namespace DS4Windows
                 StringComparer.OrdinalIgnoreCase);
             List<string> stagedRelativePaths = new List<string>();
             bool hasCanonicalAppHost = relativePaths.Exists(path =>
-                string.Equals(path, "DS4Windows.exe", StringComparison.OrdinalIgnoreCase));
+                string.Equals(path, "FUT404DS.exe", StringComparison.OrdinalIgnoreCase));
             string hostFileName = Path.GetFileName(exactHostPath);
             if (!hasCanonicalAppHost && !relativePaths.Exists(path =>
                     string.Equals(path, hostFileName, StringComparison.OrdinalIgnoreCase)))
@@ -1256,7 +1256,7 @@ namespace DS4Windows
                 string stagedRelativePath = !hasCanonicalAppHost &&
                     string.Equals(relativePath, hostFileName,
                         StringComparison.OrdinalIgnoreCase)
-                    ? "DS4Windows.exe" : relativePath;
+                    ? "FUT404DS.exe" : relativePath;
                 string targetPath = Path.GetFullPath(Path.Combine(stagedRoot,
                     stagedRelativePath));
                 if (!sourcePath.StartsWith(sourcePrefix,
@@ -1268,7 +1268,7 @@ namespace DS4Windows
                         $"Invalid package file: {relativePath}");
                 }
                 if (!File.Exists(sourcePath) && string.Equals(relativePath,
-                        "DS4Windows.exe", StringComparison.OrdinalIgnoreCase))
+                        "FUT404DS.exe", StringComparison.OrdinalIgnoreCase))
                 {
                     // The elevated entry point already verified this exact
                     // running host and adjacent package. A renamed apphost is
@@ -1309,7 +1309,7 @@ namespace DS4Windows
             }
 
             string stagedManifest = Path.Combine(stagedRoot,
-                ".ds4windows-managed-files.txt");
+                ".fut404ds-managed-files.txt");
             using (FileStream target = new FileStream(stagedManifest,
                        FileMode.CreateNew, FileAccess.Write, FileShare.None))
             using (StreamWriter writer = new StreamWriter(target,
@@ -1335,7 +1335,7 @@ namespace DS4Windows
             string stagedExtras = Path.Combine(stagedRoot, "extras");
             string[] requiredOfflineFiles =
             {
-                Path.Combine(stagedRoot, "DS4Windows.exe"),
+                Path.Combine(stagedRoot, "FUT404DS.exe"),
                 Path.Combine(stagedExtras, InstallerScriptName),
                 Path.Combine(stagedExtras, BundledViiperName),
                 Path.Combine(stagedExtras, BundledViiperHashName),
@@ -1348,7 +1348,7 @@ namespace DS4Windows
             if (missingOfflineFile != null)
             {
                 throw new InvalidOperationException(
-                    "The staged offline DS4Windows package is incomplete: " +
+                    "The staged offline FUT404DS package is incomplete: " +
                     Path.GetFileName(missingOfflineFile) + " is missing.");
             }
 
@@ -1362,7 +1362,7 @@ namespace DS4Windows
             {
                 throw new InvalidOperationException(
                     "The staged VIIPER payload does not match this " +
-                    "DS4Windows build.");
+                    "FUT404DS build.");
             }
 
             return stagedRoot;
@@ -1514,7 +1514,7 @@ namespace DS4Windows
 
         private static string GetCanonicalViiperExePath()
         {
-            return Path.Combine(GetNativeProgramFilesPath(), "DS4Windows", "VIIPER",
+            return Path.Combine(GetNativeProgramFilesPath(), "FUT404DS", "VIIPER",
                 "viiper.exe");
         }
 
@@ -1533,14 +1533,14 @@ namespace DS4Windows
         {
             return Path.Combine(Environment.GetFolderPath(
                     Environment.SpecialFolder.CommonApplicationData),
-                "DS4Windows", "Installer", "viiper-setup-host.log");
+                "FUT404DS", "Installer", "viiper-setup-host.log");
         }
 
         internal static string GetInfrastructureActionsLogPath()
         {
             return Path.Combine(Environment.GetFolderPath(
                     Environment.SpecialFolder.CommonApplicationData),
-                "DS4Windows", "Installer", "infrastructure-actions.log");
+                "FUT404DS", "Installer", "infrastructure-actions.log");
         }
 
         private static void WriteInstallerHostLog(string message)
@@ -1921,7 +1921,7 @@ namespace DS4Windows
         }
 
         private static bool CanRepairViiperStartupTask() =>
-            DS4WinWPF.StartupMethods.ReadRegistrationState().AllowsTaskRepair;
+            FUT404DSWPF.StartupMethods.ReadRegistrationState().AllowsTaskRepair;
 
         private static bool RegisterViiperStartupTask(string viiperPath)
         {
@@ -2141,7 +2141,7 @@ namespace DS4Windows
             conflictMessage = "VIIPER startup blocked: another viiper.exe " +
                 $"is not the selected copy at {canonicalPath} " +
                 $"({string.Join("; ", conflicts)}). Close it or approve the " +
-                "administrator prompt so DS4Windows can stop it safely.";
+                "administrator prompt so FUT404DS can stop it safely.";
             return false;
         }
 
@@ -2317,7 +2317,7 @@ namespace DS4Windows
             if (string.IsNullOrWhiteSpace(helperPath) ||
                 !File.Exists(helperPath))
             {
-                failureMessage = "DS4Windows could not locate its elevated " +
+                failureMessage = "FUT404DS could not locate its elevated " +
                     "termination helper. No fallback executable was used.";
                 return false;
             }
@@ -2763,7 +2763,7 @@ namespace DS4Windows
             {
                 return (true,
                     "A ctxusbm kernel service with an unexpected driver " +
-                    "image is installed. DS4Windows cannot validate this " +
+                    "image is installed. FUT404DS cannot validate this " +
                     "USB filter safely, so VIIPER remains stopped.");
             }
 
@@ -2776,7 +2776,7 @@ namespace DS4Windows
             string conflictMessage =
                 "Citrix USB Monitor (ctxusbmon.sys) is enabled. " +
                 "It can crash Windows while USB/IP virtual controllers " +
-                "connect or disconnect. DS4Windows has paused VIIPER for " +
+                "connect or disconnect. FUT404DS has paused VIIPER for " +
                 "system safety. Install / Repair can disable only Citrix " +
                 "generic USB redirection; restart Windows afterward.";
             return (true, conflictMessage);

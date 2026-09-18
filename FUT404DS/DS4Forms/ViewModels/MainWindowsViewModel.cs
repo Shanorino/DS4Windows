@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-using DS4Windows;
-using DS4WinWPF.ApiDTO;
+using FUT404DS;
+using FUT404DSWPF.ApiDTO;
 using HttpProgress;
 using System;
 using System.Collections.Generic;
@@ -27,9 +27,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public sealed class OverviewOutputControllerChoice
     {
@@ -1190,7 +1190,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
                 {
                     if (Global.AdminNeeded())
                     {
-                        int copyStatus = DS4Windows.Util.ElevatedCopyUpdater(filename);
+                        int copyStatus = FUT404DS.Util.ElevatedCopyUpdater(filename);
                         if (copyStatus != 0) launch = false;
                     }
                     else
@@ -1207,7 +1207,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         public void DownloadUpstreamVersionInfo()
         {
             if (PortableLabContext.IsActive) return;
-            Uri url = new Uri("https://api.github.com/repos/hbashton/DS4Windows/releases/latest");
+            Uri url = new Uri("https://api.github.com/repos/hbashton/FUT404DS/releases/latest");
             string filename = Global.appdatapath + "\\version.txt";
             bool success = false;
             using (StreamWriter streamWriter = new(filename, false))
@@ -1299,7 +1299,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
 
         public bool IsNET8Available()
         {
-            return DS4Windows.Util.IsNet8DesktopRuntimeAvailable();
+            return FUT404DS.Util.IsNet8DesktopRuntimeAvailable();
         }
     }
 }

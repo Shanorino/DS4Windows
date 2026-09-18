@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
-using DS4Windows.DS4Control;
+using FUT404DS.DS4Control;
 using FakerInputWrapper;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class CalibrationMouseOutputTests
@@ -114,7 +114,7 @@ public class CalibrationMouseOutputTests
     }
 
     private static string HandlerSourcePath([CallerFilePath] string source = "") =>
-        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(source)!, "..", "DS4Windows",
+        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(source)!, "..", "FUT404DS",
             "DS4Control", "OutputKBM", "FakerInputHandler.cs"));
 
     private sealed class RecordingHandler : VirtualKBMBase

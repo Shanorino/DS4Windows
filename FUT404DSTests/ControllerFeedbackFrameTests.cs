@@ -1,9 +1,9 @@
 using System;
 using System.Buffers.Binary;
 using System.Threading;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ControllerFeedbackFrameTests

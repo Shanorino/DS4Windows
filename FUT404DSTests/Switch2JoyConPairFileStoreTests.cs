@@ -1,6 +1,6 @@
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class Switch2JoyConPairFileStoreTests
@@ -9,7 +9,7 @@ public sealed class Switch2JoyConPairFileStoreTests
     public void DpapiKeyAndOpaquePairRecordSurviveReopen()
     {
         string root = Path.Combine(Path.GetTempPath(),
-            "ds4windows-switch2-pair-store-tests", Guid.NewGuid().ToString("N"));
+            "fut404ds-switch2-pair-store-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try
         {
@@ -80,7 +80,7 @@ public sealed class Switch2JoyConPairFileStoreTests
     public void CatalogEnforcesRevisionCasAndExactDeletion()
     {
         string root = Path.Combine(Path.GetTempPath(),
-            "ds4windows-switch2-pair-store-tests", Guid.NewGuid().ToString("N"));
+            "fut404ds-switch2-pair-store-tests", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(root);
         try
         {

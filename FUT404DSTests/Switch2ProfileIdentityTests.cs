@@ -1,13 +1,13 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4Windows.Switch2;
-using DS4WinWPF;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DS.Switch2;
+using FUT404DSWPF;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -343,7 +343,7 @@ public sealed class Switch2ProfileIdentityTests
     }
 
     private static string Source(string relative, [CallerFilePath] string testPath = "") =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(testPath), "..", "DS4Windows", relative));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(testPath), "..", "FUT404DS", relative));
 
     private sealed class LegacyIdentityDevice : DS4Device
     {

@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Security.Cryptography;
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -48,9 +48,9 @@ public class PortableBrokerContextTests
 
     [DataTestMethod]
     [DataRow("")]
-    [DataRow("DS4Windows portable package v2")]
-    [DataRow(" DS4Windows portable package v1")]
-    [DataRow("DS4Windows portable package v1 extra")]
+    [DataRow("FUT404DS portable package v2")]
+    [DataRow(" FUT404DS portable package v1")]
+    [DataRow("FUT404DS portable package v1 extra")]
     public void InvalidMarkerFailsClosed(string marker)
     {
         File.WriteAllText(Path.Combine(root, PortableBrokerContext.MarkerFileName), marker);
@@ -111,7 +111,7 @@ public class PortableBrokerContextTests
     [DataRow(".")]
     [DataRow(@"C:relative")]
     [DataRow(@"C:\")]
-    [DataRow(@"\\server\share\DS4Windows")]
+    [DataRow(@"\\server\share\FUT404DS")]
     public void InvalidRegisteredPathCannotAuthorizeManagedBypass(string managed)
     {
         Assert.ThrowsException<PortableBrokerStartupException>(() => Open(() => new[] { managed }));
@@ -136,7 +136,7 @@ public class PortableBrokerContextTests
     }
 
     [DataTestMethod]
-    [DataRow("DS4Windows.portable")]
+    [DataRow("FUT404DS.portable")]
     [DataRow("viiper.exe")]
     [DataRow("portable-data/VIIPER")]
     [DataRow("portable-data/VIIPER/viiper.key.txt")]

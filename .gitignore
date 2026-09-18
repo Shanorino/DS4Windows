@@ -31,7 +31,7 @@ bld/
 
 # Visual Studio 2017 auto generated files
 Generated\ Files/
-installer/DS4Windows.Package/GeneratedFiles.wxs
+installer/FUT404DS.Package/GeneratedFiles.wxs
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -331,8 +331,8 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-!DS4Windows/libs/x64/
-!DS4Windows/libs/x86/
+!FUT404DS/libs/x64/
+!FUT404DS/libs/x86/
 
 # Local validation runs and generated test artifacts
 /isolated_results/

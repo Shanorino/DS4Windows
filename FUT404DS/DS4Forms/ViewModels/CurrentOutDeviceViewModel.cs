@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -23,10 +23,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using DS4Windows;
-using DS4WinWPF.DS4Control;
+using FUT404DS;
+using FUT404DSWPF.DS4Control;
 
-namespace DS4WinWPF.DS4Forms.ViewModels
+namespace FUT404DSWPF.DS4Forms.ViewModels
 {
     public class CurrentOutDeviceViewModel
     {
@@ -102,7 +102,7 @@ namespace DS4WinWPF.DS4Forms.ViewModels
         }
         public event EventHandler UnpluginEnabledChanged;
 
-        private DS4Windows.OutputSlotManager outSlotManager;
+        private FUT404DS.OutputSlotManager outSlotManager;
         private List<SlotDeviceEntry> slotDeviceEntries;
 
         public List<SlotDeviceEntry> SlotDeviceEntries { get => slotDeviceEntries; }

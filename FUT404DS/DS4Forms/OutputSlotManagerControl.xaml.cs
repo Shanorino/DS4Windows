@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -30,16 +30,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WinWPF.DS4Forms
+namespace FUT404DSWPF.DS4Forms
 {
     /// <summary>
     /// Interaction logic for OutputSlotManager.xaml
     /// </summary>
     public partial class OutputSlotManagerControl : UserControl
     {
-        private DS4Windows.ControlService controlService;
+        private FUT404DS.ControlService controlService;
         private CurrentOutDeviceViewModel currentOutDevVM;
         //private PermanentOutDevViewModel permanentDevVM;
 
@@ -48,8 +48,8 @@ namespace DS4WinWPF.DS4Forms
             InitializeComponent();
         }
 
-        public void SetupDataContext(DS4Windows.ControlService controlService,
-            DS4Windows.OutputSlotManager outputMan)
+        public void SetupDataContext(FUT404DS.ControlService controlService,
+            FUT404DS.OutputSlotManager outputMan)
         {
             this.controlService = controlService;
 
@@ -94,7 +94,7 @@ namespace DS4WinWPF.DS4Forms
             if (tempEntry != null &&
                 tempEntry.OutSlotDevice.CurrentReserveStatus ==
                 DS4Control.OutSlotDevice.ReserveStatus.Permanent &&
-                tempEntry.OutSlotDevice.PermanentType != DS4Windows.OutContType.None)
+                tempEntry.OutSlotDevice.PermanentType != FUT404DS.OutContType.None)
             {
                 tempEntry.OutSlotDevice.CurrentType = tempEntry.OutSlotDevice.PermanentType;
                 tempEntry.RequestPlugin();

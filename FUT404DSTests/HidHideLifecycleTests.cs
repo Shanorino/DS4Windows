@@ -1,6 +1,6 @@
-using DS4Windows;
+using FUT404DS;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class HidHideLifecycleTests
@@ -225,7 +225,7 @@ namespace DS4WindowsTests
         public void ActiveControllerRestartGuardDominatesTaskAndPnputilCallSite()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "ControlService.cs"));
+                "FUT404DS", "DS4Control", "ControlService.cs"));
             string queue = Extract(source,
                 "private void QueueSteamInputReclaim",
                 "internal static bool ShouldRestartDeviceForSteamReclaim");
@@ -244,7 +244,7 @@ namespace DS4WindowsTests
         public void PerDeviceCleanupCannotClearProcessWideSessionEntries()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "ControlService.cs"));
+                "FUT404DS", "DS4Control", "ControlService.cs"));
             string perDevice = Extract(source,
                 "private void ReleaseHidHideManagedDevice",
                 "private void QueueSteamInputReclaim");
@@ -268,7 +268,7 @@ namespace DS4WindowsTests
         public void AllPersistentBlacklistMutationsShareOneBoundary()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "ControlService.cs"));
+                "FUT404DS", "DS4Control", "ControlService.cs"));
             string ensure = Extract(source,
                 "private bool EnsureHidHideSessionForDevice",
                 "private void ReleaseHidHideManagedDevice");
@@ -360,7 +360,7 @@ namespace DS4WindowsTests
         public void ServiceWideSessionClearIsInsideMutationAndLifecycleBoundary()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "ControlService.cs"));
+                "FUT404DS", "DS4Control", "ControlService.cs"));
             string release = Extract(source,
                 "private void ReleaseHidHideManagedDevices",
                 "private void EnsureHidHideForVirtualOutput");
@@ -383,7 +383,7 @@ namespace DS4WindowsTests
         public void CriticalHidHidePolicyReadsFailClosed()
         {
             string source = File.ReadAllText(FindRepositoryFile(
-                "DS4Windows", "DS4Control", "ControlService.cs"));
+                "FUT404DS", "DS4Control", "ControlService.cs"));
             string presence = Extract(source,
                 "public void CheckHidHidePresence",
                 "public void LoadPermanentSlotsConfig");

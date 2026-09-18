@@ -1,11 +1,11 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using DS4Windows;
-using DS4Windows.DS4Control;
-using DS4Windows.Switch2;
+using FUT404DS;
+using FUT404DS.DS4Control;
+using FUT404DS.Switch2;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -346,7 +346,7 @@ public class FlickStickCalibrationMappingTests
     public void PausedMappingAndProfileLifecycleRequestCancellation()
     {
         string sourcePath = Path.Combine(Path.GetDirectoryName(StoreSourcePath())!,
-            "..", "DS4Windows", "DS4Control", "ControlService.cs");
+            "..", "FUT404DS", "DS4Control", "ControlService.cs");
         string source = File.ReadAllText(sourcePath).Replace("\r\n", "\n");
         StringAssert.Contains(source, "Mapping.DiscardPostMapStickData(ind);\n                    Mapping.ResetFlickStickCalibration(ind);",
             "Skipped mapping must cancel a short in-progress turn, not catch up on resume.");

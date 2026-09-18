@@ -3,13 +3,13 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using DS4Windows;
-using DS4Windows.Switch2;
-using DS4WinWPF.DS4Forms;
-using DS4WinWPF.DS4Forms.ViewModels;
-using Fixture = DS4WindowsTests.Switch2RuntimeRawStickCalibrationTests.Fixture;
+using FUT404DS;
+using FUT404DS.Switch2;
+using FUT404DSWPF.DS4Forms;
+using FUT404DSWPF.DS4Forms.ViewModels;
+using Fixture = FUT404DSTests.Switch2RuntimeRawStickCalibrationTests.Fixture;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
@@ -280,10 +280,10 @@ public sealed class Switch2StickCalibrationEditorTests
                 application.Resources.MergedDictionaries.Clear();
                 var colors = new ResourceDictionary();
                 application.Resources.MergedDictionaries.Add(colors);
-                colors.Source = new Uri($"/DS4Windows;component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative);
+                colors.Source = new Uri($"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative);
                 var shell = new ResourceDictionary();
                 application.Resources.MergedDictionaries.Add(shell);
-                shell.Source = new Uri("/DS4Windows;component/DS4Forms/Themes/BridgeShellStyles.xaml", UriKind.Relative);
+                shell.Source = new Uri($"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/BridgeShellStyles.xaml", UriKind.Relative);
                 foreach (int width in new[] { 460, 620 })
                 {
                     using var f = new Fixture();

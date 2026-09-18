@@ -1,14 +1,14 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using DS4Windows.Installation;
+using FUT404DS.Installation;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class InstallerStartupTaskPolicyTests
 {
     private const string Sid = "S-1-5-21-100-200-300-1001";
-    private const string Exe = @"C:\Program Files\DS4Windows\DS4Windows.exe";
+    private const string Exe = @"C:\Program Files\FUT404DS\FUT404DS.exe";
     private static readonly XNamespace Ns = "http://schemas.microsoft.com/windows/2004/02/mit/task";
 
     [DataTestMethod]
@@ -16,7 +16,7 @@ public sealed class InstallerStartupTaskPolicyTests
     [DataRow(true)]
     public void OnlyMarkedExactManagedActionsAreEligible(bool viiper)
     {
-        string path = viiper ? @"C:\Program Files\DS4Windows\VIIPER\viiper.exe" : Exe;
+        string path = viiper ? @"C:\Program Files\FUT404DS\VIIPER\viiper.exe" : Exe;
         string arguments = viiper ? InstallerStartupTaskPolicy.ViiperArguments : "-m";
         var xml = Definition(path, arguments);
         Assert.IsTrue(InstallerStartupTaskPolicy.IsManaged(xml.ToString(), path, arguments, Sid, true));
@@ -27,8 +27,8 @@ public sealed class InstallerStartupTaskPolicyTests
 
     [DataTestMethod]
     [DataRow("Description", "User task")]
-    [DataRow("Command", @"C:\Foreign\DS4Windows.exe")]
-    [DataRow("Command", "DS4Windows.exe")]
+    [DataRow("Command", @"C:\Foreign\FUT404DS.exe")]
+    [DataRow("Command", "FUT404DS.exe")]
     [DataRow("Arguments", "-m --unexpected")]
     [DataRow("WorkingDirectory", @"C:\Foreign")]
     [DataRow("UserId", "S-1-5-21-999-999-999-1001")]
@@ -88,15 +88,15 @@ public sealed class InstallerStartupTaskPolicyTests
     public void InstallerConsumersUseOriginalNamesAndOwnershipGuards()
     {
         string root = Path.Combine(Path.GetDirectoryName(SourcePath()), "..", "installer");
-        string setup = File.ReadAllText(Path.Combine(root, "DS4Windows.SetupActions", "Program.cs"));
+        string setup = File.ReadAllText(Path.Combine(root, "FUT404DS.SetupActions", "Program.cs"));
         StringAssert.Contains(setup, "RemoveOwnedTask(\"RunVIIPER\",");
-        StringAssert.Contains(setup, "RemoveOwnedTask(\"RunDS4Windows\",");
+        StringAssert.Contains(setup, "RemoveOwnedTask(\"RunFUT404DS\",");
         StringAssert.Contains(setup, "InstallerStartupTaskPolicy.IsManaged(output,");
-        string bootstrap = File.ReadAllText(Path.Combine(root, "DS4Windows.Bootstrapper", "InstallerApplication.cs"));
-        Assert.IsFalse(bootstrap.Contains("DS4Windows.RunDS4Windows"));
+        string bootstrap = File.ReadAllText(Path.Combine(root, "FUT404DS.Bootstrapper", "InstallerApplication.cs"));
+        Assert.IsFalse(bootstrap.Contains("FUT404DS.RunFUT404DS"));
         StringAssert.Contains(bootstrap, "InstallerStartupTaskPolicy.IsManaged(xml,");
         StringAssert.Contains(bootstrap, "running != null && WaitForInstalledDs4Process(executable)");
-        Assert.IsFalse(bootstrap.Contains("/Run /TN \\\"RunDS4Windows\\\""),
+        Assert.IsFalse(bootstrap.Contains("/Run /TN \\\"RunFUT404DS\\\""),
             "Finish must not blindly launch a colliding legacy task.");
     }
 

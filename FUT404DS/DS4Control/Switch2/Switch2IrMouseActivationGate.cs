@@ -1,5 +1,5 @@
 /*
-DS4Windows
+FUT404DS
 Copyright (C) 2026 hbashton
 
 This program is free software: you can redistribute it and/or modify
@@ -10,12 +10,12 @@ the Free Software Foundation, either version 3 of the License, or
 The activation policy in this file is adapted from the GPL-3.0 licensed
 Switch2Connect project, commit 4487322a306f04efa27682e3f3a508635a84fd98,
 src/ir_mouse_activation.py. Coordinate decoding and output injection remain
-owned by DS4Windows.
+owned by FUT404DS.
 */
 
 using System;
 
-namespace DS4Windows.Switch2;
+namespace FUT404DS.Switch2;
 
 internal readonly struct Switch2IrCoordinate
 {

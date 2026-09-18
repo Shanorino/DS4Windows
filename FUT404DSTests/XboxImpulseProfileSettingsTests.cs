@@ -12,12 +12,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4Windows.InputDevices;
-using DS4WinWPF.DS4Control.DTOXml;
-using DS4WinWPF.DS4Forms.ViewModels;
+using FUT404DS;
+using FUT404DS.InputDevices;
+using FUT404DSWPF.DS4Control.DTOXml;
+using FUT404DSWPF.DS4Forms.ViewModels;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class XboxImpulseProfileSettingsTests
@@ -80,7 +80,7 @@ public sealed class XboxImpulseProfileSettingsTests
         {
             bool previousImpulse = Global.MapXboxImpulseTriggers[0];
             bool previousRoute = Global.XboxImpulseToAdaptiveTriggers[0];
-            var previousHub = DS4WinWPF.App.rootHub;
+            var previousHub = FUT404DSWPF.App.rootHub;
             var profile = (ProfileSettingsViewModel)RuntimeHelpers.GetUninitializedObject(typeof(ProfileSettingsViewModel));
             typeof(ProfileSettingsViewModel).GetField("controllerUiCapabilities", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(profile, ControllerUiCapabilities.For(type, ConnectionType.USB, 0x054C, productId));
@@ -94,7 +94,7 @@ public sealed class XboxImpulseProfileSettingsTests
             var routing = (CheckBox)routingPanel.Children[0];
             try
             {
-                DS4WinWPF.App.rootHub = null;
+                FUT404DSWPF.App.rootHub = null;
                 Global.MapXboxImpulseTriggers[0] = true;
                 Global.XboxImpulseToAdaptiveTriggers[0] = true;
                 foreach (var master in masters) master.DataContext = profile;
@@ -132,7 +132,7 @@ public sealed class XboxImpulseProfileSettingsTests
                 BindingOperations.ClearAllBindings(routingPanel);
                 Global.MapXboxImpulseTriggers[0] = previousImpulse;
                 Global.XboxImpulseToAdaptiveTriggers[0] = previousRoute;
-                DS4WinWPF.App.rootHub = previousHub;
+                FUT404DSWPF.App.rootHub = previousHub;
             }
         });
     }
@@ -143,7 +143,7 @@ public sealed class XboxImpulseProfileSettingsTests
     {
         bool previousImpulse = Global.MapXboxImpulseTriggers[0];
         bool previousRoute = Global.XboxImpulseToAdaptiveTriggers[0];
-        var previousHub = DS4WinWPF.App.rootHub;
+        var previousHub = FUT404DSWPF.App.rootHub;
         var previousTriggerLab = Global.store.triggerLabSettings[0];
         var triggerLab = new TriggerLabProfileSettings
         {
@@ -158,7 +158,7 @@ public sealed class XboxImpulseProfileSettingsTests
         property.AddValueChanged(profile, onChanged);
         try
         {
-            DS4WinWPF.App.rootHub = null;
+            FUT404DSWPF.App.rootHub = null;
             Global.store.triggerLabSettings[0] = triggerLab;
             Assert.AreSame(Global.Switch2MapXboxImpulseTriggersToHdRumble, Global.MapXboxImpulseTriggers);
             Global.MapXboxImpulseTriggers[0] = false;
@@ -184,7 +184,7 @@ public sealed class XboxImpulseProfileSettingsTests
             Global.MapXboxImpulseTriggers[0] = previousImpulse;
             Global.XboxImpulseToAdaptiveTriggers[0] = previousRoute;
             Global.store.triggerLabSettings[0] = previousTriggerLab;
-            DS4WinWPF.App.rootHub = previousHub;
+            FUT404DSWPF.App.rootHub = previousHub;
         }
     }
 
@@ -194,8 +194,8 @@ public sealed class XboxImpulseProfileSettingsTests
     public void ExistingProfileSettingRoundTripsThroughTheOriginalXmlField(bool enabled)
     {
         var serializer = new XmlSerializer(typeof(ProfileDTO), ProfileDTO.GetAttributeOverrides());
-        using var reader = new StringReader("<DS4Windows config_version=\"5\"><Switch2MapXboxImpulseTriggersToHdRumble>" +
-            enabled.ToString().ToLowerInvariant() + "</Switch2MapXboxImpulseTriggersToHdRumble></DS4Windows>");
+        using var reader = new StringReader("<FUT404DS config_version=\"5\"><Switch2MapXboxImpulseTriggersToHdRumble>" +
+            enabled.ToString().ToLowerInvariant() + "</Switch2MapXboxImpulseTriggersToHdRumble></FUT404DS>");
         var input = (ProfileDTO)serializer.Deserialize(reader);
         input.DeviceIndex = 0;
         var store = new BackingStore();
@@ -219,7 +219,7 @@ public sealed class XboxImpulseProfileSettingsTests
     public void ProfilesWithoutTheOptionKeepTheEnabledDefault()
     {
         var serializer = new XmlSerializer(typeof(ProfileDTO), ProfileDTO.GetAttributeOverrides());
-        using var reader = new StringReader("<DS4Windows config_version=\"5\" />");
+        using var reader = new StringReader("<FUT404DS config_version=\"5\" />");
         var profile = (ProfileDTO)serializer.Deserialize(reader);
         profile.DeviceIndex = 0;
         var store = new BackingStore();
@@ -296,7 +296,7 @@ public sealed class XboxImpulseProfileSettingsTests
             var host = new Border { Child = panel, Padding = new Thickness(16) };
             host.Resources.MergedDictionaries.Add(new ResourceDictionary
             {
-                Source = new Uri($"/DS4Windows;component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
+                Source = new Uri($"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{theme}.xaml", UriKind.Relative),
             });
             host.SetResourceReference(Border.BackgroundProperty, "BackgroundColor");
             foreach (bool supportsAdaptive in new[] { true, false })
@@ -363,7 +363,7 @@ public sealed class XboxImpulseProfileSettingsTests
         var wrapperMarkup = new XElement(Wpf + "StackPanel",
             new XElement(Wpf + "StackPanel.Resources",
                 new XElement(Wpf + "ResourceDictionary", new XAttribute("Source",
-                    $"/DS4Windows;component/DS4Forms/Themes/{theme}.xaml"))),
+                    $"/{typeof(FUT404DS.Global).Assembly.GetName().Name};component/DS4Forms/Themes/{theme}.xaml"))),
             new XElement(markup));
         var wrapper = (StackPanel)XamlReader.Parse(wrapperMarkup.ToString());
         var control = (FrameworkElement)wrapper.Children[0];
@@ -400,7 +400,7 @@ public sealed class XboxImpulseProfileSettingsTests
     {
         for (var root = new DirectoryInfo(AppContext.BaseDirectory); root != null; root = root.Parent)
         {
-            string path = Path.Combine(root.FullName, "DS4Windows", "DS4Forms", "ProfileEditor.xaml");
+            string path = Path.Combine(root.FullName, "FUT404DS", "DS4Forms", "ProfileEditor.xaml");
             if (File.Exists(path)) return XDocument.Load(path);
         }
         throw new FileNotFoundException("Production ProfileEditor.xaml not found.");

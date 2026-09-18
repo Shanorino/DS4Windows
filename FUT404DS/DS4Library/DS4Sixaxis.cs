@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using DS4WinWPF;
+using FUT404DSWPF;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     public delegate void SixAxisHandler<TEventArgs>(DS4SixAxis sender, TEventArgs args);
 

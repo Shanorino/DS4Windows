@@ -2,7 +2,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace DS4Windows.Tests;
+namespace FUT404DS.Tests;
 
 [TestClass]
 public sealed class ControlServiceLegacyHidSlotAuthorityTests

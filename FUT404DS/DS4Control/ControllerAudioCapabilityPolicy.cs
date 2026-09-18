@@ -1,9 +1,9 @@
-using DS4Windows.InputDevices;
+using FUT404DS.InputDevices;
 
-namespace DS4Windows;
+namespace FUT404DS;
 
 /// <summary>
-/// Applicability of DS4Windows-managed speaker/headset and microphone routes,
+/// Applicability of FUT404DS-managed speaker/headset and microphone routes,
 /// shared by runtime status and the UI. Native Windows USB audio (such as the
 /// Switch 2 Pro headphone jack) does not need these Sony-specific routes.
 /// Saved profile settings and the selected virtual persona

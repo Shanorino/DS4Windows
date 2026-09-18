@@ -3,7 +3,7 @@
 This test application consumes the existing Windows.Gaming.Input API; it does
 not create a virtual pad, map input, open the physical controller, or modify
 installed apps, tasks, driver policy, or authentication. Run only in the Desktop
-portable lab with the canonical DS4Windows/VIIPER stack already running.
+portable lab with the canonical FUT404DS/VIIPER stack already running.
 
 Only one WGI Gamepad matching the reviewed synthetic lab VID/PID F00D:BEED may
 receive a pulse. The target is rechecked at button activation; the neutral is

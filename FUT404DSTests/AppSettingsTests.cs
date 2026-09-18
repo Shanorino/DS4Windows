@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -21,11 +21,11 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class AppSettingsTests
@@ -38,7 +38,7 @@ namespace DS4WindowsTests
             // <Profile app_version=""3.2.21"" config_version=""2"">
             //
             //< !--Profile Configuration Data. 12 / 05 / 2023 00:24:21-- >
-            //< !--Made with DS4Windows version 3.2.21-- >
+            //< !--Made with FUT404DS version 3.2.21-- >
             appSettingsXml = @"<?xml version=""1.0"" encoding=""utf-8""?>
 
 <Profile>
@@ -218,7 +218,7 @@ namespace DS4WindowsTests
                 // Write header explicitly
                 xmlWriter.WriteStartDocument();
                 //xmlWriter.WriteComment(string.Format(" Profile Configuration Data. {0} ", DateTime.Now));
-                //xmlWriter.WriteComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+                //xmlWriter.WriteComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
                 xmlWriter.WriteWhitespace("\r\n");
                 xmlWriter.WriteWhitespace("\r\n");
 

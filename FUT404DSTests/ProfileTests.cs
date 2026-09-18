@@ -1,5 +1,5 @@
-﻿/*
-DS4Windows
+/*
+FUT404DS
 Copyright (C) 2023  Travis Nickles
 
 This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using DS4Windows;
-using DS4WinWPF.DS4Control.DTOXml;
+using FUT404DS;
+using FUT404DSWPF.DS4Control.DTOXml;
 
-namespace DS4WindowsTests
+namespace FUT404DSTests
 {
     [TestClass]
     public class ProfileTests
@@ -32,12 +32,12 @@ namespace DS4WindowsTests
         public ProfileTests()
         {
             #region ProfileXMLString
-            //<!-- DS4Windows Configuration Data. 11/30/2023 00:16:38 -->
-            //< !--Made with DS4Windows version 3.2.20-- >
+            //<!-- FUT404DS Configuration Data. 11/30/2023 00:16:38 -->
+            //< !--Made with FUT404DS version 3.2.20-- >
             //app_version=""3.2.20"" config_version=""5""
             defaultProfileXml = @"<?xml version=""1.0"" encoding=""utf-8""?>
 
-<DS4Windows>
+<FUT404DS>
   <touchToggle>True</touchToggle>
   <idleDisconnectTimeout>0</idleDisconnectTimeout>
   <outputDataToDS4>True</outputDataToDS4>
@@ -304,7 +304,7 @@ namespace DS4WindowsTests
   <ProfileActions>Disconnect Controller</ProfileActions>
   <Control />
   <ShiftControl />
-</DS4Windows>";
+</FUT404DS>";
             #endregion
         }
 
@@ -333,7 +333,7 @@ namespace DS4WindowsTests
             try
             {
                 File.WriteAllText(path, defaultProfileXml);
-                Assert.IsTrue(DS4Windows.DS4Control.PreparedProfileLoad.TryPrepare(path, 0,
+                Assert.IsTrue(FUT404DS.DS4Control.PreparedProfileLoad.TryPrepare(path, 0,
                     out var prepared, out _, out string error), error);
                 var actual = new BackingStore();
                 prepared.ApplyTo(actual);
@@ -518,11 +518,11 @@ namespace DS4WindowsTests
             var serializer = new XmlSerializer(typeof(ProfileDTO),
                 ProfileDTO.GetAttributeOverrides());
             const string legacyMicrophoneXml =
-                "<DS4Windows>" +
+                "<FUT404DS>" +
                 "<DualSenseMuteButtonMutesMicrophone>True</DualSenseMuteButtonMutesMicrophone>" +
                 "<DualSenseMuteOnProfileName>Muted</DualSenseMuteOnProfileName>" +
                 "<DualSenseMuteOffProfileName>Live</DualSenseMuteOffProfileName>" +
-                "</DS4Windows>";
+                "</FUT404DS>";
             using var legacyMicrophoneReader = new StringReader(
                 legacyMicrophoneXml);
             var legacyMicrophoneMode = (ProfileDTO)serializer.Deserialize(
@@ -540,11 +540,11 @@ namespace DS4WindowsTests
             Assert.AreEqual("Live", store.dualSenseMuteOffProfileName[0]);
 
             const string legacySwitchXml =
-                "<DS4Windows>" +
+                "<FUT404DS>" +
                 "<DualSenseMuteButtonLightEnabled>True</DualSenseMuteButtonLightEnabled>" +
                 "<DualSenseMuteOnProfileName>Muted</DualSenseMuteOnProfileName>" +
                 "<DualSenseMuteOffProfileName>Live</DualSenseMuteOffProfileName>" +
-                "</DS4Windows>";
+                "</FUT404DS>";
             using var legacySwitchReader = new StringReader(legacySwitchXml);
             var legacyProfileSwitch = (ProfileDTO)serializer.Deserialize(
                 legacySwitchReader);
@@ -586,12 +586,12 @@ namespace DS4WindowsTests
             var serializer = new XmlSerializer(typeof(ProfileDTO),
                 ProfileDTO.GetAttributeOverrides());
             const string legacyInactiveXml =
-                "<DS4Windows>" +
+                "<FUT404DS>" +
                 "<DualSenseMuteButtonLightEnabled>False</DualSenseMuteButtonLightEnabled>" +
                 "<DualSenseMuteButtonMutesMicrophone>False</DualSenseMuteButtonMutesMicrophone>" +
                 "<DualSenseMuteOnProfileName>Muted</DualSenseMuteOnProfileName>" +
                 "<DualSenseMuteOffProfileName>Live</DualSenseMuteOffProfileName>" +
-                "</DS4Windows>";
+                "</FUT404DS>";
             using var reader = new StringReader(legacyInactiveXml);
             var legacyInactive = (ProfileDTO)serializer.Deserialize(reader);
             legacyInactive.DeviceIndex = 0;
@@ -653,8 +653,8 @@ namespace DS4WindowsTests
 
                 // Write header explicitly
                 //xmlWriter.WriteStartDocument();
-                //xmlWriter.WriteComment(string.Format(" DS4Windows Configuration Data. {0} ", DateTime.Now));
-                //xmlWriter.WriteComment(string.Format(" Made with DS4Windows version {0} ", Global.exeversion));
+                //xmlWriter.WriteComment(string.Format(" FUT404DS Configuration Data. {0} ", DateTime.Now));
+                //xmlWriter.WriteComment(string.Format(" Made with FUT404DS version {0} ", Global.exeversion));
                 xmlWriter.WriteWhitespace("\r\n");
                 xmlWriter.WriteWhitespace("\r\n");
 

@@ -1,7 +1,7 @@
-# DS4Windows standard installer
+# FUT404DS standard installer
 
 `build-installer.ps1` composes the standard x64 distribution as a WiX 5 Burn
-bundle with a custom WPF interface. It contains the managed DS4Windows MSI,
+bundle with a custom WPF interface. It contains the managed FUT404DS MSI,
 VIIPER 0.1.5-rc4.6, USB-IP 0.9.7.7, and optional HidHide/FakerInput packages.
 The VIIPER payload is accompanied by its generated dependency-license notice
 and a validated provenance record containing the exact source commit and
@@ -9,7 +9,7 @@ SHA-256 used by this release.
 
 The installer intentionally has no portable mode or destination selector. The
 portable ZIP remains a separate CI artifact. The standard installer places
-VIIPER under protected `%ProgramFiles%\DS4Windows\VIIPER`. The marked portable
+VIIPER under protected `%ProgramFiles%\FUT404DS\VIIPER`. The marked portable
 ZIP instead starts its bundled, hash-verified broker when needed and does not
 create or retarget installed startup tasks. A verified matching running copy
 can be reused; a conflicting copy is reported without being terminated.
@@ -26,11 +26,11 @@ Installed startup tasks continue to target the verified installed broker.
 
 Installer logs are written by Burn and by the elevated helpers. Process
 preflight diagnostics are stored in
-`%ProgramData%\DS4Windows\Installer\setup-actions.log`; VIIPER, USB-IP, startup
+`%ProgramData%\FUT404DS\Installer\setup-actions.log`; VIIPER, USB-IP, startup
 task, and runtime verification is stored in
-`%ProgramData%\DS4Windows\Installer\infrastructure-actions.log`. The in-app
+`%ProgramData%\FUT404DS\Installer\infrastructure-actions.log`. The in-app
 repair host records failures that occur before its helper starts in
-`%ProgramData%\DS4Windows\Installer\viiper-setup-host.log`.
+`%ProgramData%\FUT404DS\Installer\viiper-setup-host.log`.
 One transaction ID is preserved across Burn, setup actions, the infrastructure
 backend, and reboot resume so those logs can be correlated without timestamp
 guesswork.
@@ -50,7 +50,7 @@ Set `DS4W_SIGN_CERT_PATH` plus `DS4W_SIGN_CERT_PASSWORD`, or use
 `DS4W_SIGN_CERT_THUMBPRINT` for a protected certificate-store identity. Set
 `DS4W_SIGN_EXPECTED_THUMBPRINT` to the independently approved signer and,
 optionally, set `DS4W_SIGN_TIMESTAMP_URL`. Stable and other signed release
-builds pass `-RequireSigning`; they fail closed unless the first-party DS4Windows
+builds pass `-RequireSigning`; they fail closed unless the first-party FUT404DS
 application, setup hosts, MSI, and final EXE have that valid timestamped
 signature. The bundled upstream VIIPER executable remains byte-identical and
 unsigned; its fixed SHA-256 and complete source/build provenance are validated
@@ -74,7 +74,7 @@ bootstrapper hashes against their signed inputs.
 The PowerShell infrastructure backend is the sole VIIPER/USB-IP mutation
 engine. Burn and the in-app repair surface only validate, stage, elevate, and
 report that same engine. HidHide and FakerInput are optional non-vital packages:
-their failure is reported without rolling back a healthy DS4Windows + VIIPER
+their failure is reported without rolling back a healthy FUT404DS + VIIPER
 installation.
 
 VIIPER's legacy Windows network installer is developer-only and fail-closed by

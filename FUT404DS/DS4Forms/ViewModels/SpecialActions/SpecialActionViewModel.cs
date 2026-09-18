@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using DS4Windows;
-using DS4WinWPF.DS4Forms.ViewModels.Util;
+using System.Collections.Generic;
+using FUT404DS;
+using FUT404DSWPF.DS4Forms.ViewModels.Util;
 
-namespace DS4WinWPF.DS4Forms.ViewModels.SpecialActions;
+namespace FUT404DSWPF.DS4Forms.ViewModels.SpecialActions;
 
 public class SpecialActionViewModel : NotifyDataErrorBase
 {

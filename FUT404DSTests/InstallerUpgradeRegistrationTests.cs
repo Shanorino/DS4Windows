@@ -1,9 +1,9 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
-using DS4Windows.Bootstrapper;
+using FUT404DS.Bootstrapper;
 using WixToolset.BootstrapperApplicationApi;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public sealed class InstallerUpgradeRegistrationTests
@@ -13,14 +13,14 @@ public sealed class InstallerUpgradeRegistrationTests
     [TestMethod]
     public void ManagedBundleAndHiddenMsiKeepTheirExistingMachineWideUpgradeFamilies()
     {
-        XElement package = Load("DS4Windows.Package/Product.wxs").Root.Element(Wix + "Package");
-        XElement bundle = Load("DS4Windows.Bundle/Bundle.wxs").Root.Element(Wix + "Bundle");
+        XElement package = Load("FUT404DS.Package/Product.wxs").Root.Element(Wix + "Package");
+        XElement bundle = Load("FUT404DS.Bundle/Bundle.wxs").Root.Element(Wix + "Bundle");
         Assert.AreEqual("65E808E3-D35A-4825-AE11-8D9415F16446", (string)package.Attribute("UpgradeCode"));
         Assert.AreEqual("BC70CCB1-AD65-42A0-B468-8A7278A37A62", (string)bundle.Attribute("UpgradeCode"));
         Assert.AreEqual("perMachine", (string)package.Attribute("Scope"));
-        Assert.AreEqual("DS4WindowsManagedV2", (string)bundle.Attribute("Tag"));
+        Assert.AreEqual("FUT404DSManagedV2", (string)bundle.Attribute("Tag"));
         XElement embeddedMsi = bundle.Descendants(Wix + "MsiPackage")
-            .Single(element => (string)element.Attribute("Id") == "DS4WindowsMsi");
+            .Single(element => (string)element.Attribute("Id") == "FUT404DSMsi");
         Assert.AreEqual("no", (string)embeddedMsi.Attribute("Visible"),
             "The bundle owns the visible Apps & Features entry; its MSI must not add another.");
     }
@@ -28,7 +28,7 @@ public sealed class InstallerUpgradeRegistrationTests
     [TestMethod]
     public void MsiMajorUpgradeHandlesRepeatedFirstThreeVersionFields()
     {
-        XElement upgrade = Load("DS4Windows.Package/Product.wxs")
+        XElement upgrade = Load("FUT404DS.Package/Product.wxs")
             .Descendants(Wix + "MajorUpgrade").Single();
         Assert.AreEqual("yes", (string)upgrade.Attribute("AllowSameVersionUpgrades"),
             "Windows Installer ignores the fourth product-version field; RC rebuilds still replace the old MSI.");
@@ -43,7 +43,7 @@ public sealed class InstallerUpgradeRegistrationTests
     public void UninstallPreflightRemainsAvailableAfterOriginalInstallerIsGone(
         bool repairFirst, bool invokedByUpgrade)
     {
-        XElement chain = Load("DS4Windows.Bundle/Bundle.wxs").Descendants(Wix + "Chain").Single();
+        XElement chain = Load("FUT404DS.Bundle/Bundle.wxs").Descendants(Wix + "Chain").Single();
         LaunchAction initialAction = repairFirst ? LaunchAction.Repair : LaunchAction.Install;
         RelationType uninstallRelation = invokedByUpgrade ? RelationType.Upgrade : RelationType.None;
         var cachedHelpers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -80,7 +80,7 @@ public sealed class InstallerUpgradeRegistrationTests
             "A related upgrade must never execute the direct shared-infrastructure uninstaller.");
 
         string bootstrapper = File.ReadAllText(SourcePath(
-            "DS4Windows.Bootstrapper/InstallerApplication.cs"));
+            "FUT404DS.Bootstrapper/InstallerApplication.cs"));
         StringAssert.Contains(bootstrapper, "UninstallHelperPackagePlan.TryGetState(e.PackageId,");
         StringAssert.Contains(bootstrapper, "e.State = helperState;");
     }

@@ -1,8 +1,8 @@
 using System;
 using System.Threading;
-using DS4Windows.Switch2;
+using FUT404DS.Switch2;
 
-namespace DS4Windows
+namespace FUT404DS
 {
     // One cold-path attempt, not an index-only sticky error. A completion may
     // mutate only this object; replacing the array entry fences an older

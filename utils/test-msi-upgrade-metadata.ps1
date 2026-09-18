@@ -81,7 +81,7 @@ function New-MetadataFixture([string]$Path, [hashtable]$Properties, [switch]$Cus
 try {
     foreach ($mutation in @('none', 'ProductName', 'ProductVersion', 'ProductCode', 'UpgradeCode', 'CustomAction')) {
         $properties = @{
-            ProductName = 'DS4Windows'; ProductVersion = '5.0.5.7'
+            ProductName = 'FUT404DS'; ProductVersion = '5.0.5.7'
             ProductCode = '{8C3839ED-2834-4927-90DE-D058EB1E0495}'; UpgradeCode = $upgradeCode
         }
         if ($mutation -notin @('none', 'CustomAction')) { $properties[$mutation] = 'unexpected-fixture-value' }
@@ -120,13 +120,13 @@ try {
         [void](New-Item -ItemType Directory -Path $attached -Force)
         $createdDirectories.Add($payloadRoot)
         $createdDirectories.Add($attached)
-        $expected = Join-Path $attached 'DS4Windows_5.0.5.7_x64.msi'
+        $expected = Join-Path $attached 'FUT404DS_5.0.5.7_x64.msi'
         $copies = switch ($shape) {
             'exact' { @($expected) }
             'missing' { @() }
-            'wrong-name' { @(Join-Path $attached 'DS4Windows_other_x64.msi') }
-            'wrong-location' { @(Join-Path $payloadRoot 'DS4Windows_5.0.5.7_x64.msi') }
-            'duplicate' { @($expected, (Join-Path $payloadRoot 'DS4Windows_5.0.5.7_x64.msi')) }
+            'wrong-name' { @(Join-Path $attached 'FUT404DS_other_x64.msi') }
+            'wrong-location' { @(Join-Path $payloadRoot 'FUT404DS_5.0.5.7_x64.msi') }
+            'duplicate' { @($expected, (Join-Path $payloadRoot 'FUT404DS_5.0.5.7_x64.msi')) }
         }
         foreach ($copy in $copies) {
             Copy-Item -LiteralPath (Join-Path $testRoot 'none.msi') -Destination $copy
@@ -153,7 +153,7 @@ try {
     $newerMsi = Join-Path $testRoot 'newer-caller-version.msi'
     $createdFiles.Add($newerMsi)
     New-MetadataFixture $newerMsi @{
-        ProductName = 'DS4Windows'; ProductVersion = '5.0.5.8'
+        ProductName = 'FUT404DS'; ProductVersion = '5.0.5.8'
         ProductCode = '{AFCE9079-ED1B-485E-ABFD-AFA60858A752}'; UpgradeCode = $upgradeCode
     }
     $callerResult = @(& $PSCommandPath -ExistingMsi $newerMsi -ExpectedVersion '5.0.5.8')

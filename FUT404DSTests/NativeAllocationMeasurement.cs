@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 // Explicit, test-process-only diagnostic. The native callback recorder is a
 // Desktop lab tool, not a production dependency. No profiler loaded by default.

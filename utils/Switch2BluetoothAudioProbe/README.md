@@ -2,7 +2,7 @@
 
 Standalone Windows diagnostic, **not a Bluetooth headphone implementation**.
 Run its published executable from the Desktop portable lab. It has no
-DS4Windows/VIIPER runtime reference, driver install, pairing API, firmware or
+FUT404DS/VIIPER runtime reference, driver install, pairing API, firmware or
 memory-write command, GATT output/CCCD write, audio renderer, or recorder.
 
 ## Modes
@@ -32,7 +32,7 @@ exits after one operation. It does not leave a service or watcher running.
 Exit codes: 0 for completed inventory, 1 for failure/cancellation, 2 for usage.
 None of these codes is a headphone-delivery result.
 
-Close DS4Windows gracefully first: b88 holds this GATT service exclusively.
+Close FUT404DS gracefully first: b88 holds this GATT service exclusively.
 SharingViolation is actionable ownership evidence, not an audio codec failure.
 The controller may become unreachable after its last owner's connection closes.
 Do not remove its association to work around that; wake it with A instead.
@@ -53,15 +53,15 @@ Build and run the protocol tests (no physical-device tests are automatic):
 
 ```powershell
 dotnet build utils/Switch2BluetoothAudioProbe -c Release
-dotnet test DS4WindowsTests/DS4WindowsTests.csproj -c Release -p:Platform=x64 --filter FullyQualifiedName~Switch2BluetoothAudioProbeTests
+dotnet test FUT404DSTests/FUT404DSTests.csproj -c Release -p:Platform=x64 --filter FullyQualifiedName~Switch2BluetoothAudioProbeTests
 ```
 
 Tests cover exact wake-address byte order, invalid/broadcast address rejection,
 advertisement validation, and separation from the production rumble UUID.
-# Wake-only mode alongside DS4Windows
+# Wake-only mode alongside FUT404DS
 
 `--wake-only <exact Pro Windows ID>` emits the same bounded, targeted two-second
 manufacturer wake advertisement and stops. Unlike the historical inspect modes,
-it never discovers or opens a GATT service, so DS4Windows remains the connection
+it never discovers or opens a GATT service, so FUT404DS remains the connection
 owner. Windows controls GAP Flags; Started/Stopped is not proof of controller
 wake. No association, firmware or controller command is written.

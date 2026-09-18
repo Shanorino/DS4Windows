@@ -1,25 +1,25 @@
-using DS4Windows;
-using DS4Windows.DS4Control;
+using FUT404DS;
+using FUT404DS.DS4Control;
 using System.Runtime.CompilerServices;
 using System.Reflection;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 [DoNotParallelize]
 public class ProfileLoadPreparationTests
 {
     [DataTestMethod]
-    [DataRow("<DS4Windows>")]
+    [DataRow("<FUT404DS>")]
     [DataRow("<WrongRoot />")]
     [DataRow("")]
-    [DataRow("<DS4Windows xmlns=\"urn:wrong\" />")]
-    [DataRow("<DS4Windows config_version=\"5\"><Color>no,0,0</Color></DS4Windows>")]
-    [DataRow("<DS4Windows config_version=\"5\"><Color>256,0,0</Color></DS4Windows>")]
-    [DataRow("<DS4Windows config_version=\"5\"><Control><Macro><Cross>1//2</Cross></Macro></Control></DS4Windows>")]
-    [DataRow("<DS4Windows config_version=\"5\"><Control><Macro><Cross>2147483648</Cross></Macro></Control></DS4Windows>")]
-    [DataRow("<DS4Windows config_version=\"5\"><ShiftControl><Macro><Cross Trigger=\"1\">1//2</Cross></Macro></ShiftControl></DS4Windows>")]
-    [DataRow("<DS4Windows config_version=\"5\"><Control><Button><Cross>A</Cross><Cross>B</Cross></Button></Control></DS4Windows>")]
+    [DataRow("<FUT404DS xmlns=\"urn:wrong\" />")]
+    [DataRow("<FUT404DS config_version=\"5\"><Color>no,0,0</Color></FUT404DS>")]
+    [DataRow("<FUT404DS config_version=\"5\"><Color>256,0,0</Color></FUT404DS>")]
+    [DataRow("<FUT404DS config_version=\"5\"><Control><Macro><Cross>1//2</Cross></Macro></Control></FUT404DS>")]
+    [DataRow("<FUT404DS config_version=\"5\"><Control><Macro><Cross>2147483648</Cross></Macro></Control></FUT404DS>")]
+    [DataRow("<FUT404DS config_version=\"5\"><ShiftControl><Macro><Cross Trigger=\"1\">1//2</Cross></Macro></ShiftControl></FUT404DS>")]
+    [DataRow("<FUT404DS config_version=\"5\"><Control><Button><Cross>A</Cross><Cross>B</Cross></Button></Control></FUT404DS>")]
     public void InvalidExistingProfileDoesNotResetLiveState(string xml)
     {
         string path = Path.Combine(Path.GetTempPath(), $"ds4w-invalid-profile-{Guid.NewGuid():N}.xml");
@@ -125,7 +125,7 @@ public class ProfileLoadPreparationTests
     public void PreparedSnapshotIsSingleUseAndDoesNotRereadOrSave(string version, bool migrated)
     {
         string path = Path.Combine(Path.GetTempPath(), $"ds4w-snapshot-profile-{Guid.NewGuid():N}.xml");
-        string xml = $"<DS4Windows config_version=\"{version}\"><RumbleBoost>77</RumbleBoost><Color>1,2,3</Color><Control><Macro><Cross>1/2/3</Cross></Macro></Control></DS4Windows>";
+        string xml = $"<FUT404DS config_version=\"{version}\"><RumbleBoost>77</RumbleBoost><Color>1,2,3</Color><Control><Macro><Cross>1/2/3</Cross></Macro></Control></FUT404DS>";
         try
         {
             File.WriteAllText(path, xml);
@@ -162,7 +162,7 @@ public class ProfileLoadPreparationTests
         VirtualKBMMapping oldMapping = Global.outputKBMMapping;
         try
         {
-            File.WriteAllText(path, "<DS4Windows config_version=\"5\"><Control><Key><Cross>65</Cross></Key></Control><ShiftControl><Key><Circle Trigger=\"1\">66</Circle></Key></ShiftControl></DS4Windows>");
+            File.WriteAllText(path, "<FUT404DS config_version=\"5\"><Control><Key><Cross>65</Cross></Key></Control><ShiftControl><Key><Circle Trigger=\"1\">66</Circle></Key></ShiftControl></FUT404DS>");
             Global.outputKBMMapping = null;
             Assert.IsTrue(PreparedProfileLoad.TryPrepare(path, 0, out var candidate,
                 out _, out string error), error);
@@ -191,7 +191,7 @@ public class ProfileLoadPreparationTests
         string path = Path.Combine(Path.GetTempPath(), $"ds4w-valid-profile-{Guid.NewGuid():N}.xml");
         try
         {
-            File.WriteAllText(path, "<DS4Windows config_version=\"5\"><RumbleBoost>77</RumbleBoost><Color>1,2,3</Color></DS4Windows>");
+            File.WriteAllText(path, "<FUT404DS config_version=\"5\"><RumbleBoost>77</RumbleBoost><Color>1,2,3</Color></FUT404DS>");
             int slot = Global.TEST_PROFILE_INDEX;
             var store = new BackingStore();
             var service = (ControlService)RuntimeHelpers.GetUninitializedObject(typeof(ControlService));
@@ -223,7 +223,7 @@ public class ProfileLoadPreparationTests
         try
         {
             Directory.CreateDirectory(profiles);
-            File.WriteAllText(path, "<DS4Windows>");
+            File.WriteAllText(path, "<FUT404DS>");
             var store = new BackingStore();
             store.profilePath[slot] = "Invalid";
             store.rumble[slot] = 77;

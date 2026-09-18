@@ -1,6 +1,6 @@
-using DS4Windows.DS4Control;
+using FUT404DS.DS4Control;
 
-namespace DS4WindowsTests;
+namespace FUT404DSTests;
 
 [TestClass]
 public class DSXControllerAdmissionTests
