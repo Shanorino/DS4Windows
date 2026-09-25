@@ -12030,7 +12030,8 @@ namespace FUT404DS
                         Global.IsCurrentProfileSwitchRevision(device,
                             transitionRevision))
                     {
-                        control.CheckProfileOptions(device, tempDev, true);
+                        control.CheckProfileOptionsAfterLoad(device, tempDev,
+                            transitionRevision);
                     }
                 }
 

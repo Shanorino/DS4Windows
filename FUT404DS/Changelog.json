@@ -1,9 +1,104 @@
 {
-  "latest_version": "5.0.8.0",
-  "latest_version_number_info": {"majorPart": 5, "minorPart": 0, "buildPart": 8},
-  "updated_at": "2026-09-14T20:45:00+0000",
+  "latest_version": "5.0.12.0",
+  "latest_version_number_info": {"majorPart": 5, "minorPart": 0, "buildPart": 12},
+  "updated_at": "2026-09-23T14:25:00+0000",
   "changelog": {
     "versions": [
+    {
+      "version_str": "5.0.12.0",
+      "version_number_info": {"majorPart": 5, "minorPart": 0, "buildPart": 12},
+      "base_header": "Release Candidate 4.6.6 — Reliable Startup & Better DualSense Edge Support",
+      "release_date": "2026-09-23T14:25:00+0000",
+      "locales": [
+        {
+          "code": "en",
+          "header": "Release Candidate 4.6.6 — Reliable Startup & Better DualSense Edge Support",
+          "log_text": [
+            "* More reliable VIIPER startup, shutdown and repair, with clearer failure messages",
+            "* Repair checks for changed dependencies without requiring an app restart",
+            "* Prevented simultaneous DS4Windows launches from competing for controllers",
+            "* Fixed the -autolaunch error when updating an installed copy",
+            "* Portable updates stay in your chosen folder and keep your profiles and settings",
+            "* Improved physical and emulated DualSense Edge report handling and motion calibration",
+            "* Standard DualSense and Edge share native haptics and adaptive triggers with either emulated model",
+            "* Unsupported virtual Edge onboard-profile commands now fail safely instead of appearing to work"
+          ],
+          "editor": "hbashton",
+          "editors_note": ["Close games, DS4Windows and VIIPER before updating. The complete installer and portable ZIP include the matching VIIPER. If updating from an older version gives an -autolaunch error, use the complete download once. This release candidate is unsigned. Virtual Edge onboard-profile editing is not included; physical Edge hardware validation remains limited."],
+          "updated_at": "2026-09-23T14:25:00+0000"
+        }
+      ]
+    },
+    {
+      "version_str": "5.0.11.0",
+      "version_number_info": {"majorPart": 5, "minorPart": 0, "buildPart": 11},
+      "base_header": "Release Candidate 4.6.5 — Smoother Logs & Easier Updates",
+      "release_date": "2026-09-23T04:30:00+0000",
+      "locales": [
+        {
+          "code": "en",
+          "header": "Release Candidate 4.6.5 — Smoother Logs & Easier Updates",
+          "log_text": [
+            "* Fixed a freeze when opening the Log page after long sessions",
+            "* Made scrolling, clearing and exporting the Log page more reliable",
+            "* Fixed cases where the DualSense lightbar did not return to your profile color after closing a game",
+            "* Fixed an update issue that could leave setup stuck on another installation finishing",
+            "* VIIPER repair restores the matching version without closing DS4Windows",
+            "* Portable VIIPER stays beside DS4Windows; repair does not move your files",
+            "* VIIPER updates now come with DS4Windows, without separate update pop-ups",
+            "* Refreshed the getting-started guide to make setup easier to follow"
+          ],
+          "editor": "hbashton",
+          "editors_note": ["Close your games, DS4Windows and VIIPER before updating. Choose the installer for the easiest setup, or extract the complete portable ZIP. This release candidate is unsigned, so Windows may show a publisher warning."],
+          "updated_at": "2026-09-23T04:30:00+0000"
+        }
+      ]
+    },
+    {
+      "version_str": "5.0.10.0",
+      "version_number_info": {"majorPart": 5, "minorPart": 0, "buildPart": 10},
+      "base_header": "Release Candidate 4.6.4 — Smoother DualSense Haptics",
+      "release_date": "2026-09-22T11:00:00+0000",
+      "locales": [
+        {
+          "code": "en",
+          "header": "Release Candidate 4.6.4 — Smoother DualSense Haptics",
+          "log_text": [
+            "* **More faithful advanced haptics** - improved Bluetooth haptic conversion preserves more detail in supported games",
+            "* **Fewer interrupted effects** - fixes brief gaps that could make closely spaced haptic effects feel incomplete or skippy",
+            "* **More reliable rumble** - settings updates no longer cut the affected active rumble effects short; genuine stop commands still work normally",
+            "* **Responsive triggers and lighting** - updates continue alongside rumble without unnecessarily interrupting it",
+            "* **Complete matching packages** - installer and portable ZIP include the updated VIIPER backend"
+          ],
+          "editor": "hbashton",
+          "editors_note": ["Unsigned Windows x64 release candidate. Close games, DS4Windows and VIIPER before updating. Portable users should extract the complete ZIP. DualSense advanced haptics require a supported game and controller audio/speaker support."],
+          "updated_at": "2026-09-22T11:00:00+0000"
+        }
+      ]
+    },
+    {
+      "version_str": "5.0.9.0",
+      "version_number_info": {"majorPart": 5, "minorPart": 0, "buildPart": 9},
+      "base_header": "Release Candidate 4.6.3 — Smooth Profile Switching & Mouse Clicks",
+      "release_date": "2026-09-21T00:48:00+0000",
+      "locales": [
+        {
+          "code": "en",
+          "header": "Release Candidate 4.6.3 — Smooth Profile Switching & Mouse Clicks",
+          "log_text": [
+            "* **Temporary profile switching** - one activation per hold, correct cancellation on early release, and no late switch into a released profile",
+            "* **Input continuity** - prepare profiles without blocking reports, preserve held keys during automatic switches, and keep backend/audio setup off the physical input queue",
+            "* **Connection safety** - reject stale profile work after replacement connections or newer selections; keep the existing virtual pad for same-output switches",
+            "* **Independent mouse toggles** - unrelated toggled actions no longer block mouse-button presses or releases",
+            "* **Shared mouse-button ownership** - ending a mouse macro no longer releases a click still held by another binding or macro",
+            "* **FakerInput side buttons** - correctly translate X1 and X2 mouse events"
+          ],
+          "editor": "hbashton",
+          "editors_note": ["Unsigned release candidate. Ordinary R2-to-left-click combined with movement or keyboard input already passes baseline regression tests. The reporter's machine and game have not been validated; this is not a universal game-compatibility fix. VIIPER and the DS4Updater 2.0.7 requirement are unchanged."],
+          "updated_at": "2026-09-21T00:48:00+0000"
+        }
+      ]
+    },
     {
       "version_str": "5.0.8.0",
       "version_number_info": {"majorPart": 5, "minorPart": 0, "buildPart": 8},

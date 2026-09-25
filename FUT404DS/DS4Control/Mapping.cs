@@ -46,10 +46,166 @@ namespace FUT404DS
             {
                 public int leftCount, middleCount, rightCount, fourthCount,
                     fifthCount, wUpCount, wDownCount, wLeftCount,
-                    wRightCount, toggleCount;
-                public bool toggle;
+                    wRightCount;
+
+                public int ButtonCount(Click button) => button switch
+                {
+                    Click.Left => leftCount,
+                    Click.Middle => middleCount,
+                    Click.Right => rightCount,
+                    Click.Fourth => fourthCount,
+                    Click.Fifth => fifthCount,
+                    _ => 0,
+                };
+
+                public void AddButton(Click button, int count)
+                {
+                    switch (button)
+                    {
+                        case Click.Left: leftCount += count; break;
+                        case Click.Middle: middleCount += count; break;
+                        case Click.Right: rightCount += count; break;
+                        case Click.Fourth: fourthCount += count; break;
+                        case Click.Fifth: fifthCount += count; break;
+                    }
+                }
             }
             public MouseClick previousClicks, currentClicks;
+            // Macro owners share the same output transition boundary as mapped
+            // buttons, but survive between controller reports.
+            public MouseClick macroClicks;
+            internal readonly int[] retainedMacroButtons = new int[Global.MAX_DS4_CONTROLLER_COUNT];
+            internal readonly MouseClick[] macroDeviceClicks = new MouseClick[Global.MAX_DS4_CONTROLLER_COUNT];
+            internal readonly int[] macroEpochs = new int[Global.MAX_DS4_CONTROLLER_COUNT];
+            internal readonly ConditionalWeakTable<bool[], MacroMouseOwner> macroMouseOwners = new();
+
+            private struct MouseToggle
+            {
+                public Click Target;
+                public bool Seen, Pressed, Latched;
+            }
+
+            private readonly MouseToggle[] mouseToggles = new MouseToggle[
+                DS4_CONTROL_MACRO_ARRAY_LEN];
+            private DS4State mouseMappingState;
+            private DS4StateExposed mouseMappingExposed;
+            private Mouse mouseMappingTouch;
+            private DS4StateFieldMapping mouseMappingFields;
+            private bool mouseMappingFrame;
+
+            internal void SetMouseMappingContext(DS4State state,
+                DS4StateExposed exposed, Mouse touch, DS4StateFieldMapping fields)
+            {
+                mouseMappingState = state;
+                mouseMappingExposed = exposed;
+                mouseMappingTouch = touch;
+                mouseMappingFields = fields;
+                mouseMappingFrame = true;
+            }
+
+            public void MapMouseButton(DS4Controls source, Click target,
+                bool pressed, bool toggle)
+            {
+                ref MouseToggle owner = ref mouseToggles[(int)source];
+                if (!toggle)
+                {
+                    owner = default;
+                    if (pressed) currentClicks.AddButton(target, 1);
+                    return;
+                }
+                if (owner.Target != target) owner = default;
+                owner.Target = target;
+                owner.Seen = true;
+                if (pressed && !owner.Pressed)
+                    owner.Latched = !owner.Latched;
+                owner.Pressed = pressed;
+            }
+
+            internal void ClearMouseButtonToggles()
+            {
+                Array.Clear(mouseToggles);
+                mouseMappingState = null;
+                mouseMappingExposed = null;
+                mouseMappingTouch = null;
+                mouseMappingFields = null;
+                mouseMappingFrame = false;
+            }
+
+            internal void PrepareMouseButtonToggles(int device)
+            {
+                for (int index = 1; index < mouseToggles.Length; index++)
+                {
+                    ref MouseToggle owner = ref mouseToggles[index];
+                    if (owner.Target == Click.None) continue;
+                    DS4Controls source = (DS4Controls)index;
+                    // Two-stage and gyro-swipe loops omit inactive sources.
+                    // That is different from removing a binding or retiring
+                    // its slot: an idle, configured toggle still owns output.
+                    if (!HasConfiguredMouseToggle(device, source, owner.Target) ||
+                        (mouseMappingFrame && !owner.Seen &&
+                            !CanOmitInactiveMouseToggle(device, source)))
+                    {
+                        owner = default;
+                        continue;
+                    }
+                    if (mouseMappingFrame && !owner.Seen) owner.Pressed = false;
+                    if (owner.Latched) currentClicks.AddButton(owner.Target, 1);
+                }
+            }
+
+            private static bool CanOmitInactiveMouseToggle(int device, DS4Controls source) => source switch
+            {
+                DS4Controls.L2 or DS4Controls.L2FullPull =>
+                    Global.L2OutputSettings[device].twoStageMode != TwoStageTriggerMode.Disabled,
+                DS4Controls.R2 or DS4Controls.R2FullPull =>
+                    Global.R2OutputSettings[device].twoStageMode != TwoStageTriggerMode.Disabled,
+                DS4Controls.GyroSwipeLeft or DS4Controls.GyroSwipeRight or
+                    DS4Controls.GyroSwipeUp or DS4Controls.GyroSwipeDown =>
+                    Global.GetGyroOutMode(device) == GyroOutMode.DirectionalSwipe,
+                _ => false,
+            };
+
+            private bool HasConfiguredMouseToggle(int device, DS4Controls source, Click target)
+            {
+                if (mouseMappingState == null || mouseMappingFields == null) return false;
+                DS4ControlSettings setting = Global.GetDS4CSetting(device, source);
+                ControlActionData action = setting.action;
+                DS4ControlSettings.ActionType actionType = setting.actionType;
+                DS4KeyType keyType = setting.keyType;
+                bool modeShift = setting.shiftTrigger == SWITCH2_MODE_SHIFT_TRIGGER &&
+                    setting.HasAnySwitch2ModeShiftAction;
+                bool shiftConfigured = modeShift || setting.shiftActionType !=
+                    DS4ControlSettings.ActionType.Default;
+                if (shiftConfigured && ShiftTrigger(setting.shiftTrigger, device,
+                    mouseMappingState, mouseMappingExposed, mouseMappingTouch, mouseMappingFields))
+                {
+                    if (modeShift)
+                    {
+                        Switch2ModeShiftAction shifted = setting.GetSwitch2ModeShiftAction(
+                            Switch2ModeShift.ResolveScope(device));
+                        action = shifted.Action;
+                        actionType = shifted.ActionType;
+                        keyType = shifted.KeyType;
+                    }
+                    else
+                    {
+                        action = setting.shiftAction;
+                        actionType = setting.shiftActionType;
+                        keyType = setting.shiftKeyType;
+                    }
+                }
+                if (actionType != DS4ControlSettings.ActionType.Button ||
+                    !keyType.HasFlag(DS4KeyType.Toggle)) return false;
+                return action.actionBtn == (target switch
+                {
+                    Click.Left => X360Controls.LeftMouse,
+                    Click.Middle => X360Controls.MiddleMouse,
+                    Click.Right => X360Controls.RightMouse,
+                    Click.Fourth => X360Controls.FourthMouse,
+                    Click.Fifth => X360Controls.FifthMouse,
+                    _ => X360Controls.None,
+                });
+            }
             public struct KeyPress
             {
                 public int vkCount, scanCodeCount, repeatCount, toggleCount; // repeat takes priority over non-, and scancode takes priority over non-
@@ -66,12 +222,18 @@ namespace FUT404DS
             {
                 previousClicks = currentClicks;
                 if (performClear)
+                {
                     currentClicks.leftCount = currentClicks.middleCount =
                         currentClicks.rightCount = currentClicks.fourthCount =
                         currentClicks.fifthCount = currentClicks.wUpCount =
                         currentClicks.wDownCount = currentClicks.wLeftCount =
-                        currentClicks.wRightCount =
-                        currentClicks.toggleCount = 0;
+                        currentClicks.wRightCount = 0;
+                    for (int i = 0; i < mouseToggles.Length; i++)
+                    {
+                        mouseToggles[i].Seen = false;
+                    }
+                    mouseMappingFrame = false;
+                }
 
                 //foreach (KeyPresses kp in keyPresses.Values)
                 Dictionary<ushort, KeyPresses>.ValueCollection keyValues = keyPresses.Values;
@@ -138,6 +300,8 @@ namespace FUT404DS
             public Func<bool> LoadGuard;
             public long Revision;
             public ControlService Control;
+            public DS4Device Source;
+            public ControllerProfileActionTarget Target;
             public GuardedNamedProfileLoad Guarded;
             // Immutable work-item identity is the enqueue ticket. Guarded
             // enqueue must not advance the live profile revision before prepare.
@@ -155,6 +319,32 @@ namespace FUT404DS
             new ProfileSwitchRequest(), new ProfileSwitchRequest(), new ProfileSwitchRequest(), new ProfileSwitchRequest(),
             new ProfileSwitchRequest(), new ProfileSwitchRequest(), new ProfileSwitchRequest(), new ProfileSwitchRequest(),
         };
+
+        // Physical trigger intent is distinct from a profile that has finished
+        // loading. A held trigger must submit once even while preparation waits;
+        // releasing it must cancel that pending load, not wait for publication.
+        private sealed class AutomaticProfileSwitchIntent
+        {
+            internal readonly SpecialAction Action;
+            internal readonly string OriginalName;
+            internal readonly bool OriginalTemporary;
+            internal readonly string TargetName;
+            internal long ActivationRevision;
+            internal long ReturnRevision;
+            internal int Released;
+
+            internal AutomaticProfileSwitchIntent(SpecialAction action,
+                string originalName, bool originalTemporary)
+            {
+                Action = action;
+                OriginalName = originalName;
+                OriginalTemporary = originalTemporary;
+                TargetName = action.details;
+            }
+        }
+
+        private static readonly AutomaticProfileSwitchIntent[] automaticProfileSwitchIntents =
+            new AutomaticProfileSwitchIntent[Global.MAX_DS4_CONTROLLER_COUNT];
 
         struct DS4Vector2
         {
@@ -1080,17 +1270,18 @@ namespace FUT404DS
         private const double MOUSESTICKMINVELOCITY = 67.5;
         //private const double MOUSESTICKMINVELOCITY = 40.0;
 
-        private static void RequestProfileSwitch(int device, string profileName, bool tempProfile,
+        private static long RequestProfileSwitch(int device, string profileName, bool tempProfile,
             bool launchProgram, ControlService ctrl, Action<bool> afterLoad = null,
             Func<bool> loadGuard = null)
         {
             if (device < 0 || device >= Global.MAX_DS4_CONTROLLER_COUNT)
             {
-                return;
+                return 0;
             }
 
             GuardedNamedProfileLoad displaced;
             bool startWorker;
+            long revision;
             lock (profileSwitchRequestLocks[device])
             {
                 ProfileSwitchRequest request = profileSwitchRequests[device];
@@ -1098,7 +1289,11 @@ namespace FUT404DS
                 request.Guarded = null;
                 Volatile.Write(ref request.LatestGuarded, null);
                 request.Control = ctrl;
-                request.Revision = Global.BeginProfileSwitchRevision(device);
+                request.Source = ctrl?.DS4Controllers?[device];
+                request.Target = default;
+                if (request.Source != null)
+                    ctrl.TryCaptureProfileActionTarget(device, request.Source, out request.Target);
+                request.Revision = revision = Global.BeginProfileSwitchRevision(device);
                 request.Pending = true;
                 request.TempProfile = tempProfile;
                 request.LaunchProgram = launchProgram;
@@ -1116,6 +1311,99 @@ namespace FUT404DS
             displaced?.Complete(new(GuardedProfileSwitchStatus.Superseded));
             if (startWorker)
                 Task.Run(() => RunProfileSwitchRequests(device));
+            return revision;
+        }
+
+        private static AutomaticProfileSwitchIntent BeginAutomaticProfileSwitch(
+            int device, SpecialAction action)
+        {
+            AutomaticProfileSwitchIntent previous = Volatile.Read(ref automaticProfileSwitchIntents[device]);
+            bool repressedBeforeReturn = previous != null &&
+                ReferenceEquals(previous.Action, action) && Volatile.Read(ref previous.Released) != 0 &&
+                Volatile.Read(ref previous.ReturnRevision) == Global.ReadProfileSwitchRevision(device) &&
+                useTempProfile[device] && string.Equals(tempprofilename[device], previous.TargetName,
+                    StringComparison.Ordinal);
+            var intent = new AutomaticProfileSwitchIntent(action,
+                repressedBeforeReturn ? previous.OriginalName :
+                    useTempProfile[device] ? tempprofilename[device] : ProfilePath[device],
+                repressedBeforeReturn ? previous.OriginalTemporary : useTempProfile[device]);
+            Volatile.Write(ref automaticProfileSwitchIntents[device], intent);
+            return intent;
+        }
+
+        private static bool IsAutomaticProfileSwitchHeld(int device, SpecialAction action)
+        {
+            AutomaticProfileSwitchIntent intent = Volatile.Read(ref automaticProfileSwitchIntents[device]);
+            return intent != null && ReferenceEquals(intent.Action, action) &&
+                Volatile.Read(ref intent.Released) == 0;
+        }
+
+        private static bool IsAutomaticProfileActivationCurrent(int device, AutomaticProfileSwitchIntent intent) =>
+            ReferenceEquals(Volatile.Read(ref automaticProfileSwitchIntents[device]), intent) &&
+            Volatile.Read(ref intent.Released) == 0;
+
+        private static bool IsOriginalProfileCurrent(int device, AutomaticProfileSwitchIntent intent) =>
+            useTempProfile[device] == intent.OriginalTemporary &&
+            string.Equals(intent.OriginalTemporary ? tempprofilename[device] : ProfilePath[device],
+                intent.OriginalName, StringComparison.Ordinal);
+
+        private static void ClearAutomaticProfileSwitchIntent(int device)
+        {
+            AutomaticProfileSwitchIntent intent = Volatile.Read(ref automaticProfileSwitchIntents[device]);
+            if (intent == null || !ReferenceEquals(
+                    Interlocked.CompareExchange(ref automaticProfileSwitchIntents[device], null, intent), intent))
+                return;
+
+            // Retirement is not a trigger release: invalidate both queued
+            // activation and return guards without loading into a reused slot.
+            Interlocked.Exchange(ref intent.Released, 1);
+            if (ReferenceEquals(untriggeraction[device], intent.Action))
+            {
+                int index = untriggerindex[device];
+                untriggeraction[device] = null;
+                untriggerindex[device] = -1;
+                if ((uint)index < actionDone.Count)
+                    actionDone[index].dev[device] = false;
+            }
+        }
+
+        private static bool TryReturnAutomaticProfile(int device, SpecialAction action,
+            int actionIndex, ControlService control)
+        {
+            AutomaticProfileSwitchIntent intent = Volatile.Read(ref automaticProfileSwitchIntents[device]);
+            if (intent == null || !ReferenceEquals(intent.Action, action)) return false;
+            if (ReferenceEquals(untriggeraction[device], action)) untriggeraction[device] = null;
+            if ((uint)actionIndex < actionDone.Count) actionDone[actionIndex].dev[device] = false;
+            if (Interlocked.Exchange(ref intent.Released, 1) != 0) return true;
+
+            // An explicit profile selection or another action has superseded
+            // this hold. Releasing an old trigger cannot undo that new choice.
+            if (Volatile.Read(ref intent.ActivationRevision) != Global.ReadProfileSwitchRevision(device))
+            {
+                Interlocked.CompareExchange(ref automaticProfileSwitchIntents[device], null, intent);
+                return true;
+            }
+
+            bool ShouldRestore()
+            {
+                if (!ReferenceEquals(Volatile.Read(ref automaticProfileSwitchIntents[device]), intent) ||
+                    Volatile.Read(ref intent.Released) == 0) return false;
+                if (!IsOriginalProfileCurrent(device, intent)) return true;
+                // Activation never published (or already returned). Consuming
+                // this cancellation must not reset the still-current mappings.
+                Interlocked.CompareExchange(ref automaticProfileSwitchIntents[device], null, intent);
+                return false;
+            }
+
+            long revision = RequestProfileSwitch(device, intent.OriginalName,
+                intent.OriginalTemporary, intent.OriginalTemporary, control,
+                loaded =>
+                {
+                    if (loaded)
+                        Interlocked.CompareExchange(ref automaticProfileSwitchIntents[device], null, intent);
+                }, ShouldRestore);
+            Volatile.Write(ref intent.ReturnRevision, revision);
+            return true;
         }
 
         /// <summary>
@@ -1211,6 +1499,8 @@ namespace FUT404DS
                 Func<bool> loadGuard;
                 long revision;
                 ControlService ctrl;
+                DS4Device source;
+                ControllerProfileActionTarget target;
                 GuardedNamedProfileLoad guarded;
 
                 lock (profileSwitchRequestLocks[device])
@@ -1224,6 +1514,8 @@ namespace FUT404DS
 
                     request.Pending = false;
                     ctrl = request.Control;
+                    source = request.Source;
+                    target = request.Target;
                     guarded = request.Guarded;
                     request.Control = null;
                     request.Guarded = null;
@@ -1267,13 +1559,9 @@ namespace FUT404DS
                 bool requestAccepted = false;
                 try
                 {
-                    loaded = TryExecuteCurrentProfileSwitchRequest(device,
-                        revision, loadGuard, () => tempProfile ?
-                            LoadTempProfile(device, profileName, launchProgram,
-                                ctrl, transitionRevision: revision) :
-                            LoadProfile(device, launchProgram, ctrl,
-                                transitionRevision: revision, profileName: profileName),
-                        out requestAccepted);
+                    loaded = GuardedProfileReload.Execute(device, profileName,
+                        tempProfile, launchProgram, ctrl, source, revision,
+                        loadGuard, out requestAccepted, target);
                 }
                 catch (Exception ex)
                 {
@@ -1332,257 +1620,214 @@ namespace FUT404DS
         {
             SyntheticState state = deviceState[device];
             syncStateLock.EnterWriteLock();
-
-            globalState.currentClicks.leftCount += state.currentClicks.leftCount - state.previousClicks.leftCount;
-            globalState.currentClicks.middleCount += state.currentClicks.middleCount - state.previousClicks.middleCount;
-            globalState.currentClicks.rightCount += state.currentClicks.rightCount - state.previousClicks.rightCount;
-            globalState.currentClicks.fourthCount += state.currentClicks.fourthCount - state.previousClicks.fourthCount;
-            globalState.currentClicks.fifthCount += state.currentClicks.fifthCount - state.previousClicks.fifthCount;
-            globalState.currentClicks.wUpCount += state.currentClicks.wUpCount - state.previousClicks.wUpCount;
-            globalState.currentClicks.wDownCount += state.currentClicks.wDownCount - state.previousClicks.wDownCount;
-            globalState.currentClicks.wLeftCount += state.currentClicks.wLeftCount - state.previousClicks.wLeftCount;
-            globalState.currentClicks.wRightCount += state.currentClicks.wRightCount - state.previousClicks.wRightCount;
-            globalState.currentClicks.toggleCount += state.currentClicks.toggleCount - state.previousClicks.toggleCount;
-            globalState.currentClicks.toggle = state.currentClicks.toggle;
-
-            if (globalState.currentClicks.toggleCount != 0 && globalState.previousClicks.toggleCount == 0 && globalState.currentClicks.toggle)
+            try
             {
-                if (globalState.currentClicks.leftCount != 0 && globalState.previousClicks.leftCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_LEFTDOWN);
-                if (globalState.currentClicks.rightCount != 0 && globalState.previousClicks.rightCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_RIGHTDOWN);
-                if (globalState.currentClicks.middleCount != 0 && globalState.previousClicks.middleCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_MIDDLEDOWN);
-                if (globalState.currentClicks.fourthCount != 0 && globalState.previousClicks.fourthCount == 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONDOWN, 1);
-                if (globalState.currentClicks.fifthCount != 0 && globalState.previousClicks.fifthCount == 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONDOWN, 2);
-            }
-            else if (globalState.currentClicks.toggleCount != 0 && globalState.previousClicks.toggleCount == 0 && !globalState.currentClicks.toggle)
-            {
-                if (globalState.currentClicks.leftCount != 0 && globalState.previousClicks.leftCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_LEFTUP);
-                if (globalState.currentClicks.rightCount != 0 && globalState.previousClicks.rightCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_RIGHTUP);
-                if (globalState.currentClicks.middleCount != 0 && globalState.previousClicks.middleCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_MIDDLEUP);
-                if (globalState.currentClicks.fourthCount != 0 && globalState.previousClicks.fourthCount == 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONUP, 1);
-                if (globalState.currentClicks.fifthCount != 0 && globalState.previousClicks.fifthCount == 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONUP, 2);
-            }
-
-            if (globalState.currentClicks.toggleCount == 0 && globalState.previousClicks.toggleCount == 0)
-            {
-                if (globalState.currentClicks.leftCount != 0 && globalState.previousClicks.leftCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_LEFTDOWN);
-                else if (globalState.currentClicks.leftCount == 0 && globalState.previousClicks.leftCount != 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_LEFTUP);
-
-                if (globalState.currentClicks.middleCount != 0 && globalState.previousClicks.middleCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_MIDDLEDOWN);
-                else if (globalState.currentClicks.middleCount == 0 && globalState.previousClicks.middleCount != 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_MIDDLEUP);
-
-                if (globalState.currentClicks.rightCount != 0 && globalState.previousClicks.rightCount == 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_RIGHTDOWN);
-                else if (globalState.currentClicks.rightCount == 0 && globalState.previousClicks.rightCount != 0)
-                    outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_RIGHTUP);
-
-                if (globalState.currentClicks.fourthCount != 0 && globalState.previousClicks.fourthCount == 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONDOWN, 1);
-                else if (globalState.currentClicks.fourthCount == 0 && globalState.previousClicks.fourthCount != 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONUP, 1);
-
-                if (globalState.currentClicks.fifthCount != 0 && globalState.previousClicks.fifthCount == 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONDOWN, 2);
-                else if (globalState.currentClicks.fifthCount == 0 && globalState.previousClicks.fifthCount != 0)
-                    outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONUP, 2);
-
-                if (globalState.currentClicks.wUpCount != 0 && globalState.previousClicks.wUpCount == 0)
+                state.PrepareMouseButtonToggles(device);
+                globalState.currentClicks.leftCount += state.currentClicks.leftCount - state.previousClicks.leftCount;
+                globalState.currentClicks.middleCount += state.currentClicks.middleCount - state.previousClicks.middleCount;
+                globalState.currentClicks.rightCount += state.currentClicks.rightCount - state.previousClicks.rightCount;
+                globalState.currentClicks.fourthCount += state.currentClicks.fourthCount - state.previousClicks.fourthCount;
+                globalState.currentClicks.fifthCount += state.currentClicks.fifthCount - state.previousClicks.fifthCount;
+                globalState.currentClicks.wUpCount += state.currentClicks.wUpCount - state.previousClicks.wUpCount;
+                globalState.currentClicks.wDownCount += state.currentClicks.wDownCount - state.previousClicks.wDownCount;
+                globalState.currentClicks.wLeftCount += state.currentClicks.wLeftCount - state.previousClicks.wLeftCount;
+                globalState.currentClicks.wRightCount += state.currentClicks.wRightCount - state.previousClicks.wRightCount;
+                // Every mouse button is independent. A toggle on crouch, aim, or
+                // another controller must never gate a fire-button edge.
+                for (Click button = Click.Left; button <= Click.Fifth; button++)
                 {
-                    outputKBMHandler.PerformMouseWheelEvent(outputKBMMapping.WHEEL_TICK_UP, 0);
-                    oldnow = DateTime.UtcNow;
-                    wheel = outputKBMMapping.WHEEL_TICK_UP;
-                }
-                else if (globalState.currentClicks.wUpCount == 0 && globalState.previousClicks.wUpCount != 0)
-                    wheel = 0;
-
-                if (globalState.currentClicks.wDownCount != 0 && globalState.previousClicks.wDownCount == 0)
-                {
-                    outputKBMHandler.PerformMouseWheelEvent(outputKBMMapping.WHEEL_TICK_DOWN, 0);
-                    oldnow = DateTime.UtcNow;
-                    wheel = outputKBMMapping.WHEEL_TICK_DOWN;
-                }
-                if (globalState.currentClicks.wDownCount == 0 && globalState.previousClicks.wDownCount != 0)
-                    wheel = 0;
-
-                if (globalState.currentClicks.wLeftCount != 0 &&
-                    globalState.previousClicks.wLeftCount == 0)
-                {
-                    outputKBMHandler.PerformMouseWheelEvent(0,
-                        outputKBMMapping.WHEEL_TICK_DOWN);
-                    horizontalWheelOldNow = DateTime.UtcNow;
-                    horizontalWheel = outputKBMMapping.WHEEL_TICK_DOWN;
-                }
-                else if (globalState.currentClicks.wLeftCount == 0 &&
-                    globalState.previousClicks.wLeftCount != 0)
-                {
-                    horizontalWheel = 0;
+                    int macroOwners = globalState.macroClicks.ButtonCount(button);
+                    EmitMouseButtonTransition(button,
+                        globalState.previousClicks.ButtonCount(button) + macroOwners,
+                        globalState.currentClicks.ButtonCount(button) + macroOwners);
                 }
 
-                if (globalState.currentClicks.wRightCount != 0 &&
-                    globalState.previousClicks.wRightCount == 0)
                 {
-                    outputKBMHandler.PerformMouseWheelEvent(0,
-                        outputKBMMapping.WHEEL_TICK_UP);
-                    horizontalWheelOldNow = DateTime.UtcNow;
-                    horizontalWheel = outputKBMMapping.WHEEL_TICK_UP;
-                }
-                else if (globalState.currentClicks.wRightCount == 0 &&
-                    globalState.previousClicks.wRightCount != 0)
-                {
-                    horizontalWheel = 0;
-                }
-            }
-
-
-            if (wheel != 0) //Continue mouse wheel movement
-            {
-                DateTime now = DateTime.UtcNow;
-                if (now >= oldnow + TimeSpan.FromMilliseconds(150) && !pressagain)
-                {
-                    oldnow = now;
-                    outputKBMHandler.PerformMouseWheelEvent(wheel, 0);
-                }
-            }
-
-            if (horizontalWheel != 0)
-            {
-                DateTime now = DateTime.UtcNow;
-                if (now >= horizontalWheelOldNow +
-                        TimeSpan.FromMilliseconds(150))
-                {
-                    horizontalWheelOldNow = now;
-                    outputKBMHandler.PerformMouseWheelEvent(0,
-                        horizontalWheel);
-                }
-            }
-
-            // Merge and synthesize all key presses/releases that are present in this device's mapping.
-            // TODO what about the rest?  e.g. repeat keys really ought to be on some set schedule
-            Dictionary<UInt16, SyntheticState.KeyPresses>.KeyCollection kvpKeys = state.keyPresses.Keys;
-            //foreach (KeyValuePair<UInt16, SyntheticState.KeyPresses> kvp in state.keyPresses)
-            //for (int i = 0, keyCount = kvpKeys.Count; i < keyCount; i++)
-            for (var keyEnum = kvpKeys.GetEnumerator(); keyEnum.MoveNext();)
-            {
-                //UInt16 kvpKey = kvpKeys.ElementAt(i);
-                UInt16 kvpKey = keyEnum.Current;
-                SyntheticState.KeyPresses kvpValue = state.keyPresses[kvpKey];
-
-                SyntheticState.KeyPresses gkp;
-                if (globalState.keyPresses.TryGetValue(kvpKey, out gkp))
-                {
-                    gkp.current.vkCount += kvpValue.current.vkCount - kvpValue.previous.vkCount;
-                    gkp.current.scanCodeCount += kvpValue.current.scanCodeCount - kvpValue.previous.scanCodeCount;
-                    gkp.current.repeatCount += kvpValue.current.repeatCount - kvpValue.previous.repeatCount;
-                    gkp.current.toggle = kvpValue.current.toggle;
-                    gkp.current.toggleCount += kvpValue.current.toggleCount - kvpValue.previous.toggleCount;
-                }
-                else
-                {
-                    gkp = new SyntheticState.KeyPresses();
-                    gkp.current = kvpValue.current;
-                    globalState.keyPresses[kvpKey] = gkp;
-                }
-
-                uint nativeKey = state.nativeKeyAlias[kvpKey];
-                if (gkp.current.toggleCount != 0 && gkp.previous.toggleCount == 0 && gkp.current.toggle)
-                {
-                    if (gkp.current.scanCodeCount != 0)
-                        outputKBMHandler.PerformKeyPressAlt(nativeKey);
-                    else
-                        outputKBMHandler.PerformKeyPress(nativeKey);
-                }
-                else if (gkp.current.toggleCount != 0 && gkp.previous.toggleCount == 0 && !gkp.current.toggle)
-                {
-                    if (gkp.previous.scanCodeCount != 0) // use the last type of VK/SC
-                        outputKBMHandler.PerformKeyReleaseAlt(nativeKey);
-                    else
-                        outputKBMHandler.PerformKeyRelease(nativeKey);
-                }
-                else if (gkp.current.vkCount + gkp.current.scanCodeCount != 0 && gkp.previous.vkCount + gkp.previous.scanCodeCount == 0)
-                {
-                    if (gkp.current.scanCodeCount != 0)
+                    if (globalState.currentClicks.wUpCount != 0 && globalState.previousClicks.wUpCount == 0)
                     {
+                        outputKBMHandler.PerformMouseWheelEvent(outputKBMMapping.WHEEL_TICK_UP, 0);
                         oldnow = DateTime.UtcNow;
-                        outputKBMHandler.PerformKeyPressAlt(nativeKey);
-                        pressagain = false;
-                        keyshelddown = kvpKey;
+                        wheel = outputKBMMapping.WHEEL_TICK_UP;
+                    }
+                    else if (globalState.currentClicks.wUpCount == 0 && globalState.previousClicks.wUpCount != 0)
+                        wheel = 0;
+
+                    if (globalState.currentClicks.wDownCount != 0 && globalState.previousClicks.wDownCount == 0)
+                    {
+                        outputKBMHandler.PerformMouseWheelEvent(outputKBMMapping.WHEEL_TICK_DOWN, 0);
+                        oldnow = DateTime.UtcNow;
+                        wheel = outputKBMMapping.WHEEL_TICK_DOWN;
+                    }
+                    if (globalState.currentClicks.wDownCount == 0 && globalState.previousClicks.wDownCount != 0)
+                        wheel = 0;
+
+                    if (globalState.currentClicks.wLeftCount != 0 &&
+                        globalState.previousClicks.wLeftCount == 0)
+                    {
+                        outputKBMHandler.PerformMouseWheelEvent(0,
+                            outputKBMMapping.WHEEL_TICK_DOWN);
+                        horizontalWheelOldNow = DateTime.UtcNow;
+                        horizontalWheel = outputKBMMapping.WHEEL_TICK_DOWN;
+                    }
+                    else if (globalState.currentClicks.wLeftCount == 0 &&
+                        globalState.previousClicks.wLeftCount != 0)
+                    {
+                        horizontalWheel = 0;
+                    }
+
+                    if (globalState.currentClicks.wRightCount != 0 &&
+                        globalState.previousClicks.wRightCount == 0)
+                    {
+                        outputKBMHandler.PerformMouseWheelEvent(0,
+                            outputKBMMapping.WHEEL_TICK_UP);
+                        horizontalWheelOldNow = DateTime.UtcNow;
+                        horizontalWheel = outputKBMMapping.WHEEL_TICK_UP;
+                    }
+                    else if (globalState.currentClicks.wRightCount == 0 &&
+                        globalState.previousClicks.wRightCount != 0)
+                    {
+                        horizontalWheel = 0;
+                    }
+                }
+
+
+                if (wheel != 0) //Continue mouse wheel movement
+                {
+                    DateTime now = DateTime.UtcNow;
+                    if (now >= oldnow + TimeSpan.FromMilliseconds(150) && !pressagain)
+                    {
+                        oldnow = now;
+                        outputKBMHandler.PerformMouseWheelEvent(wheel, 0);
+                    }
+                }
+
+                if (horizontalWheel != 0)
+                {
+                    DateTime now = DateTime.UtcNow;
+                    if (now >= horizontalWheelOldNow +
+                            TimeSpan.FromMilliseconds(150))
+                    {
+                        horizontalWheelOldNow = now;
+                        outputKBMHandler.PerformMouseWheelEvent(0,
+                            horizontalWheel);
+                    }
+                }
+
+                // Merge and synthesize all key presses/releases that are present in this device's mapping.
+                // TODO what about the rest?  e.g. repeat keys really ought to be on some set schedule
+                Dictionary<UInt16, SyntheticState.KeyPresses>.KeyCollection kvpKeys = state.keyPresses.Keys;
+                //foreach (KeyValuePair<UInt16, SyntheticState.KeyPresses> kvp in state.keyPresses)
+                //for (int i = 0, keyCount = kvpKeys.Count; i < keyCount; i++)
+                for (var keyEnum = kvpKeys.GetEnumerator(); keyEnum.MoveNext();)
+                {
+                    //UInt16 kvpKey = kvpKeys.ElementAt(i);
+                    UInt16 kvpKey = keyEnum.Current;
+                    SyntheticState.KeyPresses kvpValue = state.keyPresses[kvpKey];
+
+                    SyntheticState.KeyPresses gkp;
+                    if (globalState.keyPresses.TryGetValue(kvpKey, out gkp))
+                    {
+                        gkp.current.vkCount += kvpValue.current.vkCount - kvpValue.previous.vkCount;
+                        gkp.current.scanCodeCount += kvpValue.current.scanCodeCount - kvpValue.previous.scanCodeCount;
+                        gkp.current.repeatCount += kvpValue.current.repeatCount - kvpValue.previous.repeatCount;
+                        gkp.current.toggle = kvpValue.current.toggle;
+                        gkp.current.toggleCount += kvpValue.current.toggleCount - kvpValue.previous.toggleCount;
                     }
                     else
                     {
-                        oldnow = DateTime.UtcNow;
-                        outputKBMHandler.PerformKeyPress(nativeKey);
-                        pressagain = false;
-                        keyshelddown = kvpKey;
+                        gkp = new SyntheticState.KeyPresses();
+                        gkp.current = kvpValue.current;
+                        globalState.keyPresses[kvpKey] = gkp;
                     }
-                }
-                else if (outputKBMHandler.fakeKeyRepeat && (gkp.current.toggleCount != 0 || gkp.previous.toggleCount != 0 || gkp.current.repeatCount != 0 || // repeat or SC/VK transition
-                     ((gkp.previous.scanCodeCount == 0) != (gkp.current.scanCodeCount == 0)))) //repeat keystroke after 500ms
-                {
-                    if (keyshelddown == kvpKey)
+
+                    uint nativeKey = state.nativeKeyAlias[kvpKey];
+                    if (gkp.current.toggleCount != 0 && gkp.previous.toggleCount == 0 && gkp.current.toggle)
                     {
-                        DateTime now = DateTime.UtcNow;
-                        if (now >= oldnow + TimeSpan.FromMilliseconds(500) && !pressagain)
+                        if (gkp.current.scanCodeCount != 0)
+                            outputKBMHandler.PerformKeyPressAlt(nativeKey);
+                        else
+                            outputKBMHandler.PerformKeyPress(nativeKey);
+                    }
+                    else if (gkp.current.toggleCount != 0 && gkp.previous.toggleCount == 0 && !gkp.current.toggle)
+                    {
+                        if (gkp.previous.scanCodeCount != 0) // use the last type of VK/SC
+                            outputKBMHandler.PerformKeyReleaseAlt(nativeKey);
+                        else
+                            outputKBMHandler.PerformKeyRelease(nativeKey);
+                    }
+                    else if (gkp.current.vkCount + gkp.current.scanCodeCount != 0 && gkp.previous.vkCount + gkp.previous.scanCodeCount == 0)
+                    {
+                        if (gkp.current.scanCodeCount != 0)
                         {
-                            oldnow = now;
-                            pressagain = true;
+                            oldnow = DateTime.UtcNow;
+                            outputKBMHandler.PerformKeyPressAlt(nativeKey);
+                            pressagain = false;
+                            keyshelddown = kvpKey;
                         }
-                        if (pressagain && gkp.current.scanCodeCount != 0)
+                        else
                         {
-                            now = DateTime.UtcNow;
-                            if (now >= oldnow + TimeSpan.FromMilliseconds(25) && pressagain)
+                            oldnow = DateTime.UtcNow;
+                            outputKBMHandler.PerformKeyPress(nativeKey);
+                            pressagain = false;
+                            keyshelddown = kvpKey;
+                        }
+                    }
+                    else if (outputKBMHandler.fakeKeyRepeat && (gkp.current.toggleCount != 0 || gkp.previous.toggleCount != 0 || gkp.current.repeatCount != 0 || // repeat or SC/VK transition
+                         ((gkp.previous.scanCodeCount == 0) != (gkp.current.scanCodeCount == 0)))) //repeat keystroke after 500ms
+                    {
+                        if (keyshelddown == kvpKey)
+                        {
+                            DateTime now = DateTime.UtcNow;
+                            if (now >= oldnow + TimeSpan.FromMilliseconds(500) && !pressagain)
                             {
                                 oldnow = now;
-                                outputKBMHandler.PerformKeyPressAlt(nativeKey);
+                                pressagain = true;
                             }
-                        }
-                        else if (pressagain)
-                        {
-                            now = DateTime.UtcNow;
-                            if (now >= oldnow + TimeSpan.FromMilliseconds(25) && pressagain)
+                            if (pressagain && gkp.current.scanCodeCount != 0)
                             {
-                                oldnow = now;
-                                outputKBMHandler.PerformKeyPress(nativeKey);
+                                now = DateTime.UtcNow;
+                                if (now >= oldnow + TimeSpan.FromMilliseconds(25) && pressagain)
+                                {
+                                    oldnow = now;
+                                    outputKBMHandler.PerformKeyPressAlt(nativeKey);
+                                }
+                            }
+                            else if (pressagain)
+                            {
+                                now = DateTime.UtcNow;
+                                if (now >= oldnow + TimeSpan.FromMilliseconds(25) && pressagain)
+                                {
+                                    oldnow = now;
+                                    outputKBMHandler.PerformKeyPress(nativeKey);
+                                }
                             }
                         }
                     }
+
+                    if ((gkp.current.toggleCount == 0 && gkp.previous.toggleCount == 0) && gkp.current.vkCount + gkp.current.scanCodeCount == 0 && gkp.previous.vkCount + gkp.previous.scanCodeCount != 0)
+                    {
+                        if (gkp.previous.scanCodeCount != 0) // use the last type of VK/SC
+                        {
+                            outputKBMHandler.PerformKeyReleaseAlt(nativeKey);
+                            pressagain = false;
+                        }
+                        else
+                        {
+                            outputKBMHandler.PerformKeyRelease(nativeKey);
+                            pressagain = false;
+                        }
+                    }
                 }
 
-                if ((gkp.current.toggleCount == 0 && gkp.previous.toggleCount == 0) && gkp.current.vkCount + gkp.current.scanCodeCount == 0 && gkp.previous.vkCount + gkp.previous.scanCodeCount != 0)
-                {
-                    if (gkp.previous.scanCodeCount != 0) // use the last type of VK/SC
-                    {
-                        outputKBMHandler.PerformKeyReleaseAlt(nativeKey);
-                        pressagain = false;
-                    }
-                    else
-                    {
-                        outputKBMHandler.PerformKeyRelease(nativeKey);
-                        pressagain = false;
-                    }
-                }
+                globalState.SaveToPrevious(false);
+                state.SaveToPrevious(true);
+
+                // Send possible virtual events to system. Only used for FakerInput atm.
+                // Keep the flush in the publication boundary so replacing a backend
+                // cannot reset or null it between the button edge and its HID report.
+                outputKBMHandler.Sync();
             }
-
-            globalState.SaveToPrevious(false);
-
-            syncStateLock.ExitWriteLock();
-            state.SaveToPrevious(true);
-
-            // Send possible virtual events to system. Only used for FakerInput atm.
-            // SendInput version does nothing
-            outputKBMHandler.Sync();
+            finally { syncStateLock.ExitWriteLock(); }
         }
 
         public enum Click
@@ -1590,6 +1835,183 @@ namespace FUT404DS
             None, Left, Middle, Right, Fourth, Fifth, WUP, WDOWN, WLEFT,
             WRIGHT,
         };
+
+        // Called only inside syncStateLock. Publish edges of the union of all
+        // owners, never a release belonging to just one of several bindings.
+        private static void EmitMouseButtonTransition(Click button, int previous, int current)
+        {
+            if ((previous > 0) == (current > 0)) return;
+            bool down = current > 0;
+            switch (button)
+            {
+                case Click.Left:
+                    outputKBMHandler.PerformMouseButtonEvent(down ? outputKBMMapping.MOUSEEVENTF_LEFTDOWN : outputKBMMapping.MOUSEEVENTF_LEFTUP);
+                    break;
+                case Click.Middle:
+                    outputKBMHandler.PerformMouseButtonEvent(down ? outputKBMMapping.MOUSEEVENTF_MIDDLEDOWN : outputKBMMapping.MOUSEEVENTF_MIDDLEUP);
+                    break;
+                case Click.Right:
+                    outputKBMHandler.PerformMouseButtonEvent(down ? outputKBMMapping.MOUSEEVENTF_RIGHTDOWN : outputKBMMapping.MOUSEEVENTF_RIGHTUP);
+                    break;
+                case Click.Fourth:
+                case Click.Fifth:
+                    outputKBMHandler.PerformMouseButtonEventAlt(down ? outputKBMMapping.MOUSEEVENTF_XBUTTONDOWN : outputKBMMapping.MOUSEEVENTF_XBUTTONUP,
+                        button == Click.Fourth ? 1 : 2);
+                    break;
+            }
+        }
+
+        private static Click MacroMouseButton(int code) => code switch
+        {
+            256 => Click.Left,
+            257 => Click.Right,
+            258 => Click.Middle,
+            259 => Click.Fourth,
+            260 => Click.Fifth,
+            _ => Click.None,
+        };
+
+        internal sealed class MacroMouseOwner
+        {
+            internal int Device, Epoch;
+        }
+
+        private static MacroMouseOwner GetMacroMouseOwner(int device, bool[] keydown)
+        {
+            if (!globalState.macroMouseOwners.TryGetValue(keydown, out MacroMouseOwner owner))
+            {
+                owner = new MacroMouseOwner { Device = device, Epoch = globalState.macroEpochs[device] };
+                globalState.macroMouseOwners.Add(keydown, owner);
+            }
+            return owner;
+        }
+
+        private static void RegisterMacroMouseOwner(int device, bool[] keydown)
+            => RegisterMacroMouseOwnerInEpoch(device, keydown, CaptureMacroMouseEpoch(device));
+
+        private static int CaptureMacroMouseEpoch(int device)
+        {
+            syncStateLock.EnterReadLock();
+            try { return globalState.macroEpochs[device]; }
+            finally { syncStateLock.ExitReadLock(); }
+        }
+
+        private static void RegisterMacroMouseOwnerInEpoch(int device, bool[] keydown, int epoch)
+        {
+            syncStateLock.EnterWriteLock();
+            try
+            {
+                globalState.macroMouseOwners.Add(keydown,
+                    new MacroMouseOwner { Device = device, Epoch = epoch });
+            }
+            finally { syncStateLock.ExitWriteLock(); }
+        }
+
+        private static void MapMacroMouseButton(int device, int code, bool down, bool[] keydown)
+        {
+            Click button = MacroMouseButton(code);
+            syncStateLock.EnterWriteLock();
+            try
+            {
+                MacroMouseOwner owner = GetMacroMouseOwner(device, keydown);
+                if (owner.Device != device || owner.Epoch != globalState.macroEpochs[device]) return;
+                int previous = globalState.currentClicks.ButtonCount(button) +
+                    globalState.macroClicks.ButtonCount(button);
+                int retainedBit = 1 << (code - 256);
+                if (down && (globalState.retainedMacroButtons[device] & retainedBit) != 0)
+                {
+                    // A subsequent macro can take over a deliberately retained
+                    // button without accumulating an unreachable owner.
+                    globalState.retainedMacroButtons[device] &= ~retainedBit;
+                }
+                else
+                {
+                    globalState.macroClicks.AddButton(button, down ? 1 : -1);
+                    globalState.macroDeviceClicks[device].AddButton(button, down ? 1 : -1);
+                }
+                EmitMouseButtonTransition(button, previous,
+                    globalState.currentClicks.ButtonCount(button) +
+                    globalState.macroClicks.ButtonCount(button));
+                if ((previous > 0) != (globalState.currentClicks.ButtonCount(button) +
+                        globalState.macroClicks.ButtonCount(button) > 0))
+                {
+                    // Buffered HID backends must observe both edges of a
+                    // short macro, even between two controller reports.
+                    outputKBMHandler.Sync();
+                }
+            }
+            finally { syncStateLock.ExitWriteLock(); }
+        }
+
+        private static void RetainMacroMouseButtons(int device, bool[] keydown)
+        {
+            syncStateLock.EnterWriteLock();
+            try
+            {
+                MacroMouseOwner owner = GetMacroMouseOwner(device, keydown);
+                if (owner.Device != device || owner.Epoch != globalState.macroEpochs[device]) return;
+                for (int code = 256; code <= 260; code++)
+                {
+                    if (!keydown[code]) continue;
+                    int bit = 1 << (code - 256);
+                    if ((globalState.retainedMacroButtons[device] & bit) != 0)
+                    {
+                        globalState.macroClicks.AddButton(MacroMouseButton(code), -1);
+                        globalState.macroDeviceClicks[device].AddButton(MacroMouseButton(code), -1);
+                    }
+                    globalState.retainedMacroButtons[device] |= bit;
+                }
+            }
+            finally { syncStateLock.ExitWriteLock(); }
+        }
+
+        internal static void CommitNeutral(int device)
+        {
+            ClearAutomaticProfileSwitchIntent(device);
+            syncStateLock.EnterWriteLock();
+            try
+            {
+                // Retire this slot's macro epoch before releasing its output.
+                // Delayed macro steps may finish, but cannot reclaim the mouse.
+                globalState.macroEpochs[device]++;
+                for (Click button = Click.Left; button <= Click.Fifth; button++)
+                {
+                    int previous = globalState.currentClicks.ButtonCount(button) +
+                        globalState.macroClicks.ButtonCount(button);
+                    globalState.macroClicks.AddButton(button,
+                        -globalState.macroDeviceClicks[device].ButtonCount(button));
+                    EmitMouseButtonTransition(button, previous,
+                        globalState.currentClicks.ButtonCount(button) +
+                        globalState.macroClicks.ButtonCount(button));
+                }
+                globalState.macroDeviceClicks[device] = default;
+                globalState.retainedMacroButtons[device] = 0;
+                deviceState[device].currentClicks = default;
+                deviceState[device].ClearMouseButtonToggles();
+            }
+            finally { syncStateLock.ExitWriteLock(); }
+            Commit(device);
+        }
+
+        internal static bool ReplaceMouseOutput(Func<bool> replace)
+        {
+            // The replacement callback must return true only after the old
+            // backend has disconnected and the new backend is initialized.
+            // No macro/Commit may publish an edge between reset and replay.
+            syncStateLock.EnterWriteLock();
+            try
+            {
+                if (!replace()) return false;
+                for (Click button = Click.Left; button <= Click.Fifth; button++)
+                    EmitMouseButtonTransition(button, 0,
+                        globalState.currentClicks.ButtonCount(button) +
+                        globalState.macroClicks.ButtonCount(button));
+                outputKBMHandler.Sync();
+                return true;
+            }
+            finally { syncStateLock.ExitWriteLock(); }
+        }
+
         public static void MapClick(int device, Click mouseClick)
         {
             switch (mouseClick)
@@ -2503,6 +2925,7 @@ namespace FUT404DS
             //DS4StateFieldMapping outputfieldMapping = new DS4StateFieldMapping(cState, eState, tp);
 
             SyntheticState deviceState = Mapping.deviceState[device];
+            deviceState.SetMouseMappingContext(cState, eState, tp, fieldMapping);
             // Calibration is an Axis Config command, not a button remap or
             // Special Action. Reserve its normal output before either runs;
             // only field maps change, never the physical report snapshot.
@@ -4070,7 +4493,6 @@ namespace FUT404DS
                 }
                 else if (actionType == DS4ControlSettings.ActionType.Button)
                 {
-                    int keyvalue = 0;
                     bool isAnalog = false;
 
                     if (dcs.control >= DS4Controls.LXNeg && dcs.control <= DS4Controls.RYPos)
@@ -4125,58 +4547,25 @@ namespace FUT404DS
                         switch (xboxControl)
                         {
                             case X360Controls.LeftMouse:
-                                {
-                                    keyvalue = 256;
-                                    if (GetBoolActionMappingForMappedAction(
-                                            device, dcs.control, cState,
-                                            eState, tp, fieldMapping,
-                                            switch2DirectionTapEligible))
-                                        deviceState.currentClicks.leftCount++;
-
-                                    break;
-                                }
                             case X360Controls.RightMouse:
-                                {
-                                    keyvalue = 257;
-                                    if (GetBoolActionMappingForMappedAction(
-                                            device, dcs.control, cState,
-                                            eState, tp, fieldMapping,
-                                            switch2DirectionTapEligible))
-                                        deviceState.currentClicks.rightCount++;
-
-                                    break;
-                                }
                             case X360Controls.MiddleMouse:
-                                {
-                                    keyvalue = 258;
-                                    if (GetBoolActionMappingForMappedAction(
-                                            device, dcs.control, cState,
-                                            eState, tp, fieldMapping,
-                                            switch2DirectionTapEligible))
-                                        deviceState.currentClicks.middleCount++;
-
-                                    break;
-                                }
                             case X360Controls.FourthMouse:
-                                {
-                                    keyvalue = 259;
-                                    if (GetBoolActionMappingForMappedAction(
-                                            device, dcs.control, cState,
-                                            eState, tp, fieldMapping,
-                                            switch2DirectionTapEligible))
-                                        deviceState.currentClicks.fourthCount++;
-
-                                    break;
-                                }
                             case X360Controls.FifthMouse:
                                 {
-                                    keyvalue = 260;
-                                    if (GetBoolActionMappingForMappedAction(
+                                    Click target = xboxControl switch
+                                    {
+                                        X360Controls.LeftMouse => Click.Left,
+                                        X360Controls.RightMouse => Click.Right,
+                                        X360Controls.MiddleMouse => Click.Middle,
+                                        X360Controls.FourthMouse => Click.Fourth,
+                                        _ => Click.Fifth,
+                                    };
+                                    deviceState.MapMouseButton(dcs.control, target,
+                                        GetBoolActionMappingForMappedAction(
                                             device, dcs.control, cState,
                                             eState, tp, fieldMapping,
-                                            switch2DirectionTapEligible))
-                                        deviceState.currentClicks.fifthCount++;
-
+                                            switch2DirectionTapEligible),
+                                        keyType.HasFlag(DS4KeyType.Toggle));
                                     break;
                                 }
                             case X360Controls.WUP:
@@ -4459,26 +4848,6 @@ namespace FUT404DS
                                 break;
 
                             default: break;
-                        }
-                    }
-
-                    if (keyType.HasFlag(DS4KeyType.Toggle))
-                    {
-                        if (GetBoolActionMappingForMappedAction(device,
-                                dcs.control, cState, eState, tp,
-                                fieldMapping,
-                                switch2DirectionTapEligible))
-                        {
-                            if (!pressedonce[keyvalue])
-                            {
-                                deviceState.currentClicks.toggle = !deviceState.currentClicks.toggle;
-                                pressedonce[keyvalue] = true;
-                            }
-                            deviceState.currentClicks.toggleCount++;
-                        }
-                        else
-                        {
-                            pressedonce[keyvalue] = false;
                         }
                     }
 
@@ -4766,9 +5135,13 @@ namespace FUT404DS
                             {
                                 actionFound = true;
 
-                                if (!actionDone[index].dev[device] && (!useTempProfile[device] || untriggeraction[device] == null || untriggeraction[device].typeID != SpecialAction.ActionTypeId.Profile))
+                                if (!actionDone[index].dev[device] &&
+                                    (!action.automaticUntrigger || !IsAutomaticProfileSwitchHeld(device, action)) &&
+                                    (!useTempProfile[device] || untriggeraction[device] == null || untriggeraction[device].typeID != SpecialAction.ActionTypeId.Profile))
                                 {
                                     actionDone[index].dev[device] = true;
+                                    AutomaticProfileSwitchIntent automaticIntent = action.automaticUntrigger ?
+                                        BeginAutomaticProfileSwitch(device, action) : null;
                                     // If Loadprofile special action doesn't have untrigger keys or automatic untrigger option is not set then don't set untrigger status. This way the new loaded profile allows yet another loadProfile action key event.
                                     if (action.uTrigger.Count > 0 || action.automaticUntrigger)
                                     {
@@ -4778,8 +5151,11 @@ namespace FUT404DS
                                         // If the existing profile is a temp profile then store its name, because automaticUntrigger needs to know where to go back (empty name goes back to default regular profile)
                                         untriggeraction[device].prevProfileName = (useTempProfile[device] ? tempprofilename[device] : string.Empty);
                                     }
-                                    //foreach (DS4Controls dc in action.trigger)
-                                    for (int i = 0, arlen = action.trigger.Count; i < arlen; i++)
+                                    // Automatic temporary switches keep mapping
+                                    // while the worker prepares. Let Commit
+                                    // reconcile old/new owners; a direct key-up
+                                    // would cancel another held binding's key.
+                                    for (int i = 0, arlen = action.automaticUntrigger ? 0 : action.trigger.Count; i < arlen; i++)
                                     {
                                         DS4Controls dc = action.trigger[i];
                                         DS4ControlSettings dcs = GetDS4CSetting(device, dc);
@@ -4808,7 +5184,7 @@ namespace FUT404DS
 
                                     AppLogger.LogToGui(prolog, false);
                                     if (Global.ProfileChangedNotification) AppLogger.LogToTray(prolog);
-                                    RequestProfileSwitch(device, action.details, true, true, ctrl, loaded =>
+                                    long activationRevision = RequestProfileSwitch(device, action.details, true, true, ctrl, loaded =>
                                     {
                                         if (loaded && action.uTrigger.Count == 0 && !action.automaticUntrigger)
                                         {
@@ -4825,7 +5201,10 @@ namespace FUT404DS
                                                     actionDone[indexNext].dev[device] = true;
                                             }
                                         }
-                                    });
+                                    }, automaticIntent == null ? null :
+                                        () => IsAutomaticProfileActivationCurrent(device, automaticIntent));
+                                    if (automaticIntent != null)
+                                        Volatile.Write(ref automaticIntent.ActivationRevision, activationRevision);
 
                                     return;
                                 }
@@ -5267,9 +5646,13 @@ namespace FUT404DS
 
                 if (utriggeractivated && action.typeID == SpecialAction.ActionTypeId.Profile)
                 {
-                    if ((action.controls == action.ucontrols && !actionDone[index].dev[device]) || //if trigger and end trigger are the same
+                    if (action.automaticUntrigger ||
+                        (action.controls == action.ucontrols && !actionDone[index].dev[device]) || //if trigger and end trigger are the same
                     action.controls != action.ucontrols)
                     {
+                        if (action.automaticUntrigger &&
+                            TryReturnAutomaticProfile(device, action, index, ctrl))
+                            return;
                         if (useTempProfile[device])
                         {
                             //foreach (DS4Controls dc in action.uTrigger)
@@ -5309,7 +5692,8 @@ namespace FUT404DS
                 }
                 else
                 {
-                    actionDone[index].dev[device] = false;
+                    if (!action.automaticUntrigger)
+                        actionDone[index].dev[device] = false;
                 }
             }
         }
@@ -5346,22 +5730,28 @@ namespace FUT404DS
         // If the macro definition is a macroStr string value then it will be converted as integer array on the fl. If steps are already defined as list or array of integers then there is no need to do type cast conversion.
         private static void PlayMacro(int device, bool[] macrocontrol, string macroStr, List<int> macroLst, int[] macroArr, DS4Controls control, DS4KeyType keyType, SpecialAction action = null, ActionState actionDoneState = null)
         {
+            // Capture admission before queuing: a synchronized macro may not
+            // start until after this controller/slot has already retired.
+            int mouseEpoch = CaptureMacroMouseEpoch(device);
             if (action != null && action.synchronized)
             {
                 // Run special action macros in synchronized order (ie. FirstIn-FirstOut). The trigger control name string is the execution queue identifier (ie. each unique trigger combination has an own synchronization queue).
                 if (!macroTaskQueue[device].TryGetValue(action.controls, out Task prevTask))
-                    macroTaskQueue[device].Add(action.controls, (Task.Factory.StartNew(() => PlayMacroTask(device, macroControl, macroStr, macroLst, macroArr, control, keyType, action, actionDoneState))));
+                    macroTaskQueue[device].Add(action.controls, (Task.Factory.StartNew(() => PlayMacroTaskInEpoch(device, macroControl, macroStr, macroLst, macroArr, control, keyType, action, actionDoneState, mouseEpoch))));
                 else
-                    macroTaskQueue[device][action.controls] = prevTask.ContinueWith((x) => PlayMacroTask(device, macroControl, macroStr, macroLst, macroArr, control, keyType, action, actionDoneState));
+                    macroTaskQueue[device][action.controls] = prevTask.ContinueWith((x) => PlayMacroTaskInEpoch(device, macroControl, macroStr, macroLst, macroArr, control, keyType, action, actionDoneState, mouseEpoch));
             }
             else
                 // Run macro as "fire and forget" background task. No need to wait for completion of any of the other macros. 
                 // If the same trigger macro is re-launched while previous macro is still running then the order of parallel macros is not guaranteed.
-                Task.Factory.StartNew(() => PlayMacroTask(device, macroControl, macroStr, macroLst, macroArr, control, keyType, action, actionDoneState));
+                Task.Factory.StartNew(() => PlayMacroTaskInEpoch(device, macroControl, macroStr, macroLst, macroArr, control, keyType, action, actionDoneState, mouseEpoch));
         }
 
         // Play through a macro. The macro steps are defined either as string, List or Array object (always only one of those parameters is set to a valid value)
         private static void PlayMacroTask(int device, bool[] macrocontrol, string macroStr, List<int> macroLst, int[] macroArr, DS4Controls control, DS4KeyType keyType, SpecialAction action, ActionState actionDoneState)
+            => PlayMacroTaskInEpoch(device, macrocontrol, macroStr, macroLst, macroArr, control, keyType, action, actionDoneState, CaptureMacroMouseEpoch(device));
+
+        private static void PlayMacroTaskInEpoch(int device, bool[] macrocontrol, string macroStr, List<int> macroLst, int[] macroArr, DS4Controls control, DS4KeyType keyType, SpecialAction action, ActionState actionDoneState, int mouseEpoch)
         {
             if (!String.IsNullOrEmpty(macroStr))
             {
@@ -5397,6 +5787,7 @@ namespace FUT404DS
             {
                 int macroCodeValue;
                 bool[] keydown = new bool[512];
+                RegisterMacroMouseOwnerInEpoch(device, keydown, mouseEpoch);
 
                 if (control != DS4Controls.None)
                     macrodone[DS4ControltoInt(control)] = true;
@@ -5435,6 +5826,10 @@ namespace FUT404DS
                     DS4LightBar.forcedFlash[device] = 0;
                     DS4LightBar.forcelight[device] = false;
                 }
+                else
+                {
+                    RetainMacroMouseButtons(device, keydown);
+                }
 
                 // Commented out rumble reset. No need to zero out rumble after a macro because it may conflict with a game generated rumble events (ie. macro would stop a game generated rumble effect).
                 // If macro generates rumble effects then the macro can stop the rumble as a last step or wait for rumble watchdog timer to do it after few seconds.
@@ -5470,6 +5865,12 @@ namespace FUT404DS
                     if (macroCount > 0) macroCount--;
                 }
             }
+            else if (macroCodeValue >= 256 && macroCodeValue <= 260)
+            {
+                bool down = !keydown[macroCodeValue];
+                MapMacroMouseButton(device, macroCodeValue, down, keydown);
+                keydown[macroCodeValue] = down;
+            }
             else if (macroCodeValue < 300)
             {
                 // Keyboard key or mouse button macro event
@@ -5477,13 +5878,6 @@ namespace FUT404DS
                 {
                     switch (macroCodeValue)
                     {
-                        //anything above 255 is not a keyvalue
-                        case 256: outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_LEFTDOWN); break;
-                        case 257: outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_RIGHTDOWN); break;
-                        case 258: outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_MIDDLEDOWN); break;
-                        case 259: outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONDOWN, 1); break;
-                        case 260: outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONDOWN, 2); break;
-
                         default:
                             uint eventMacroCode = !outputKBMMapping.macroKeyTranslate ? (uint)macroCodeValue :
                                 outputKBMMapping.GetRealEventKey((uint)macroCodeValue);
@@ -5498,13 +5892,6 @@ namespace FUT404DS
                 {
                     switch (macroCodeValue)
                     {
-                        //anything above 255 is not a keyvalue
-                        case 256: outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_LEFTUP); break;
-                        case 257: outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_RIGHTUP); break;
-                        case 258: outputKBMHandler.PerformMouseButtonEvent(outputKBMMapping.MOUSEEVENTF_MIDDLEUP); break;
-                        case 259: outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONUP, 1); break;
-                        case 260: outputKBMHandler.PerformMouseButtonEventAlt(outputKBMMapping.MOUSEEVENTF_XBUTTONUP, 2); break;
-
                         default:
                             uint eventMacroCode = !outputKBMMapping.macroKeyTranslate ? (uint)macroCodeValue :
                                 outputKBMMapping.GetRealEventKey((uint)macroCodeValue);

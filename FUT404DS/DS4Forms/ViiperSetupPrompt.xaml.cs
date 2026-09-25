@@ -66,15 +66,15 @@ namespace FUT404DSWPF.DS4Forms
                     : "The installed VIIPER does not match this FUT404DS package.";
                 requirementsHeadingText.Text = "Verified update required";
                 requirementsText.Text = usbipReplacementRequired
-                    ? "• Install and verify bundled VIIPER 0.1.5-rc4.6\n" +
+                    ? "• Install and verify bundled VIIPER 0.1.9-rc4.6.6\n" +
                       "• Safely remove the unsupported USB-IP package\n" +
                       "• Restart, then finish installing USB-IP 0.9.7.7"
                     : "• Install the exact bundled VIIPER build\n" +
-                      "• Choose managed or portable FUT404DS\n" +
+                      "• Keep your existing installation location\n" +
                       "• The unverified backend will not be started";
                 installButton.Content = usbipReplacementRequired
                     ? "Repair VIIPER + USB-IP"
-                    : "Install standard";
+                    : "Install / Repair";
                 installPortableButton.Content =
                     "Keep FUT404DS portable";
                 existingViiperPanel.Visibility = Visibility.Collapsed;
@@ -88,7 +88,7 @@ namespace FUT404DSWPF.DS4Forms
                 summaryText.Text = currentStatus;
                 requirementsHeadingText.Text = "Required before FUT404DS can run";
                 requirementsText.Text =
-                    "• Install the bundled VIIPER 0.1.5-rc4.6 build\n" +
+                    "• Install the bundled VIIPER 0.1.9-rc4.6.6 build\n" +
                     "• Install and verify USB-IP 0.9.7.7\n" +
                     "• Start FUT404DS only after the runtime probe passes";
                 installButton.Content = "Install / Repair";

@@ -1,5 +1,10 @@
 [CmdletBinding()]
-param([Parameter(Mandatory)][string]$NewMsi)
+param(
+    [Parameter(Mandatory)][string]$NewMsi,
+    [Parameter(Mandatory)]
+    [ValidatePattern('\A[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\z')]
+    [string]$ExpectedVersion
+)
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -9,7 +14,7 @@ $ErrorActionPreference = 'Stop'
 if ($env:GITHUB_ACTIONS -cne 'true' -or
     $env:RUNNER_ENVIRONMENT -cne 'github-hosted' -or
     $env:RUNNER_OS -cne 'Windows' -or
-    $env:GITHUB_REPOSITORY -cne 'hbashton/DS4Windows' -or
+    $env:GITHUB_REPOSITORY -cne 'hbashton/FUT404DS' -or
     $env:GITHUB_RUN_ID -notmatch '^\d+$' -or
     [string]::IsNullOrWhiteSpace($env:RUNNER_TEMP) -or
     [string]::IsNullOrWhiteSpace($env:GITHUB_WORKSPACE)) {
@@ -52,14 +57,14 @@ if (-not (Test-AtOrBelow $NewMsi $workspaceRoot) -and
     -not (Test-AtOrBelow $NewMsi $runnerRoot)) {
     throw 'The new MSI must be in this hosted runner workspace or temporary directory.'
 }
-$installRoot = Assert-LocalPath (Join-Path $env:ProgramFiles 'DS4Windows')
-$installedApp = Join-Path $installRoot 'DS4Windows.exe'
+$installRoot = Assert-LocalPath (Join-Path $env:ProgramFiles 'FUT404DS')
+$installedApp = Join-Path $installRoot 'FUT404DS.exe'
 $upgradeCode = '{65E808E3-D35A-4825-AE11-8D9415F16446}'
 $oldVersion = '5.0.5.5'
-$newVersion = '5.0.8.0'
+$newVersion = $ExpectedVersion
 $oldInstallerSha256 = '5DCA513CE521DD660BADAC0DD6A23FDCE8A3192930397C4A6C45D44A69B8ED74'
 $oldInstallerLength = 200120243L
-$oldInstallerUrl = 'https://github.com/hbashton/DS4Windows/releases/download/VIIPERRC4.5.5/DS4Windows_5.0.5.5_Setup_x64.exe'
+$oldInstallerUrl = 'https://github.com/hbashton/FUT404DS/releases/download/VIIPERRC4.5.5/FUT404DS_5.0.5.5_Setup_x64.exe'
 
 # Inventory only. Avoid Win32_Product, which can trigger unrelated MSI repairs.
 Add-Type -TypeDefinition @'
@@ -83,20 +88,20 @@ public static class Ds4HostedMsiInventory {
 }
 '@
 function Assert-NoRuntimeProcesses {
-    if (@(Get-Process -Name DS4Windows, viiper -ErrorAction SilentlyContinue).Count) {
-        throw 'A DS4Windows or VIIPER process exists; the application-only fixture will not stop or adopt it.'
+    if (@(Get-Process -Name FUT404DS, viiper -ErrorAction SilentlyContinue).Count) {
+        throw 'A FUT404DS or VIIPER process exists; the application-only fixture will not stop or adopt it.'
     }
 }
 Assert-NoRuntimeProcesses
 if (@([Ds4HostedMsiInventory]::Related($upgradeCode)).Count -ne 0 -or
     ((Test-Path -LiteralPath $installRoot) -and
         @(Get-ChildItem -LiteralPath $installRoot -Force).Count -ne 0)) {
-    throw 'A pre-existing DS4Windows installation is present; refusing the upgrade fixture.'
+    throw 'A pre-existing FUT404DS installation is present; refusing the upgrade fixture.'
 }
-$registeredPath = Get-ItemPropertyValue -LiteralPath 'HKLM:\SOFTWARE\DS4Windows' -Name InstallPath -ErrorAction SilentlyContinue
-if ($registeredPath) { throw 'A pre-existing managed DS4Windows registration is present.' }
+$registeredPath = Get-ItemPropertyValue -LiteralPath 'HKLM:\SOFTWARE\FUT404DS' -Name InstallPath -ErrorAction SilentlyContinue
+if ($registeredPath) { throw 'A pre-existing managed FUT404DS registration is present.' }
 
-$runRoot = Join-Path $runnerRoot ('ds4windows-previous-msi-upgrade-' + [Guid]::NewGuid().ToString('N'))
+$runRoot = Join-Path $runnerRoot ('fut404ds-previous-msi-upgrade-' + [Guid]::NewGuid().ToString('N'))
 [void](New-Item -ItemType Directory -Path $runRoot)
 $script:MutationTimedOut = $false
 $script:InstalledCodes = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
@@ -123,7 +128,7 @@ function Invoke-Msi([string]$Arguments, [string]$Phase) {
 function Get-PreviousMsiPayload([string]$PayloadRoot, [string]$ExpectedVersion) {
     $PayloadRoot = Assert-LocalPath $PayloadRoot
     if ($ExpectedVersion -notmatch '^\d+\.\d+\.\d+\.\d+$') { throw 'Invalid expected MSI version.' }
-    $name = "DS4Windows_${ExpectedVersion}_x64.msi"
+    $name = "FUT404DS_${ExpectedVersion}_x64.msi"
     $expected = Join-Path $PayloadRoot ('WixAttachedContainer\' + $name)
     $matchingPayloads = @(Get-ChildItem -LiteralPath $PayloadRoot -Filter $name -File -Recurse)
     if ($matchingPayloads.Count -ne 1 -or $matchingPayloads[0].FullName -ine $expected) {
@@ -148,7 +153,7 @@ function Expand-PreviousBundlePayloads([string]$RepositoryRoot, [string]$BundleP
     }, $true)
     if (-not $resolver) { throw 'The verified WiX SDK resolver was not found.' }
     Invoke-Expression $resolver.Extent.Text
-    $wix = Resolve-WixExecutable (Join-Path $RepositoryRoot 'installer\DS4Windows.Bundle\DS4Windows.Bundle.wixproj')
+    $wix = Resolve-WixExecutable (Join-Path $RepositoryRoot 'installer\FUT404DS.Bundle\FUT404DS.Bundle.wixproj')
     $ExtractionRoot = Assert-LocalPath $ExtractionRoot
     if (Test-Path -LiteralPath $ExtractionRoot) { throw 'Passive extraction requires a fresh directory.' }
     $payloads = Join-Path $ExtractionRoot 'payloads'
@@ -200,7 +205,7 @@ function Inspect-Msi([string]$Path, [string]$ExpectedVersion) {
         foreach ($name in @('ProductCode', 'ProductName', 'ProductVersion', 'UpgradeCode')) {
             $properties[$name] = Get-MsiProperty $database $name
         }
-        if ($properties.ProductName -cne 'DS4Windows' -or
+        if ($properties.ProductName -cne 'FUT404DS' -or
             $properties.ProductVersion -cne $ExpectedVersion -or
             $properties.UpgradeCode -ine $upgradeCode -or
             $properties.ProductCode -notmatch '^\{[0-9A-Fa-f-]{36}\}$') {
@@ -259,7 +264,7 @@ try {
     if (@([Ds4HostedMsiInventory]::Related($upgradeCode)).Count -ne 0) {
         throw 'Layout unexpectedly changed MSI registration; refusing further work.'
     }
-    $layoutBundle = Join-Path $layout 'DS4Windows_VIIPERRC4.5.5_Setup_x64.exe'
+    $layoutBundle = Join-Path $layout 'FUT404DS_VIIPERRC4.5.5_Setup_x64.exe'
     if (-not (Test-Path -LiteralPath $layoutBundle -PathType Leaf) -or
         (Get-FileHash -LiteralPath $layoutBundle -Algorithm SHA256).Hash -cne $oldInstallerSha256) {
         throw 'Layout did not preserve the exact pinned previous bundle.'
@@ -276,11 +281,11 @@ try {
     Invoke-Msi "/i `"$oldMsi`"" '01-install-previous'
     Assert-Installed $oldIdentity.ProductCode $oldVersion
     foreach ($profileRoot in @((Join-Path $installRoot 'Profiles'),
-        (Join-Path ([Environment]::GetFolderPath('ApplicationData')) 'DS4Windows\Profiles'))) {
+        (Join-Path ([Environment]::GetFolderPath('ApplicationData')) 'FUT404DS\Profiles'))) {
         $profileRoot = Assert-LocalPath $profileRoot
         [void](New-Item -ItemType Directory -Path $profileRoot -Force)
         $sentinel = Join-Path $profileRoot ('rc456-upgrade-fixture-' + [Guid]::NewGuid().ToString('N') + '.xml')
-        [IO.File]::WriteAllText($sentinel, '<DS4Windows><Name>CI upgrade preservation sentinel</Name></DS4Windows>')
+        [IO.File]::WriteAllText($sentinel, '<FUT404DS><Name>CI upgrade preservation sentinel</Name></FUT404DS>')
         $script:Sentinels.Add($sentinel, (Get-FileHash -LiteralPath $sentinel -Algorithm SHA256).Hash)
     }
     [void]$script:InstalledCodes.Add($newIdentity.ProductCode)

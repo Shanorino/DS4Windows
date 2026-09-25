@@ -25,8 +25,15 @@ namespace FUT404DS.InputDevices
         internal const int NativeCommandIdentityOffset =
             DualSenseBluetoothPhysicalOutputSequence.
                 ControllerStatePayloadLength + sizeof(long) + ReportLength;
-        internal const int GameStateAndTemplatePayloadLength =
+        internal const int NativeCommandRumblePolicyOffset =
             NativeCommandIdentityOffset + sizeof(long) + sizeof(int);
+        internal const int GameStateAndTemplatePayloadLength =
+            NativeCommandRumblePolicyOffset + sizeof(byte);
+        internal enum NativeRumbleUpdatePolicy : byte
+        {
+            Authoritative = 0,
+            SettingsRefresh = 1,
+        }
         // Keep media on the hardware-validated MeasuredTransport-sized carrier: one
         // complete speaker/haptics generation per 10.667 ms. The 547-byte
         // paired carrier is valid on the combined-report reference's raw L2CAP stack, but Windows
@@ -165,7 +172,7 @@ namespace FUT404DS.InputDevices
         }
 
         private const string HelperArgument = "--dualsense-bt-audio-pacer-helper";
-        private const int ProtocolVersion = 16;
+        private const int ProtocolVersion = 17;
         private const int PipeConnectTimeoutMilliseconds = 5000;
         private const int HelperReadyTimeoutMilliseconds = 5000;
         private const int HelperStopTimeoutMilliseconds = 3000;
@@ -1772,13 +1779,15 @@ namespace FUT404DS.InputDevices
 
         public bool UpdateGameStateAndTemplate(byte[] gameStateReport,
             byte[] quiescentTemplate, long hapticsExpiryQpc,
-            out bool capacityUnavailable)
+            out bool capacityUnavailable,
+            NativeRumbleUpdatePolicy rumblePolicy = NativeRumbleUpdatePolicy.Authoritative)
         {
             capacityUnavailable = false;
             if (gameStateReport == null ||
                 gameStateReport.Length != ReportLength ||
                 quiescentTemplate == null ||
-                quiescentTemplate.Length != ReportLength || !IsRunning)
+                quiescentTemplate.Length != ReportLength || !IsRunning ||
+                rumblePolicy > NativeRumbleUpdatePolicy.SettingsRefresh)
             {
                 return false;
             }
@@ -1829,6 +1838,7 @@ namespace FUT404DS.InputDevices
                     AsSpan(NativeCommandIdentityOffset), commandId);
                 BinaryPrimitives.WriteInt32LittleEndian(command.Payload.Buffer.
                     AsSpan(NativeCommandIdentityOffset + sizeof(long)), generation);
+                command.Payload.Buffer[NativeCommandRumblePolicyOffset] = (byte)rumblePolicy;
                 // Do not replace an older game delta in the parent FIFO. The
                 // helper preserves exact commands at the physical
                 // boundary; replacing here could erase a rumble stop,
@@ -3048,6 +3058,7 @@ namespace FUT404DS.InputDevices
             {
                 public long Id;
                 public int Generation;
+                public NativeRumbleUpdatePolicy RumblePolicy;
                 public readonly byte[] State = new byte[DualSensePendingGameStateComposer.StateLength];
                 public readonly byte[] QuiescentState = new byte[DualSensePendingGameStateComposer.StateLength];
             }
@@ -3143,6 +3154,14 @@ namespace FUT404DS.InputDevices
             private byte acceptedImprovedRumbleMode;
             private byte acceptedLightRumble;
             private byte acceptedHeavyRumble;
+            private bool acceptedSettingsRefreshRumbleRetained;
+            private long acceptedRumbleMediaWatermark;
+            // These describe the original claimed command, before an unowned
+            // local LED/trigger update inherits the accepted continuous tuple.
+            private bool claimedControllerRumbleExplicit;
+            private bool claimedSettingsRefreshRumbleRetained;
+            internal Action BeforeMediaPhysicalWriteTestHook = null;
+            internal Action BeforeNativeCommandCreditProbeTestHook = null;
             private bool HasPendingControllerState => pendingControllerStateAvailable || nativeCommands.Count != 0;
             private readonly byte[] controllerStatePresentation = new byte[
                 DualSenseBluetoothPhysicalOutputSequence.
@@ -3164,6 +3183,10 @@ namespace FUT404DS.InputDevices
                     ControllerStatePayloadLength];
             private readonly DualSenseRealtimeHapticsSharedRing
                 realtimeHaptics;
+            internal Action BeforeRealtimeHapticsAvailabilityProbeTestHook = null;
+            private readonly DualSenseRearHapticsUnderrunGate rearHapticsUnderrunGate =
+                new(Stopwatch.Frequency);
+            private long rearHapticsDeferralDeadlineQpc;
             private readonly bool useMeasuredTransportAudioTransport;
             private readonly bool useCompactCombinedHapticsTransport;
             private readonly bool useNativeAudioTransport;
@@ -3868,6 +3891,11 @@ namespace FUT404DS.InputDevices
                 int startupReportsRemaining, long nowQpc)
             {
                 if (!CanQueuedSpeakerConsumeControllerStateLocked()) return false;
+                // A briefly unavailable rear block has not claimed the front
+                // carrier. Eligible immutable native commands can still use
+                // their own lane; local latest-state piggyback stays ordered.
+                if (nativeCommands.Count != 0 && rearHapticsDeferralDeadlineQpc > nowQpc)
+                    return false;
                 return nativeCommands.Count == 0 || primeRequired ||
                     startupReportsRemaining > 0 || !mediaScheduler.IsStarted ||
                     mediaScheduler.NextDeadlineQpc <= nowQpc;
@@ -3887,6 +3915,12 @@ namespace FUT404DS.InputDevices
 
             private long SelectV5PresentationWakeDeadlineLocked(long nowQpc, long mediaDeadline)
             {
+                // While rear data is briefly deferred, native HID credit may
+                // return without an IPC/data notification. Retain the normal
+                // 1 ms Busy retry instead of sleeping the full rear deadline.
+                if (rearHapticsDeferralDeadlineQpc > nowQpc && nativeCommands.Count != 0 &&
+                    !nativeCommandCreditAvailable && PendingStateReportsAhead <= 0)
+                    return Math.Min(mediaDeadline, nowQpc + Math.Max(1, Stopwatch.Frequency / 1000));
                 // An overdue media slot wins even if a control deadline is
                 // older. Selecting that older deadline would repeatedly return
                 // to the loop whose due-media priority then rejects the control,
@@ -3911,6 +3945,11 @@ namespace FUT404DS.InputDevices
                 WaitHandle[] mediaWaits = timerWait != null ?
                     new WaitHandle[] { timerWait, stopRequested, reservoirChanged } :
                     new WaitHandle[] { stopRequested, reservoirChanged };
+                WaitHandle[] rearWaits = timerWait != null ?
+                    new WaitHandle[] { timerWait, stopRequested, reservoirChanged,
+                        realtimeHaptics.DataAvailableSignal } :
+                    new WaitHandle[] { stopRequested, reservoirChanged,
+                        realtimeHaptics.DataAvailableSignal };
                 // Compact/paired fallbacks retain the rational clock. The V5
                 // source opts into the native transport's separately observed 10/20 ms
                 // host lattice below; other native sources keep their existing
@@ -3930,6 +3969,9 @@ namespace FUT404DS.InputDevices
                         ApplyPendingLifecycleResets(
                             ref appliedLifecycleResetRevision,
                             ref appliedWriterClockResetRevision);
+                        if (rearHapticsDeferralDeadlineQpc != 0)
+                            UpdateRearHapticsDeferral(Stopwatch.GetTimestamp());
+                        BeforeNativeCommandCreditProbeTestHook?.Invoke();
                         // Completion polling is physical I/O and must remain
                         // outside stateLock. The write rechecks credit
                         // atomically; a busy native lane never blocks media.
@@ -4126,7 +4168,8 @@ namespace FUT404DS.InputDevices
                                     lock (stateLock)
                                     {
                                         if (!claimedNative && lifecycleResetRevision == appliedLifecycleResetRevision)
-                                            CommitAcceptedRumbleModeLocked(controllerStatePresentation);
+                                            CommitAcceptedRumbleModeLocked(controllerStatePresentation,
+                                                claimedControllerRumbleExplicit);
                                         // A newer state/reset remains pending;
                                         // completing this older claimed write
                                         // must not clear or overwrite it.
@@ -4173,10 +4216,12 @@ namespace FUT404DS.InputDevices
                                         if (HasPendingControllerState)
                                         {
                                             // Yield only when queued media can
-                                            // present. A partial prime cannot
-                                            // return the fairness credit, so a
-                                            // Busy control must retry on its own.
-                                            if (CanQueuedSpeakerConsumeControllerStateLocked())
+                                            // present. Neither a partial prime
+                                            // nor a rear-data deferral can
+                                            // return fairness credit. A Busy
+                                            // control must retry on its own.
+                                            if (rearHapticsDeferralDeadlineQpc <= Stopwatch.GetTimestamp() &&
+                                                CanQueuedSpeakerConsumeControllerStateLocked())
                                             {
                                                 if (nativeCommands.Count != 0)
                                                     nativeStateReportsAhead = Math.Max(nativeStateReportsAhead, 1);
@@ -4287,6 +4332,20 @@ namespace FUT404DS.InputDevices
                                 reservoirChanged.WaitOne(1);
                             }
 
+                            continue;
+                        }
+
+                        if (rearHapticsDeferralDeadlineQpc != 0)
+                        {
+                            long wakeDeadline;
+                            lock (stateLock)
+                                wakeDeadline = SelectV5PresentationWakeDeadlineLocked(
+                                    Stopwatch.GetTimestamp(), rearHapticsDeferralDeadlineQpc);
+                            // No packet, native claim, sequence or media-clock
+                            // tick has been consumed. Data/control/lifecycle
+                            // notifications all return through full readiness
+                            // validation, without renewing this deadline.
+                            WaitForNativeDeadline(timer, wakeDeadline, rearWaits);
                             continue;
                         }
 
@@ -4441,6 +4500,23 @@ namespace FUT404DS.InputDevices
                             break;
                         }
 
+                        // A test may admit independent source/control work at
+                        // this actual due-media boundary, before any queue or
+                        // native-command claim. Never invoke it under a lock.
+                        BeforeRealtimeHapticsAvailabilityProbeTestHook?.Invoke();
+
+                        bool mayDeferRear;
+                        lock (stateLock)
+                        {
+                            mayDeferRear = useV5PresentationCadence && useNativeAudioTransport &&
+                                !UsePairedAudioReports && !nativeTransportStartupBurstPresentation &&
+                                !primeRequired && lifecycleResetRevision == appliedLifecycleResetRevision &&
+                                reservoir.TryPeek(out QueuedReport rearHead) &&
+                                IsSpeakerAudioReport(rearHead.Report);
+                        }
+                        if (mayDeferRear && UpdateRearHapticsDeferral(Stopwatch.GetTimestamp()) != 0)
+                            continue;
+
                         // Legacy lossless paths wait for an oldest-slot credit.
                         // MeasuredTransport and the paired hybrid instead probe the
                         // strict oldest slot without waiting at the due tick;
@@ -4497,6 +4573,9 @@ namespace FUT404DS.InputDevices
                         int claimedEpoch = 0;
                         bool claimedLifecycleStillCurrent = false;
                         bool resetWriterClockAfterFinalize = false;
+                        bool settingsRumbleMayYieldToPcm = false;
+                        long settingsRumbleMediaWatermark = 0;
+                        bool pcmTakesOverSettingsRumble = false;
                         lock (stateLock)
                         {
                             if (lifecycleResetRevision !=
@@ -4624,6 +4703,11 @@ namespace FUT404DS.InputDevices
                             {
                                 nativeStatePiggybacked = ClaimControllerStateLocked();
                             }
+                            settingsRumbleMayYieldToPcm =
+                                !(controllerStatePiggybacked && claimedControllerRumbleExplicit) &&
+                                (nativeStatePiggybacked ? claimedSettingsRefreshRumbleRetained :
+                                    acceptedSettingsRefreshRumbleRetained);
+                            settingsRumbleMediaWatermark = acceptedRumbleMediaWatermark;
                         }
 
                         if (item.Epoch != claimedEpoch ||
@@ -4686,8 +4770,21 @@ namespace FUT404DS.InputDevices
                                 // interval after template/state composition.
                                 // A rejected HID write retains both this
                                 // report and this haptics generation.
-                                realtimeHaptics.PrepareForPresentation(
+                                bool realRearBlock = realtimeHaptics.PrepareForPresentation(
                                     item.Report, presentedAt);
+                                pcmTakesOverSettingsRumble = realRearBlock &&
+                                    settingsRumbleMayYieldToPcm &&
+                                    realtimeHaptics.PreparedSequence > settingsRumbleMediaWatermark;
+                                if (pcmTakesOverSettingsRumble)
+                                {
+                                    // Only a real, newer rear generation can end
+                                    // provisional refresh protection. Authored
+                                    // zero is real PCM; synthesized silence is not.
+                                    ClearRumbleTuple(item.Report,
+                                        DualSenseBluetoothPhysicalOutputSequence.ControllerStateSourceOffset);
+                                    if (controllerStatePiggybacked)
+                                        ClearRumbleTuple(controllerStatePresentation, 0);
+                                }
                             }
 
                             // Filter at the last mutable boundary, after
@@ -4752,6 +4849,8 @@ namespace FUT404DS.InputDevices
                                 // once WriteFile accepts/PENDING. Draining
                                 // every outstanding 0x36 and then waiting
                                 // for 0x32 completion breaks that FIFO.
+                                if (!controlOnly)
+                                    BeforeMediaPhysicalWriteTestHook?.Invoke();
                                 accepted = physicalWriteBoundary.TryWrite(
                                     writer, physicalReport, nativeStatePiggybacked,
                                     out transportFault);
@@ -4833,10 +4932,13 @@ namespace FUT404DS.InputDevices
                                         claimedLifecycleResetRevision &&
                                     currentEpoch == claimedEpoch;
                                 if (nativeStatePiggybacked)
-                                    FinishNativeClaimLocked(accepted, presentedAt);
+                                    FinishNativeClaimLocked(accepted, presentedAt, pcmTakesOverSettingsRumble);
                                 if (accepted && controllerStatePiggybacked && !nativeStatePiggybacked &&
                                     claimedLifecycleStillCurrent)
-                                    CommitAcceptedRumbleModeLocked(controllerStatePresentation);
+                                    CommitAcceptedRumbleModeLocked(controllerStatePresentation,
+                                        claimedControllerRumbleExplicit);
+                                if (accepted && pcmTakesOverSettingsRumble && claimedLifecycleStillCurrent)
+                                    ResetAcceptedRumbleModeLocked();
                                 if (accepted && controllerStatePiggybacked && !nativeStatePiggybacked &&
                                     claimedLifecycleStillCurrent &&
                                     controllerStateRevision ==
@@ -5068,6 +5170,9 @@ namespace FUT404DS.InputDevices
                 int generation = BinaryPrimitives.ReadInt32LittleEndian(payload.AsSpan(NativeCommandIdentityOffset + sizeof(long)));
                 if (id == 0 || generation == 0)
                     throw new InvalidDataException("Invalid native command identity.");
+                var rumblePolicy = (NativeRumbleUpdatePolicy)payload[NativeCommandRumblePolicyOffset];
+                if (rumblePolicy > NativeRumbleUpdatePolicy.SettingsRefresh)
+                    throw new InvalidDataException("Invalid native rumble update policy.");
                 lock (stateLock)
                 {
                     if (generation != lifecycleHapticsGeneration)
@@ -5106,6 +5211,7 @@ namespace FUT404DS.InputDevices
                     }
                     command.Id = id;
                     command.Generation = generation;
+                    command.RumblePolicy = rumblePolicy;
                     Buffer.BlockCopy(payload, 0, command.State, 0, stateLength);
                     Buffer.BlockCopy(payload, templateOffset +
                         DualSenseBluetoothPhysicalOutputSequence.ControllerStateSourceOffset,
@@ -5190,6 +5296,7 @@ namespace FUT404DS.InputDevices
 
             private bool ClaimControllerStateLocked()
             {
+                claimedSettingsRefreshRumbleRetained = false;
                 if (nativeCommands.TryPeek(out NativeStateCommand command))
                 {
                     if (claimedNativeCommand != null)
@@ -5197,17 +5304,26 @@ namespace FUT404DS.InputDevices
                     claimedNativeCommand = command;
                     Buffer.BlockCopy(command.State, 0, controllerStatePresentation, 0,
                         controllerStatePresentation.Length);
+                    claimedControllerRumbleExplicit =
+                        command.RumblePolicy == NativeRumbleUpdatePolicy.Authoritative;
+                    claimedSettingsRefreshRumbleRetained =
+                        command.RumblePolicy == NativeRumbleUpdatePolicy.SettingsRefresh &&
+                        HasAcceptedActiveHidRumbleLocked();
+                    if (claimedSettingsRefreshRumbleRetained)
+                        ApplyAcceptedRumbleModeLocked(controllerStatePresentation, 0);
                     return true;
                 }
                 Buffer.BlockCopy(pendingControllerState, 0, controllerStatePresentation, 0,
                     controllerStatePresentation.Length);
-                if ((controllerStatePresentation[0] & 0x03) == 0 &&
-                    (controllerStatePresentation[38] & 0x04) == 0)
+                claimedControllerRumbleExplicit = (pendingControllerState[0] & 0x03) != 0 ||
+                    (pendingControllerState[38] & 0x04) != 0;
+                if (!claimedControllerRumbleExplicit)
                     ApplyAcceptedRumbleModeLocked(controllerStatePresentation, 0);
                 return false;
             }
 
-            private void FinishNativeClaimLocked(bool accepted, long submittedAt)
+            private void FinishNativeClaimLocked(bool accepted, long submittedAt,
+                bool pcmTakesOverSettingsRumble = false)
             {
                 NativeStateCommand command = claimedNativeCommand;
                 if (command == null) throw new InvalidOperationException("No native state claim.");
@@ -5218,7 +5334,13 @@ namespace FUT404DS.InputDevices
                 if (current)
                 {
                     nativeCommands.TryDequeue(out _);
-                    CommitAcceptedRumbleModeLocked(command.State);
+                    // The original FIFO bytes remain immutable for retry.
+                    // Commit the effective tuple that was physically accepted,
+                    // not a protected refresh's original zero-mode tuple.
+                    CommitAcceptedRumbleModeLocked(controllerStatePresentation,
+                        claimedControllerRumbleExplicit);
+                    acceptedSettingsRefreshRumbleRetained =
+                        claimedSettingsRefreshRumbleRetained && !pcmTakesOverSettingsRumble;
                     Buffer.BlockCopy(command.QuiescentState, 0, nativeQuiescentState, 0,
                         nativeQuiescentState.Length);
                     if (latestTemplateAvailable)
@@ -5239,13 +5361,26 @@ namespace FUT404DS.InputDevices
                     DualSenseBluetoothPhysicalOutputSequence.ControllerStateSourceOffset);
             }
 
-            private void CommitAcceptedRumbleModeLocked(byte[] state)
+            private bool HasAcceptedActiveHidRumbleLocked() =>
+                acceptedRumbleModeAvailable && (acceptedRumbleMode & 0x02) != 0 &&
+                ((acceptedRumbleMode & 0x01) != 0 || (acceptedImprovedRumbleMode & 0x04) != 0) &&
+                (acceptedLightRumble != 0 || acceptedHeavyRumble != 0);
+
+            private void CommitAcceptedRumbleModeLocked(byte[] state, bool explicitRumbleOwnership)
             {
                 acceptedRumbleModeAvailable = true;
                 acceptedRumbleMode = (byte)(state[0] & 0x03);
                 acceptedImprovedRumbleMode = (byte)(state[38] & 0x04);
                 acceptedLightRumble = state[2];
                 acceptedHeavyRumble = state[3];
+                if (explicitRumbleOwnership)
+                {
+                    acceptedSettingsRefreshRumbleRetained = false;
+                    // Older queued PCM must not undo a later explicit motor
+                    // owner. Sequence identity also distinguishes real authored
+                    // zero from our continuously generated idle carriers.
+                    acceptedRumbleMediaWatermark = realtimeHaptics.PublishedSequence;
+                }
                 if (latestTemplateAvailable) ApplyAcceptedRumbleModeLocked(latestTemplate, 13);
                 if (previousTemplateAvailable) ApplyAcceptedRumbleModeLocked(previousTemplate, 13);
             }
@@ -5266,9 +5401,18 @@ namespace FUT404DS.InputDevices
                 acceptedRumbleModeAvailable = true;
                 acceptedRumbleMode = acceptedImprovedRumbleMode = 0;
                 acceptedLightRumble = acceptedHeavyRumble = 0;
+                acceptedSettingsRefreshRumbleRetained = false;
+                acceptedRumbleMediaWatermark = 0;
                 if (latestTemplateAvailable) ApplyAcceptedRumbleModeLocked(latestTemplate, 13);
                 if (previousTemplateAvailable) ApplyAcceptedRumbleModeLocked(previousTemplate, 13);
                 ApplyAcceptedRumbleModeLocked(nativeQuiescentState, 0);
+            }
+
+            private static void ClearRumbleTuple(byte[] state, int offset)
+            {
+                state[offset] &= 0xFC;
+                state[offset + 38] &= 0xFB;
+                state[offset + 2] = state[offset + 3] = 0;
             }
 
             private void MergeNativeQuiescentStateIntoTemplateLocked(byte[] template)
@@ -5298,6 +5442,15 @@ namespace FUT404DS.InputDevices
                 acknowledgementAvailable.Set();
             }
 
+            private long UpdateRearHapticsDeferral(long nowQpc)
+            {
+                bool ready = realtimeHaptics.TryPrepareCurrentGeneration(nowQpc,
+                    out bool empty, out long committedSequence, out long committedEnqueuedQpc);
+                rearHapticsDeferralDeadlineQpc = rearHapticsUnderrunGate.Update(
+                    nowQpc, ready, empty, committedSequence, committedEnqueuedQpc);
+                return rearHapticsDeferralDeadlineQpc;
+            }
+
             private void ApplyPendingLifecycleResets(
                 ref long appliedLifecycleRevision,
                 ref long appliedWriterRevision)
@@ -5320,6 +5473,8 @@ namespace FUT404DS.InputDevices
                     // flight without racing the physical compositor.
                     realtimeHaptics.AcceptGeneration(hapticsGeneration,
                         silenceFutureReports: true);
+                    rearHapticsUnderrunGate.Reset();
+                    rearHapticsDeferralDeadlineQpc = 0;
                     physicalStateTransitionFilter.Reset();
                     appliedLifecycleRevision = requestedLifecycleRevision;
                 }

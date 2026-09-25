@@ -13,6 +13,8 @@ namespace FUT404DS.Tests;
 [DoNotParallelize]
 public class PortableBrokerIntegrationTests
 {
+    public TestContext TestContext { get; set; }
+
     [TestMethod]
     public void PortablePreflightFollowsHelpersAndLegacyArgumentsButPrecedesMutation()
     {
@@ -46,8 +48,8 @@ public class PortableBrokerIntegrationTests
             "if (!StartPortableBroker()) return;");
         Before(core, "if (!StartPortableBroker()) return;", "CreateTempWorkerThread();");
         Before(core, "if (!StartPortableBroker()) return;", "Global.FindConfigLocation();");
-        StringAssert.Contains(core,
-            "requireNew: FUT404DS.PortableLabContext.IsActive ||\n                        FUT404DS.PortableBrokerContext.IsActive");
+        StringAssert.Contains(core, "CreateSingleAppComEvent(SingleAppComEventName,\n                        requireNew: true)");
+        Before(core, "AcquirePortableRepairStartupGate()", "PortableBrokerMaintenance.EnsureStartupPayload(");
         // A second ordinary launch can activate its existing matching mapper;
         // the explicit development lab retains its no-signal policy.
         StringAssert.Contains(core,
@@ -63,7 +65,7 @@ public class PortableBrokerIntegrationTests
         StringAssert.Contains(start, "authenticated: true,");
         StringAssert.Contains(start, "totalTimeoutMilliseconds:");
         StringAssert.Contains(start,
-            "portable.InspectOwnedProcess(out running, out _) && running)");
+            "portable.InspectOwnedProcess(out running, out _) && running;");
         Before(start, "ViiperSetupManager.ProbeServer(",
             "portable.InspectOwnedProcess(out running, out _)");
         Assert.IsFalse(start.Contains("TryStartServer(", StringComparison.Ordinal));
@@ -76,7 +78,42 @@ public class PortableBrokerIntegrationTests
             "private bool StartPortableBroker()", "private static void ShowStartupDialog(");
         StringAssert.Contains(start, "out lastProbeFailure, totalTimeoutMilliseconds:");
         StringAssert.Contains(start, "DescribeReadinessFailure(lastProbeFailure)");
-        Before(start, "portable.Dispose();", "CancelPortableStartup(exception.Message);");
+        Before(start, "portable.Dispose();", "MessageBox.Show(message");
+        StringAssert.Contains(start, "catch (FUT404DS.PortableBrokerStartupException retirementFailure)");
+        Assert.IsFalse(start.Contains("CancelPortableStartup(", StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    public void StartupBorrowFailureKeepsOneAutomaticRecoveryButMaintenanceDoesNotChaseNewcomers()
+    {
+        string app = Read("App.xaml.cs");
+        string selection = Section(app, "bool startupMaintenanceAttempted = true;",
+            "// Preserve legacy startup retargeting");
+        StringAssert.Contains(selection,
+            "startupMaintenanceAttempted = FUT404DS.PortableBrokerMaintenance.EnsureStartupPayload(");
+        const string guarded = "if (startupMaintenanceAttempted) FUT404DS.ViiperRecovery.TryBeginAutomaticRecovery();";
+        Assert.AreEqual(2, selection.Split(new[] { guarded }, StringSplitOptions.None).Length - 1);
+        Before(selection, guarded, "PortableBrokerContext.Initialize(");
+        string startup = Section(app, "private bool StartPortableBroker()", "private static void ShowStartupDialog(");
+        Assert.IsFalse(startup.Contains("TryBeginAutomaticRecovery", StringComparison.Ordinal),
+            "A preserved same-path argv/start failure must allow the later guarded recovery attempt.");
+        string maintenance = Read("PortableBrokerMaintenance.cs");
+        StringAssert.Contains(maintenance, "internal static bool EnsureStartupPayload(");
+        StringAssert.Contains(maintenance, "if (!replace && !conflicting) return false;");
+        Before(maintenance, "PortableRepairProgress.Run<object>", "return true;");
+    }
+
+    [TestMethod]
+    public void InvalidPortableFallbackClosesBeforeInstalledMaintenanceOrControllerStartup()
+    {
+        string selection = Section(Read("App.xaml.cs"), "bool startupMaintenanceAttempted = true;",
+            "// Preserve legacy startup retargeting");
+        StringAssert.Contains(selection, "if (!FUT404DS.PortableBrokerContext.TryInitializeUnavailable(");
+        StringAssert.Contains(selection, "out string identityFailure)");
+        StringAssert.Contains(selection, "CancelPortableStartup(exception.Message");
+        Before(selection, "CancelPortableStartup(exception.Message", "return;\n                    }");
+        Assert.IsFalse(selection.Contains("PortableBrokerContext.InitializeUnavailable(", StringComparison.Ordinal),
+            "The fallback must not throw through the original startup failure handler.");
     }
 
     [DataTestMethod]
@@ -125,6 +162,24 @@ public class PortableBrokerIntegrationTests
         Assert.IsFalse(status.Contains("PersistPreferredViiperPath(", StringComparison.Ordinal));
     }
 
+    [TestMethod]
+    public void StartupAndRepairRefreshDependencyAuthorityWithoutChangingOrdinaryStatusPolling()
+    {
+        string setup = Read("DS4Control", "Viiper", "ViiperSetupManager.cs");
+        StringAssert.Contains(setup, "dependencyReadiness.Read(refreshDependencies || tryStartServer)");
+        StringAssert.Contains(setup, "GetStatus(bool tryStartServer = false) =>\n            GetStatusCore(tryStartServer, refreshDependencies: false)");
+        string recovery = Read("DS4Control", "Viiper", "ViiperRecovery.cs");
+        Assert.AreEqual(4, recovery.Split("GetFreshDependencyStatus()").Length - 1,
+            "Repair admission, mutation, portable readiness, and installed readiness must each revalidate dependencies.");
+        string managedStart = Section(setup, "internal static bool TryStartRepairedServer(",
+            "private static bool TryStartServer(");
+        StringAssert.Contains(managedStart, "HasSafeRuntimePrerequisites(GetFreshDependencyStatus())");
+        Assert.IsFalse(setup.Contains("usbipDriverIntegrityStatus.Value", StringComparison.Ordinal));
+        Assert.IsFalse(setup.Contains("citrixUsbMonitorStatus.Value", StringComparison.Ordinal));
+        Assert.AreEqual(2, setup.Split("searcher.Options = CreateDependencyQueryOptions();").Length - 1);
+        Assert.AreEqual(2, setup.Split("using ManagementObjectCollection drivers = searcher.Get();").Length - 1);
+    }
+
     [DataTestMethod]
     [DataRow("public static void RefreshSelectedStartupTaskOnLaunch()",
         "public static void RefreshSelectedStartupTaskAfterRunAtStartupChange()")]
@@ -152,13 +207,18 @@ public class PortableBrokerIntegrationTests
     }
 
     [TestMethod]
-    public void ForcedRepairPromptRemainsStatusOnlyAndPublicInstallerIsGuarded()
+    public void ForcedPortableRepairUsesLocalMaintenanceAndPublicInstallerIsGuarded()
     {
         string source = Read("DS4Control", "Viiper", "ViiperSetupManager.cs");
         string prompt = Section(source, "public static bool EnsureReadyWithPrompt(",
             "if (PortableLabContext.IsActive)");
         StringAssert.Contains(prompt, "if (PortableBrokerContext.IsActive)");
         StringAssert.Contains(prompt, "if (!status.Ready || forcePrompt)");
+        StringAssert.Contains(prompt, "if (!ViiperRecovery.Repair(owner)) return false;");
+        Before(prompt, "if (ViiperRecovery.RepairRequired && !PortableLabContext.IsActive &&",
+            "if (forcePrompt && status.Ready)");
+        StringAssert.Contains(prompt, "!PortableLabContext.IsActive && runtimePrerequisitesReady &&");
+        StringAssert.Contains(prompt, "runtimePrerequisitesReady && !managedInstallationMissing) return false;");
         StringAssert.Contains(prompt, "return status.Ready;");
         Assert.IsFalse(prompt.Contains("LaunchInstaller(", StringComparison.Ordinal));
         Assert.IsFalse(prompt.Contains("new FUT404DSWPF.DS4Forms.ViiperSetupPrompt",
@@ -193,12 +253,16 @@ public class PortableBrokerIntegrationTests
         string source = Read("App.xaml.cs");
         string exit = Section(source, "private void Application_Exit(",
             "private void Application_SessionEnding(");
-        Before(exit, "CleanShutdown();", "PortableBrokerContext.Current?.Dispose();");
+        Before(exit, "CleanShutdown();", "DisposePortableBrokerForShutdown();");
         StringAssert.Contains(exit, "finally");
         string stop = Section(source, "private void CleanShutdown()", "Environment.Exit(0);");
         Before(stop, "shutdownHub.StopAndShutDown(immediateUnplug: true);",
-            "PortableBrokerContext.Current?.Dispose();");
+            "DisposePortableBrokerForShutdown();");
         StringAssert.Contains(stop, "if (shutdownTimedOut)");
+        string cleanup = source[source.IndexOf("private static void DisposePortableBrokerForShutdown()", StringComparison.Ordinal)..];
+        StringAssert.Contains(cleanup, "PortableBrokerContext.Current?.Dispose();");
+        StringAssert.Contains(cleanup, "catch (FUT404DS.PortableBrokerStartupException error)");
+        StringAssert.Contains(cleanup, "Logger?.Warn");
     }
 
     [TestMethod]
@@ -217,6 +281,7 @@ public class PortableBrokerIntegrationTests
             Before(entry, guard, "mainWinVM.RunUpdaterCheck(");
             Before(entry, guard, "mainWinVM.LauchDS4Updater(");
             Before(entry, guard, "RequestApplicationShutdown();");
+            Before(entry, "mainWinVM.UpdaterRequiresApplicationShutdown", "RequestApplicationShutdown();");
         }
         string guidance = Section(source, "private bool CanStartPortableUpdate()",
             "private void Check_Version(");
@@ -239,7 +304,7 @@ public class PortableBrokerIntegrationTests
         StringAssert.Contains(System.Text.RegularExpressions.Regex.Replace(launch, @"\s+", " "),
             "if (PortableLabContext.IsActive) return false;");
         StringAssert.Contains(launch, "return PortableUpdaterBootstrap.Launch(preparedPortableUpdater,");
-        StringAssert.Contains(launch, "finally { preparedPortableUpdater = null; }");
+        StringAssert.Contains(launch, "finally { preparedPortableUpdater = null; preparedManagedUpdater = null; }");
         Before(launch, "PortableBrokerContext.IsActive",
             "new Process()");
         Before(launch, "PortableBrokerContext.IsActive",
@@ -248,6 +313,8 @@ public class PortableBrokerIntegrationTests
         // Only ordinary, unmarked managed updates retain the existing path.
         StringAssert.Contains(launch, "argList.Add(\"-autolaunch\");");
         StringAssert.Contains(launch, "argList.Add(\"--releaseTag\");");
+        Before(launch, "ManagedUpdaterBootstrap.Launch(", "new Process()");
+        StringAssert.Contains(launch, "PortableBrokerContext.FindPortableRoot(Global.exedirpath)");
     }
 
     [DataTestMethod]
@@ -258,20 +325,42 @@ public class PortableBrokerIntegrationTests
         using ProbeFixture fixture = new();
         using TcpListener listener = new(IPAddress.Loopback, 0);
         listener.Start();
+        using ManualResetEventSlim measuredServerReady = new();
         using ManualResetEventSlim reachedPhase = new();
         using ManualResetEventSlim peerClosed = new();
         byte[] key = ViiperAuthentication.DeriveKey(ProbeFixture.Password);
+        string serverPhase = "WarmupAccept";
         Task server = Task.Factory.StartNew(() =>
         {
+            // Exercise the real key-file cache, authenticated handshake and both
+            // encrypted-record directions before measuring the trickle deadline.
+            // A fresh fixture path otherwise puts cold PBKDF/cipher/JIT work and
+            // dedicated-thread startup inside the unrelated 500 ms stall budget.
+            using (TcpClient warmPeer = listener.AcceptTcpClient())
+            {
+                warmPeer.ReceiveTimeout = 4000;
+                warmPeer.SendTimeout = 4000;
+                using NetworkStream warmWire = warmPeer.GetStream();
+                Volatile.Write(ref serverPhase, "WarmupAuthenticate");
+                byte[] warmHello = ReadProbeHello(warmWire, key);
+                byte[] warmNonce = Enumerable.Repeat((byte)0x5a, 32).ToArray();
+                using ViiperEncryptedStream warmEncrypted = new(warmWire,
+                    ViiperAuthentication.DeriveSessionKey(key, warmNonce, warmHello[5..37]),
+                    ViiperConnectionRole.Server);
+                warmWire.Write("OK\0"u8.ToArray().Concat(warmNonce).ToArray());
+                Volatile.Write(ref serverPhase, "WarmupReadPing");
+                ReadProbePing(warmEncrypted);
+                warmEncrypted.Write("VIIPER warmup fixture\0"u8);
+            }
+
+            Volatile.Write(ref serverPhase, "MeasuredAccept");
+            measuredServerReady.Set();
             using TcpClient peer = listener.AcceptTcpClient();
             peer.ReceiveTimeout = 4000;
             peer.SendTimeout = 4000;
             using NetworkStream wire = peer.GetStream();
-            byte[] hello = new byte[69];
-            wire.ReadExactly(hello);
-            CollectionAssert.AreEqual("eVI2\0"u8.ToArray(), hello[..5]);
-            byte[] authInput = "VIIPER-Auth-v2"u8.ToArray().Concat(hello[5..37]).ToArray();
-            CollectionAssert.AreEqual(HMACSHA256.HashData(key, authInput), hello[37..]);
+            Volatile.Write(ref serverPhase, "MeasuredAuthenticate");
+            byte[] hello = ReadProbeHello(wire, key);
             byte[] nonce = Enumerable.Repeat((byte)0x5a, 32).ToArray();
             byte[] reply = "OK\0"u8.ToArray().Concat(nonce).ToArray();
             using ViiperEncryptedStream encrypted = duringAuthentication ? null : new(wire,
@@ -280,9 +369,8 @@ public class PortableBrokerIntegrationTests
             if (!duringAuthentication)
             {
                 wire.Write(reply);
-                byte[] ping = new byte[5];
-                encrypted.ReadExactly(ping);
-                CollectionAssert.AreEqual("ping\0"u8.ToArray(), ping);
+                Volatile.Write(ref serverPhase, "MeasuredReadPing");
+                ReadProbePing(encrypted);
                 // Produce a valid first server record, then trickle its bytes.
                 using MemoryStream captured = new();
                 using ViiperEncryptedStream encoder = new(captured,
@@ -291,6 +379,7 @@ public class PortableBrokerIntegrationTests
                 encoder.Write("VIIPER deadline fixture\0"u8);
                 reply = captured.ToArray();
             }
+            Volatile.Write(ref serverPhase, duringAuthentication ? "TrickleAuthenticate" : "TrickleReadPing");
             reachedPhase.Set();
             try
             {
@@ -305,15 +394,24 @@ public class PortableBrokerIntegrationTests
             catch (IOException) { peerClosed.Set(); }
             catch (SocketException) { peerClosed.Set(); }
         }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        Exception primaryFailure = null;
         try
         {
+            int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            bool warmReady = ViiperSetupManager.ProbeServer("127.0.0.1", port,
+                authenticated: true, out string warmFailure, totalTimeoutMilliseconds: 3000);
+            Assert.IsTrue(warmReady,
+                $"The positive authenticated warmup failed: {warmFailure}; server={Volatile.Read(ref serverPhase)}.");
+            Assert.IsTrue(measuredServerReady.Wait(5000),
+                $"The same server thread was not ready for the measured connection; server={Volatile.Read(ref serverPhase)}.");
             Stopwatch elapsed = Stopwatch.StartNew();
-            bool ready = ViiperSetupManager.ProbeServer("127.0.0.1",
-                ((IPEndPoint)listener.LocalEndpoint).Port, authenticated: true,
+            bool ready = ViiperSetupManager.ProbeServer("127.0.0.1", port, authenticated: true,
                 out string failure, totalTimeoutMilliseconds: 500);
             elapsed.Stop();
+            string phaseEvidence = $"probe={failure}; server={Volatile.Read(ref serverPhase)}; elapsed={elapsed.ElapsedMilliseconds} ms";
+            TestContext?.WriteLine(phaseEvidence);
             Assert.IsFalse(ready);
-            Assert.IsTrue(reachedPhase.IsSet, "The real handshake reached the intended stall.");
+            Assert.IsTrue(reachedPhase.IsSet, "The real handshake must reach the intended stall: " + phaseEvidence);
             StringAssert.StartsWith(failure, duringAuthentication ? "Authenticate:" : "ReadPing:");
             Assert.IsTrue(elapsed.ElapsedMilliseconds < 1800,
                 $"The 500 ms whole-probe deadline took {elapsed.ElapsedMilliseconds} ms.");
@@ -322,12 +420,76 @@ public class PortableBrokerIntegrationTests
             Assert.IsFalse(failure.Contains(ProbeFixture.Password, StringComparison.Ordinal));
             Assert.IsFalse(failure.Contains(fixture.Context.KeyPath, StringComparison.Ordinal));
         }
+        catch (Exception failure)
+        {
+            primaryFailure = failure;
+            throw;
+        }
         finally
         {
             listener.Stop();
-            try { server.Wait(5000); }
+            try
+            {
+                bool stopped = server.Wait(5000);
+                if (!stopped)
+                {
+                    const string message = "The loopback server did not retire during bounded cleanup.";
+                    if (primaryFailure == null) Assert.Fail(message);
+                    TestContext?.WriteLine(message);
+                    primaryFailure.Data["ProbeServerCleanup"] = message;
+                }
+            }
+            catch (AggregateException cleanupFailure) when (primaryFailure != null)
+            {
+                // Preserve the original phase/assertion failure; do not turn an
+                // early handshake error into an apparently unrelated Wait fault.
+                primaryFailure.Data["ProbeServerCleanup"] = cleanupFailure.ToString();
+                TestContext?.WriteLine($"Server cleanup after {Volatile.Read(ref serverPhase)}: {cleanupFailure}");
+            }
             finally { CryptographicOperations.ZeroMemory(key); }
         }
+    }
+
+    [TestMethod]
+    public void RepairedManagedLaunchRechecksDriverSafetyBeforeProcessStart()
+    {
+        string source = Read("DS4Control", "Viiper", "ViiperSetupManager.cs");
+        string method = Section(source, "internal static bool TryStartRepairedServer(",
+            "private static bool TryStartServer(");
+        Before(method, "HasSafeRuntimePrerequisites(GetFreshDependencyStatus())", "TryStartServer(viiperPath)");
+        string recovery = Read("DS4Control", "Viiper", "ViiperRecovery.cs");
+        Before(recovery, "HasSafeRuntimePrerequisites(ViiperSetupManager.GetFreshDependencyStatus())", "PortableRepairProgress.Run");
+    }
+
+    [TestMethod]
+    public void PortableRecoveryPrecedesBackendPinAndNeverMigrates()
+    {
+        string app = Read("App.xaml.cs");
+        Before(app, "PortableBrokerMaintenance.EnsureStartupPayload(", "PortableBrokerContext.Initialize(");
+        string maintenance = Read("PortableBrokerMaintenance.cs");
+        StringAssert.Contains(maintenance, "if (PortableLabContext.IsActive) return false;");
+        StringAssert.Contains(maintenance, "PortableBrokerRepair.RepairAsync(root,");
+        Assert.IsFalse(maintenance.Contains("LaunchInstaller(", StringComparison.Ordinal));
+        Assert.IsFalse(maintenance.Contains("RetargetExistingTask", StringComparison.Ordinal));
+        Assert.IsFalse(maintenance.Contains("Process.Kill", StringComparison.Ordinal));
+        Assert.IsFalse(maintenance.Contains("Application.Current.Shutdown();", StringComparison.Ordinal));
+    }
+
+    private static byte[] ReadProbeHello(NetworkStream wire, byte[] key)
+    {
+        byte[] hello = new byte[69];
+        wire.ReadExactly(hello);
+        CollectionAssert.AreEqual("eVI2\0"u8.ToArray(), hello[..5]);
+        byte[] authInput = "VIIPER-Auth-v2"u8.ToArray().Concat(hello[5..37]).ToArray();
+        CollectionAssert.AreEqual(HMACSHA256.HashData(key, authInput), hello[37..]);
+        return hello;
+    }
+
+    private static void ReadProbePing(ViiperEncryptedStream encrypted)
+    {
+        byte[] ping = new byte[5];
+        encrypted.ReadExactly(ping);
+        CollectionAssert.AreEqual("ping\0"u8.ToArray(), ping);
     }
 
     private sealed class ProbeFixture : IDisposable

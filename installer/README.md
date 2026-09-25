@@ -2,7 +2,8 @@
 
 `build-installer.ps1` composes the standard x64 distribution as a WiX 5 Burn
 bundle with a custom WPF interface. It contains the managed FUT404DS MSI,
-VIIPER 0.1.5-rc4.6, USB-IP 0.9.7.7, and optional HidHide/FakerInput packages.
+the release's hash-pinned VIIPER backend, USB-IP 0.9.7.7, and optional
+HidHide/FakerInput packages.
 The VIIPER payload is accompanied by its generated dependency-license notice
 and a validated provenance record containing the exact source commit and
 SHA-256 used by this release.
@@ -12,15 +13,18 @@ portable ZIP remains a separate CI artifact. The standard installer places
 VIIPER under protected `%ProgramFiles%\FUT404DS\VIIPER`. The marked portable
 ZIP instead starts its bundled, hash-verified broker when needed and does not
 create or retarget installed startup tasks. A verified matching running copy
-can be reused; a conflicting copy is reported without being terminated.
-Installed startup tasks continue to target the verified installed broker.
+can be reused. Recovery identifies conflicting brokers by executable, process ID
+and start time before stopping them; it never kills an unrelated port owner.
+An access-denied stop leaves FUT404DS open with actionable guidance.
+Installed startup tasks continue to target the verified installed broker;
+portable repair stays in the portable folder.
 
 ```powershell
 .\installer\build-installer.ps1 `
   -PublishRoot .\bin\x64\Release\output `
-  -ProductVersion 5.0.8.0 `
-  -BundleVersion 5.0.8.0 `
-  -DisplayVersion VIIPERRC4.6.2 `
+  -ProductVersion 5.0.12.0 `
+  -BundleVersion 5.0.12.0 `
+  -DisplayVersion VIIPERRC4.6.6 `
   -SkipApplicationPublish
 ```
 

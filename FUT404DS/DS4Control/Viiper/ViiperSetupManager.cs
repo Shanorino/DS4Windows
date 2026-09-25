@@ -22,6 +22,7 @@ using System.Security.Principal;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using ExecAction = Microsoft.Win32.TaskScheduler.ExecAction;
@@ -162,11 +163,12 @@ namespace FUT404DS
             "--run-embedded-viiper-installer";
         private const string InstallerResourceName =
             "FUT404DS.install-viiper-backend.ps1";
-        private const string BundledViiperName = "VIIPER-0.1.5-rc4.6-x64.exe";
+        internal const string BundledViiperName = "VIIPER-0.1.9-rc4.6.6-x64.exe";
+        internal const string SupportedViiperReleaseTag = "v0.1.9-rc4.6.6";
         private const string BundledViiperHashName =
             BundledViiperName + ".sha256";
         internal const string SupportedViiperSha256 =
-            "9A334912E26FAC09C6DF17BA75A272A41D871D9BBE14934D06F983E101F3DF3C";
+            "9392A49E619E1D9B7956EA4BEDAFD2E74CBF5065C011554E80F756D1524F892B";
         private const string BundledUsbipName = "USBip-0.9.7.7-x64.exe";
         private const string BundledHidHideName =
             "HidHide_1.5.230_x64.exe";
@@ -190,6 +192,7 @@ namespace FUT404DS
         private const int ForeignViiperHelperTimeoutMilliseconds = 15000;
         private const string UsbipRelativePath = @"USBip\usbip.exe";
         private const int UsbipProbeTimeoutMilliseconds = 3000;
+        internal const int UsbipProbePipeDrainMilliseconds = 250;
         private const string CitrixUsbMonitorServiceName = "ctxusbm";
         private const string CitrixUsbMonitorImageName = "ctxusbmon.sys";
         private const string UsbipUdeServiceName = "usbip2_ude";
@@ -202,12 +205,12 @@ namespace FUT404DS
             "FC1660E3759D8AF4CEDE48DBE194285A5A1DE85CE6E3216724499AFD32BE92E8";
         private static readonly object serverStartLock = new object();
         private static readonly object foreignViiperProcessLock = new object();
-        private static readonly Lazy<(bool Conflict, string Message)>
-            citrixUsbMonitorStatus = new(EvaluateCitrixUsbMonitorConflict,
-                LazyThreadSafetyMode.ExecutionAndPublication);
-        private static readonly Lazy<(bool Safe, string Message)>
-            usbipDriverIntegrityStatus = new(EvaluateUsbipDriverIntegrity,
-                LazyThreadSafetyMode.ExecutionAndPublication);
+        private static readonly ViiperDependencyReadiness dependencyReadiness = new(() =>
+        {
+            var driver = EvaluateUsbipDriverIntegrity();
+            var conflict = EvaluateCitrixUsbMonitorConflict();
+            return new(driver.Safe, driver.Message, conflict.Conflict, conflict.Message);
+        });
         private static DateTime lastServerStartAttemptUtc = DateTime.MinValue;
         private static DateTime lastForeignViiperTerminationAttemptUtc =
             DateTime.MinValue;
@@ -239,7 +242,13 @@ namespace FUT404DS
 
         public static bool IsViiperOutputType(OutContType type) => ViiperOutDevice.IsViiperType(type);
 
-        public static ViiperPrerequisiteStatus GetStatus(bool tryStartServer = false)
+        public static ViiperPrerequisiteStatus GetStatus(bool tryStartServer = false) =>
+            GetStatusCore(tryStartServer, refreshDependencies: false);
+
+        internal static ViiperPrerequisiteStatus GetFreshDependencyStatus() =>
+            GetStatusCore(tryStartServer: false, refreshDependencies: true);
+
+        private static ViiperPrerequisiteStatus GetStatusCore(bool tryStartServer, bool refreshDependencies)
         {
             string canonicalViiperPath = GetCanonicalViiperExePath();
             // Location is not identity. Portable users may keep the exact
@@ -275,12 +284,11 @@ namespace FUT404DS
                 FileHasSha256(usbipPath, SupportedUsbipExecutableSha256);
             bool usbipRuntimeReady = false;
             string usbipProbeMessage;
-            (bool usbipDriverFilesSafe,
-                string usbipDriverIntegrityMessage) =
-                usbipDriverIntegrityStatus.Value;
-            bool citrixUsbMonitorConflict =
-                TryGetCitrixUsbMonitorConflict(
-                    out string citrixUsbMonitorConflictMessage);
+            ViiperDependencyStatus dependencies = dependencyReadiness.Read(refreshDependencies || tryStartServer);
+            bool usbipDriverFilesSafe = dependencies.UsbipDriverFilesSafe;
+            string usbipDriverIntegrityMessage = dependencies.UsbipDriverIntegrityMessage;
+            bool citrixUsbMonitorConflict = dependencies.CitrixUsbMonitorConflict;
+            string citrixUsbMonitorConflictMessage = dependencies.CitrixUsbMonitorConflictMessage;
 
             if (usbipInstalled && usbipExecutableSafe &&
                 usbipDriverFilesSafe)
@@ -309,7 +317,7 @@ namespace FUT404DS
             bool viiperPackageCurrent = lab != null
                 ? lab.IsVerifiedBackend(viiperPath)
                 : portable != null ? portable.IsVerifiedBackend(viiperPath)
-                : IsBundledViiperAuthentic() && FilesHaveSameSha256(viiperPath, bundledViiperPath);
+                : FileHasSha256(viiperPath, SupportedViiperSha256);
             bool viiperStartupTaskReady = portable != null || !startupRequested ||
                 IsViiperStartupTaskValid(canonicalViiperPath, out _);
             bool canonicalViiperRunning;
@@ -376,12 +384,39 @@ namespace FUT404DS
 
         public static bool EnsureReadyWithPrompt(Window owner, bool forcePrompt = false)
         {
+            if (ViiperRecovery.IsRecovering) return false;
             ViiperPrerequisiteStatus status = GetStatus(tryStartServer: true);
+            bool runtimePrerequisitesReady = HasSafeRuntimePrerequisites(status);
+            // Unmarked copies still offer the existing full-setup workflow
+            // when no managed app installation exists. Broker-only repair
+            // never creates a new installation or migrates an extracted copy.
+            bool managedInstallationMissing = !PortableBrokerContext.IsActive &&
+                !Directory.Exists(Path.GetDirectoryName(Path.GetDirectoryName(GetCanonicalViiperExePath())));
+            if (!PortableLabContext.IsActive && runtimePrerequisitesReady && !managedInstallationMissing &&
+                (!status.ViiperPackageCurrent || !status.ServerRunning ||
+                    ViiperRecovery.RepairRequired) &&
+                (forcePrompt || ViiperRecovery.TryBeginAutomaticRecovery()))
+            {
+                if (!ViiperRecovery.Repair(owner)) return false;
+                status = GetStatus();
+            }
+            // A failed broker repair must not claim Ready. Missing/unsafe
+            // drivers still reach the managed prerequisite prompt below;
+            // broker replacement cannot repair a driver or a USB conflict.
+            if (ViiperRecovery.RepairRequired && !PortableLabContext.IsActive &&
+                runtimePrerequisitesReady && !managedInstallationMissing) return false;
+            if (forcePrompt && status.Ready)
+            {
+                ShowInstallerMessage(owner, "VIIPER is verified and ready. Your files stay in their current location.\n\n" + status.ViiperPath,
+                    "VIIPER ready", MessageBoxImage.Information);
+                return true;
+            }
             if (PortableBrokerContext.IsActive)
             {
                 if (!status.Ready || forcePrompt)
-                    ShowInstallerMessage(owner, status.DisplayText +
-                        "\n\nThis portable copy uses its bundled VIIPER. It does not replace an installed broker or change its startup task. Close conflicting VIIPER instances and restart FUT404DS. If the USB/IP drivers need setup, close this portable session and use the full installer.",
+                    ShowInstallerMessage(owner, status.Ready
+                        ? "VIIPER is verified and ready beside this portable FUT404DS. Your files stay in this folder."
+                        : status.DisplayText + "\n\nYour portable files have not moved. You can retry Install / Repair here.",
                         "FUT404DS portable", status.Ready ? MessageBoxImage.Information : MessageBoxImage.Warning);
                 return status.Ready;
             }
@@ -495,6 +530,11 @@ namespace FUT404DS
                     return status.Ready;
             }
         }
+
+        internal static bool HasSafeRuntimePrerequisites(ViiperPrerequisiteStatus status) =>
+            status != null && status.UsbipInstalled && status.UsbipExecutableSafe &&
+            status.UsbipDriverFilesSafe && status.UsbipRuntimeReady &&
+            !status.UsbipRebootOrRepairRequired && !status.CitrixUsbMonitorConflict;
 
         internal static bool RequiresVerifiedViiperUpdate(
             ViiperPrerequisiteStatus status)
@@ -1512,7 +1552,7 @@ namespace FUT404DS
             }
         }
 
-        private static string GetCanonicalViiperExePath()
+        internal static string GetCanonicalViiperExePath()
         {
             return Path.Combine(GetNativeProgramFilesPath(), "FUT404DS", "VIIPER",
                 "viiper.exe");
@@ -1632,9 +1672,7 @@ namespace FUT404DS
                     return false;
                 }
 
-                return IsBundledViiperAuthentic() &&
-                    FilesHaveSameSha256(normalized,
-                        GetBundledViiperPath());
+                return FileHasSha256(normalized, SupportedViiperSha256);
             }
             catch
             {
@@ -2595,10 +2633,15 @@ namespace FUT404DS
             using ManagementObjectSearcher searcher = new(
                 "SELECT PathName FROM Win32_SystemDriver " +
                 $"WHERE Name='{serviceName}'");
-            foreach (ManagementObject driver in searcher.Get())
+            searcher.Options = CreateDependencyQueryOptions();
+            using ManagementObjectCollection drivers = searcher.Get();
+            foreach (ManagementObject driver in drivers)
             {
-                matches++;
-                pathName = driver["PathName"] as string;
+                using (driver)
+                {
+                    matches++;
+                    pathName = driver["PathName"] as string;
+                }
             }
 
             if (matches != 1)
@@ -2676,12 +2719,16 @@ namespace FUT404DS
         }
 
         internal static bool IsUnsafeCitrixUsbMonitorState(bool installed,
-            string state, int? startValue)
+            string state, int? startValue, bool runtimeStateVerified = true)
         {
             if (!installed)
             {
                 return false;
             }
+
+            // A disabled service can still have its kernel driver loaded.
+            // A failed runtime query cannot authorize USB/IP startup.
+            if (!runtimeStateVerified) return true;
 
             if (string.Equals(state, "Running",
                     StringComparison.OrdinalIgnoreCase))
@@ -2695,14 +2742,6 @@ namespace FUT404DS
             return !startValue.HasValue || startValue.Value != 4;
         }
 
-        private static bool TryGetCitrixUsbMonitorConflict(
-            out string conflictMessage)
-        {
-            (bool conflict, string message) = citrixUsbMonitorStatus.Value;
-            conflictMessage = message;
-            return conflict;
-        }
-
         private static (bool Conflict, string Message)
             EvaluateCitrixUsbMonitorConflict()
         {
@@ -2710,6 +2749,7 @@ namespace FUT404DS
             string state = null;
             string imagePath = null;
             int? startValue = null;
+            bool runtimeStateVerified = false;
 
             try
             {
@@ -2739,17 +2779,24 @@ namespace FUT404DS
                 using ManagementObjectSearcher searcher = new(
                     "SELECT State, PathName FROM Win32_SystemDriver " +
                     $"WHERE Name='{CitrixUsbMonitorServiceName}'");
-                foreach (ManagementObject driver in searcher.Get())
+                searcher.Options = CreateDependencyQueryOptions();
+                using ManagementObjectCollection drivers = searcher.Get();
+                foreach (ManagementObject driver in drivers)
                 {
-                    installed = true;
-                    state = driver["State"] as string;
-                    imagePath ??= driver["PathName"] as string;
-                    break;
+                    using (driver)
+                    {
+                        installed = true;
+                        state = driver["State"] as string;
+                        imagePath ??= driver["PathName"] as string;
+                        break;
+                    }
                 }
+                runtimeStateVerified = true;
             }
             catch
             {
-                // Registry state is sufficient when WMI is unavailable.
+                // Registry disablement does not prove that an already loaded
+                // filter has stopped. Preserve failed runtime verification.
             }
 
             if (!installed)
@@ -2768,10 +2815,13 @@ namespace FUT404DS
             }
 
             if (!IsUnsafeCitrixUsbMonitorState(installed, state,
-                    startValue))
+                    startValue, runtimeStateVerified))
             {
                 return (false, null);
             }
+
+            if (!runtimeStateVerified)
+                return (true, "Citrix USB Monitor is installed, but Windows could not verify whether its driver has stopped. Retry the check or restart Windows before using USB/IP controllers.");
 
             string conflictMessage =
                 "Citrix USB Monitor (ctxusbmon.sys) is enabled. " +
@@ -2781,6 +2831,16 @@ namespace FUT404DS
                 "generic USB redirection; restart Windows afterward.";
             return (true, conflictMessage);
         }
+
+        internal static System.Management.EnumerationOptions CreateDependencyQueryOptions() => new()
+        {
+            // Bound row retrieval from a stalled WMI enumerator and release
+            // each result promptly. This is not a cancellation guarantee for
+            // every COM connection/provider invocation inside WMI.
+            Timeout = TimeSpan.FromSeconds(2),
+            ReturnImmediately = true,
+            Rewindable = false,
+        };
 
         internal static bool IsSuccessfulUsbipPortProbe(int exitCode,
             string output)
@@ -2806,6 +2866,7 @@ namespace FUT404DS
         {
             try
             {
+                Stopwatch probeElapsed = Stopwatch.StartNew();
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = usbipPath,
@@ -2824,32 +2885,52 @@ namespace FUT404DS
                     return false;
                 }
 
-                System.Threading.Tasks.Task<string> stdout =
-                    process.StandardOutput.ReadToEndAsync();
-                System.Threading.Tasks.Task<string> stderr =
-                    process.StandardError.ReadToEndAsync();
-                if (!process.WaitForExit(UsbipProbeTimeoutMilliseconds))
+                using CancellationTokenSource readCancellation = new();
+                using StreamReader outputReader = process.StandardOutput;
+                using StreamReader errorReader = process.StandardError;
+                try
                 {
-                    try { process.Kill(entireProcessTree: true); } catch { }
-                    message = "usbip.exe port timed out; reboot or repair usbip-win2.";
-                    return false;
-                }
+                    Task<string> stdout = outputReader.ReadToEndAsync(readCancellation.Token);
+                    ObserveUsbipProbeRead(stdout);
+                    Task<string> stderr = errorReader.ReadToEndAsync(readCancellation.Token);
+                    ObserveUsbipProbeRead(stderr);
+                    int remaining = (int)Math.Max(0, UsbipProbeTimeoutMilliseconds - probeElapsed.ElapsedMilliseconds);
+                    if (!process.WaitForExit(remaining))
+                    {
+                        // This exact child belongs to this probe. Never use a
+                        // name/PID search when stopping a timed-out driver CLI.
+                        try
+                        {
+                            process.Kill(entireProcessTree: true);
+                            process.WaitForExit(UsbipProbePipeDrainMilliseconds);
+                        }
+                        catch { }
+                        message = "usbip.exe port timed out; reboot or repair usbip-win2.";
+                        return false;
+                    }
 
-                System.Threading.Tasks.Task.WhenAll(stdout, stderr)
-                    .GetAwaiter().GetResult();
-                string output = string.Join(Environment.NewLine,
-                    stdout.Result, stderr.Result).Trim();
-                if (!IsSuccessfulUsbipPortProbe(process.ExitCode, output))
+                    remaining = (int)Math.Max(0, UsbipProbeTimeoutMilliseconds - probeElapsed.ElapsedMilliseconds);
+                    if (!TryCompleteUsbipProbeOutput(stdout, stderr, remaining, out string output, out message))
+                        return false;
+                    if (!IsSuccessfulUsbipPortProbe(process.ExitCode, output))
+                    {
+                        string detail = string.IsNullOrWhiteSpace(output)
+                            ? "no diagnostic output"
+                            : output;
+                        message = $"usbip.exe port failed (exit {process.ExitCode}): {detail}";
+                        return false;
+                    }
+
+                    message = "usbip.exe port confirmed a compatible userspace/driver ABI.";
+                    return true;
+                }
+                finally
                 {
-                    string detail = string.IsNullOrWhiteSpace(output)
-                        ? "no diagnostic output"
-                        : output;
-                    message = $"usbip.exe port failed (exit {process.ExitCode}): {detail}";
-                    return false;
+                    // An exited CLI can leave a descendant holding a pipe.
+                    // Cancel both readers and close our exact pipe handles;
+                    // late read faults are observed without blocking startup.
+                    readCancellation.Cancel();
                 }
-
-                message = "usbip.exe port confirmed a compatible userspace/driver ABI.";
-                return true;
             }
             catch (Exception ex)
             {
@@ -2879,6 +2960,60 @@ namespace FUT404DS
                         return TryStartServer(viiperPath);
                     });
             }
+        }
+
+        internal static bool TryStartRepairedServer(string viiperPath)
+        {
+            // Recheck after the elevated replacement, not only when its UI
+            // began: never bypass the ordinary driver's startup safety gate.
+            if (!HasSafeRuntimePrerequisites(GetFreshDependencyStatus())) return false;
+            lock (serverStartLock)
+            {
+                if (PortableLabContext.IsActive || PortableBrokerContext.IsActive ||
+                    !IsExactViiperExecutablePath(viiperPath, GetCanonicalViiperExePath()) ||
+                    !FileHasSha256(viiperPath, SupportedViiperSha256) ||
+                    !InspectViiperProcessOwnership(viiperPath, out bool running, out _))
+                    return false;
+                return running || TryStartServer(viiperPath);
+            }
+        }
+
+        internal static bool TryCompleteUsbipProbeOutput(Task<string> stdout, Task<string> stderr,
+            int remainingMilliseconds, out string output, out string message)
+        {
+            ArgumentNullException.ThrowIfNull(stdout);
+            ArgumentNullException.ThrowIfNull(stderr);
+            output = null;
+            Task<string[]> reads = Task.WhenAll(stdout, stderr);
+            ObserveUsbipProbeRead(reads);
+            try
+            {
+                if (remainingMilliseconds <= 0) throw new TimeoutException();
+                string[] completed = reads.WaitAsync(TimeSpan.FromMilliseconds(
+                    Math.Min(remainingMilliseconds, UsbipProbePipeDrainMilliseconds))).GetAwaiter().GetResult();
+                output = string.Join(Environment.NewLine, completed).Trim();
+                message = null;
+                return true;
+            }
+            catch (TimeoutException)
+            {
+                message = "usbip.exe port diagnostic output timed out; retry or repair usbip-win2.";
+                return false;
+            }
+            catch
+            {
+                // Do not include arbitrary reader exception text in the
+                // startup phase diagnostic or admit a partial driver response.
+                message = "usbip.exe port diagnostic output could not be read; retry or repair usbip-win2.";
+                return false;
+            }
+        }
+
+        private static void ObserveUsbipProbeRead(Task read)
+        {
+            _ = read.ContinueWith(completed => { _ = completed.Exception; },
+                CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted |
+                TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
         }
 
         private static bool TryStartServer(string viiperPath)

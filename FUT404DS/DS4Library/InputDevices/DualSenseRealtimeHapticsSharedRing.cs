@@ -14,7 +14,7 @@ namespace FUT404DS.InputDevices
     /// </summary>
     internal sealed class DualSenseRealtimeHapticsSharedRing : IDisposable
     {
-        internal const int Version = 1;
+        internal const int Version = 2;
         internal const int DefaultCapacity = 64;
         internal const int PayloadLength = 64;
 
@@ -37,6 +37,7 @@ namespace FUT404DS.InputDevices
         private readonly MemoryMappedFile map;
         private readonly MemoryMappedViewAccessor view;
         private readonly EventWaitHandle spaceAvailable;
+        private readonly EventWaitHandle dataAvailable;
         private readonly EventWaitHandle stopRequested;
         private readonly WaitHandle[] producerWaitHandles;
         private readonly object producerLock = new object();
@@ -45,6 +46,9 @@ namespace FUT404DS.InputDevices
         private readonly int capacity;
         private bool prepared;
         private long preparedSequence;
+        private long preparedEnqueuedQpc;
+        private long committedSequence;
+        private long committedEnqueuedQpc;
         private bool hasReceivedGeneration;
         private int acceptedGeneration = 1;
         private int maximumQueueDepth;
@@ -79,6 +83,8 @@ namespace FUT404DS.InputDevices
                     MemoryMappedFileAccess.ReadWrite);
                 spaceAvailable = new EventWaitHandle(false,
                     EventResetMode.AutoReset, spaceAvailableName);
+                dataAvailable = new EventWaitHandle(false,
+                    EventResetMode.AutoReset, mapName + ".Data");
                 stopRequested = new EventWaitHandle(false,
                     EventResetMode.ManualReset, stopRequestedName);
             }
@@ -88,6 +94,7 @@ namespace FUT404DS.InputDevices
                     MemoryMappedFileRights.ReadWrite);
                 spaceAvailable = EventWaitHandle.OpenExisting(
                     spaceAvailableName);
+                dataAvailable = EventWaitHandle.OpenExisting(mapName + ".Data");
                 stopRequested = EventWaitHandle.OpenExisting(
                     stopRequestedName);
             }
@@ -120,6 +127,8 @@ namespace FUT404DS.InputDevices
         internal string SpaceAvailableName { get; }
         internal string StopRequestedName { get; }
         internal int Capacity => capacity;
+        internal WaitHandle DataAvailableSignal => dataAvailable;
+        internal WaitHandle StopRequestedSignal => stopRequested;
         internal int Count
         {
             get
@@ -131,6 +140,21 @@ namespace FUT404DS.InputDevices
             }
         }
         internal bool HasPreparedGeneration => prepared;
+        // One-based publication identities, not payload/nonzero heuristics.
+        // A prepared slot has already passed the accepted-generation check.
+        internal long PublishedSequence
+        {
+            get
+            {
+                long sequence = view.ReadInt64(WriteSequenceOffset);
+                Thread.MemoryBarrier();
+                return sequence;
+            }
+        }
+        internal long PreparedSequence
+        {
+            get { lock (consumerLock) return prepared ? preparedSequence + 1 : 0; }
+        }
         internal int MaximumQueueDepth => maximumQueueDepth;
         internal long MaximumQueueAgeTicks => maximumQueueAgeTicks;
         internal long PresentedCount => presentedCount;
@@ -190,6 +214,9 @@ namespace FUT404DS.InputDevices
                             writeSequence + 1);
                         Thread.MemoryBarrier();
                         view.Write(WriteSequenceOffset, writeSequence + 1);
+                        // This is a distinct consumer notification. Sharing the
+                        // producer's space event would steal its wake/credit.
+                        dataAvailable.Set();
                         return true;
                     }
                 }
@@ -219,73 +246,103 @@ namespace FUT404DS.InputDevices
 
             lock (consumerLock)
             {
-                if (prepared)
+                if (TryPrepareLocked(nowQpc, out bool empty))
                 {
                     ApplyPrepared(report);
                     return true;
                 }
 
-                while (true)
+                if (empty && hasReceivedGeneration)
+                    Silence(report);
+                return false;
+            }
+        }
+
+        // Bind without consuming a ring slot or touching a front-audio report.
+        // The presenter can then defer an empty rear lane before claiming any
+        // speaker packet or ordered controller-state command.
+        internal bool TryPrepareCurrentGeneration(long nowQpc, out bool empty,
+            out long lastCommittedSequence, out long lastCommittedEnqueuedQpc)
+        {
+            lock (consumerLock)
+            {
+                bool ready = TryPrepareLocked(nowQpc, out empty);
+                lastCommittedSequence = committedSequence;
+                lastCommittedEnqueuedQpc = committedEnqueuedQpc;
+                return ready;
+            }
+        }
+
+        private bool TryPrepareLocked(long nowQpc, out bool empty)
+        {
+            empty = false;
+            if (prepared)
+            {
+                // Prebinding may precede HID credit. Include that wait
+                // when the final presentation reapplies this same block.
+                if (preparedEnqueuedQpc > 0)
+                    maximumQueueAgeTicks = Math.Max(maximumQueueAgeTicks,
+                        Math.Max(0, nowQpc - preparedEnqueuedQpc));
+                return true;
+            }
+
+            while (true)
+            {
+                long readSequence = view.ReadInt64(ReadSequenceOffset);
+                long writeSequence = view.ReadInt64(WriteSequenceOffset);
+                int depth = (int)Math.Min(capacity,
+                    Math.Max(0, writeSequence - readSequence));
+                if (depth > maximumQueueDepth)
                 {
-                    long readSequence = view.ReadInt64(ReadSequenceOffset);
-                    long writeSequence = view.ReadInt64(WriteSequenceOffset);
-                    int depth = (int)Math.Min(capacity,
-                        Math.Max(0, writeSequence - readSequence));
-                    if (depth > maximumQueueDepth)
-                    {
-                        maximumQueueDepth = depth;
-                    }
-                    if (readSequence >= writeSequence)
-                    {
-                        if (hasReceivedGeneration)
-                        {
-                            Silence(report);
-                        }
-                        return false;
-                    }
-
-                    int slotIndex = (int)(readSequence & (capacity - 1));
-                    long slotOffset = HeaderLength +
-                        (long)slotIndex * SlotStride;
-                    Thread.MemoryBarrier();
-                    if (view.ReadInt64(slotOffset +
-                            SlotPublishedSequenceOffset) != readSequence + 1)
-                    {
-                        return false;
-                    }
-
-                    int generation = view.ReadInt32(slotOffset +
-                        SlotGenerationOffset);
-                    int generationDelta = unchecked(generation -
-                        acceptedGeneration);
-                    if (generationDelta > 0)
-                    {
-                        // A lifecycle command for this generation is already
-                        // in the ordered pipe but has not been applied yet.
-                        return false;
-                    }
-                    if (generationDelta < 0)
-                    {
-                        AdvanceRead(readSequence);
-                        continue;
-                    }
-
-                    view.ReadArray(slotOffset + SlotPayloadOffset,
-                        preparedPayload, 0, PayloadLength);
-                    long queuedAt = view.ReadInt64(slotOffset +
-                        SlotEnqueuedQpcOffset);
-                    if (queuedAt > 0)
-                    {
-                        maximumQueueAgeTicks = Math.Max(
-                            maximumQueueAgeTicks,
-                            Math.Max(0, nowQpc - queuedAt));
-                    }
-                    preparedSequence = readSequence;
-                    prepared = true;
-                    hasReceivedGeneration = true;
-                    ApplyPrepared(report);
-                    return true;
+                    maximumQueueDepth = depth;
                 }
+                if (readSequence >= writeSequence)
+                {
+                    empty = true;
+                    return false;
+                }
+
+                int slotIndex = (int)(readSequence & (capacity - 1));
+                long slotOffset = HeaderLength +
+                    (long)slotIndex * SlotStride;
+                Thread.MemoryBarrier();
+                if (view.ReadInt64(slotOffset +
+                        SlotPublishedSequenceOffset) != readSequence + 1)
+                {
+                    return false;
+                }
+
+                int generation = view.ReadInt32(slotOffset +
+                    SlotGenerationOffset);
+                int generationDelta = unchecked(generation -
+                    acceptedGeneration);
+                if (generationDelta > 0)
+                {
+                    // A lifecycle command for this generation is already
+                    // in the ordered pipe but has not been applied yet.
+                    return false;
+                }
+                if (generationDelta < 0)
+                {
+                    AdvanceRead(readSequence);
+                    continue;
+                }
+
+                view.ReadArray(slotOffset + SlotPayloadOffset,
+                    preparedPayload, 0, PayloadLength);
+                long queuedAt = view.ReadInt64(slotOffset +
+                    SlotEnqueuedQpcOffset);
+                if (queuedAt > 0)
+                {
+                    maximumQueueAgeTicks = Math.Max(
+                        maximumQueueAgeTicks,
+                        Math.Max(0, nowQpc - queuedAt));
+                }
+                preparedSequence = readSequence;
+                preparedEnqueuedQpc = queuedAt;
+                prepared = true;
+                hasReceivedGeneration = true;
+                return true;
             }
         }
 
@@ -299,6 +356,8 @@ namespace FUT404DS.InputDevices
                 }
 
                 AdvanceRead(preparedSequence);
+                committedSequence = preparedSequence + 1;
+                committedEnqueuedQpc = preparedEnqueuedQpc;
                 Array.Clear(preparedPayload, 0, preparedPayload.Length);
                 prepared = false;
                 presentedCount++;
@@ -312,6 +371,9 @@ namespace FUT404DS.InputDevices
             {
                 acceptedGeneration = generation;
                 prepared = false;
+                preparedEnqueuedQpc = 0;
+                committedSequence = 0;
+                committedEnqueuedQpc = 0;
                 Array.Clear(preparedPayload, 0, preparedPayload.Length);
                 hasReceivedGeneration = silenceFutureReports;
             }
@@ -371,6 +433,7 @@ namespace FUT404DS.InputDevices
             view.Dispose();
             map.Dispose();
             spaceAvailable.Dispose();
+            dataAvailable.Dispose();
             stopRequested.Dispose();
         }
     }

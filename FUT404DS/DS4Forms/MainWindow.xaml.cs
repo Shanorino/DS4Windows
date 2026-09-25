@@ -65,6 +65,7 @@ namespace FUT404DSWPF.DS4Forms
         private ProfileList profileListHolder = new ProfileList();
         private ListCollectionView profilesCollectionView;
         private LogViewModel logvm;
+        private LogViewAutoScroller logAutoScroller;
         private ControllerListViewModel conLvViewModel;
         private TrayIconViewModel trayIconVM;
         private SettingsViewModel settingsWrapVM;
@@ -351,7 +352,10 @@ namespace FUT404DSWPF.DS4Forms
 
                 if (launch)
                 {
-                    RequestApplicationShutdown();
+                    // The installed updater downloads first; the AIO installer
+                    // coordinates shutdown only when installation can begin.
+                    if (mainWinVM.UpdaterRequiresApplicationShutdown)
+                        RequestApplicationShutdown();
                 }
                 else
                 {
@@ -417,7 +421,8 @@ namespace FUT404DSWPF.DS4Forms
 
                     if (launch)
                     {
-                        RequestApplicationShutdown();
+                        if (mainWinVM.UpdaterRequiresApplicationShutdown)
+                            RequestApplicationShutdown();
                     }
                     else
                     {
@@ -503,7 +508,7 @@ namespace FUT404DSWPF.DS4Forms
             conLvViewModel.ControllerCol.CollectionChanged += ControllerCol_CollectionChanged;
             AppLogger.TrayIconLog += ShowNotification;
             AppLogger.GuiLog += UpdateLastStatusMessage;
-            logvm.LogItems.CollectionChanged += LogItems_CollectionChanged;
+            logAutoScroller = new LogViewAutoScroller(logListView);
             App.rootHub.Debug += UpdateLastStatusMessage;
             trayIconVM.RequestShutdown += TrayIconVM_RequestShutdown;
             trayIconVM.ProfileSelected += TrayIconVM_ProfileSelected;
@@ -572,22 +577,6 @@ Suspend support not enabled.", true);
         private void TrayIconVM_RequestServiceChange(object sender, EventArgs e)
         {
             ChangeService();
-        }
-
-        private void LogItems_CollectionChanged(object sender,
-            System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    int count = logListView.Items.Count;
-                    if (count > 0)
-                    {
-                        logListView.ScrollIntoView(logvm.LogItems[count - 1]);
-                    }
-                }));
-            }
         }
 
         private void ControlServiceStarted(object sender, EventArgs e)
@@ -1381,10 +1370,8 @@ Suspend support not enabled.", true);
 
         private void LogListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            int idx = logListView.SelectedIndex;
-            if (idx > -1)
+            if (logListView.SelectedItem is LogItem temp)
             {
-                LogItem temp = logvm.LogItems[idx];
                 LogMessageDisplay msgBox = new LogMessageDisplay(temp.Message);
                 msgBox.Owner = this;
                 msgBox.ShowDialog();
@@ -1394,7 +1381,7 @@ Suspend support not enabled.", true);
 
         private void ClearLogBtn_Click(object sender, RoutedEventArgs e)
         {
-            logvm.LogItems.Clear();
+            logvm.Clear();
         }
 
         private void MainTabCon_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1613,7 +1600,7 @@ Suspend support not enabled.", true);
                         deviceIndex];
                     if (device != null)
                     {
-                        App.rootHub.CheckProfileOptions(deviceIndex, device);
+                        App.rootHub.QueueProfileOptionsRefresh(deviceIndex, device);
                     }
                 }
             }
@@ -1805,7 +1792,7 @@ Suspend support not enabled.", true);
             dialog.InitialDirectory = Global.appdatapath;
             if (dialog.ShowDialog() == true)
             {
-                LogWriter logWriter = new LogWriter(dialog.FileName, logvm.LogItems.ToList());
+                LogWriter logWriter = new LogWriter(dialog.FileName, logvm.Snapshot());
                 logWriter.Process();
             }
         }
@@ -1938,6 +1925,7 @@ Suspend support not enabled.", true);
 
         private void MainDS4Window_Closed(object sender, EventArgs e)
         {
+            logAutoScroller?.Dispose();
             DisposePowerLifecycle();
             CancelBoundedHotplugRecovery();
             overviewProfileSaveTimer.Stop();

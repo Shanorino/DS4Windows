@@ -104,7 +104,7 @@ $script:UsbipUdeDriverSha256 =
 $script:UsbipFilterDriverSha256 =
     "c290299ff4d0f6a597db5ce03e15b29a5349cdce7c587ebfbd9ecaeca04f73ed"
 $script:BundledViiperPath = Join-Path $script:PackageExtrasRoot `
-    "VIIPER-0.1.5-rc4.6-x64.exe"
+    "VIIPER-0.1.9-rc4.6.6-x64.exe"
 $script:BundledViiperSha256Path = $script:BundledViiperPath + ".sha256"
 $script:BundledUsbipInstallerPath = Join-Path $script:PackageExtrasRoot `
     "USBip-0.9.7.7-x64.exe"
@@ -151,7 +151,7 @@ $script:UsbipReplacementStatePath = Join-Path $script:InstallDir `
 $script:UsbipUninstallKeyName = `
     "{199505b0-b93d-4521-a8c7-897818e0205a}_is1"
 $script:InfrastructureRegistryPath = "HKLM:\SOFTWARE\FUT404DS"
-$script:InfrastructureVersion = "VIIPER-0.1.5-rc4.6+USBIP-0.9.7.7"
+$script:InfrastructureVersion = "VIIPER-0.1.9-rc4.6.6+USBIP-0.9.7.7"
 $script:System32 = [Environment]::SystemDirectory
 $script:PnPUtilPath = Join-Path $script:System32 "pnputil.exe"
 $script:TaskKillPath = Join-Path $script:System32 "taskkill.exe"
@@ -174,6 +174,22 @@ function Write-SetupLog([string]$message, [ConsoleColor]$color =
             "[$timestamp] [$($script:CorrelationId)] $message") -Encoding UTF8
     }
     catch { }
+}
+
+function Test-SetupUnattended([string[]]$HostArguments =
+        [Environment]::GetCommandLineArgs()) {
+    # -Yes authorizes the advertised managed setup, not destructive cleanup of
+    # another VIIPER installation. In-app repairs also hide their -NoPause host.
+    if ($Yes -or $NoPause -or $script:InstallerMode) { return $true }
+    foreach ($argument in $HostArguments) {
+        if ($argument -and $argument.Length -ge 5 -and
+                ($argument[0] -eq '-' -or $argument[0] -eq '/') -and
+                'NonInteractive'.StartsWith($argument.Substring(1),
+                    [StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+    }
+    return $false
 }
 
 function Write-Step([string]$message) {
@@ -384,6 +400,11 @@ function Disable-ConflictingCitrixUsbMonitor {
     ) Yellow
 
     if (-not $Yes) {
+        if (Test-SetupUnattended) {
+            throw "Disabling the Citrix USB monitor requires explicit " +
+                "confirmation. Run setup interactively, or use -Yes only " +
+                "after approving this change and the required restart."
+        }
         $answer = Read-Host (
             "Disable the conflicting Citrix USB monitor and require a " +
             "restart? [Y/N]")
@@ -1419,24 +1440,20 @@ function Remove-ForeignViiperInstallations {
         ) Yellow
     }
 
-    if (-not $script:InstallerMode) {
-        # The built-in repair flow can ask directly. The all-in-one installer
-        # already received one explicit confirmation and runs this child with
-        # -NonInteractive, so it follows the standard-install choice instead.
-        $answer = Read-Host (
-            "Stop these foreign VIIPER processes with administrator rights " +
-            "and remove their viiper.exe files? [Y/N]")
-        if ($answer -notmatch '^(?i:y|yes)$') {
-            $script:UserCanceled = $true
-            throw "Setup canceled because a foreign VIIPER instance is " +
-                "running. Close or remove it, then run Install / Repair again."
-        }
+    if (Test-SetupUnattended) {
+        # Never wait invisibly while owning the setup mutex, and do not infer
+        # permission to terminate an unmanaged backend from -Yes/InstallerMode.
+        throw "Close the listed VIIPER process(es) outside the managed " +
+            "installation, then run Install / Repair again. Unattended " +
+            "setup will not stop or remove a foreign VIIPER instance."
     }
-    else {
-        Write-SetupLog (
-            "The standard installer will replace the foreign VIIPER instance " +
-            "with its verified Program Files copy."
-        ) Yellow
+    $answer = Read-Host (
+        "Stop these foreign VIIPER processes with administrator rights " +
+        "and remove their viiper.exe files? [Y/N]")
+    if ($answer -notmatch '^(?i:y|yes)$') {
+        $script:UserCanceled = $true
+        throw "Setup canceled because a foreign VIIPER instance is " +
+            "running. Close or remove it, then run Install / Repair again."
     }
 
     $unknownPath = @($foreign | Where-Object {
@@ -1714,10 +1731,13 @@ function Remove-PortableDs4WindowsPackageForStandardMode {
     }
 }
 
-function Stop-ViiperProcesses([string]$operation) {
+function Stop-ViiperProcesses([string]$operation, [switch]$ManagedOnly) {
     $attempts = 12
     for ($attempt = 1; $attempt -le $attempts; $attempt++) {
-        $processes = @(Get-RunningViiperProcesses)
+        $processes = @(Get-RunningViiperProcesses | Where-Object {
+            -not $ManagedOnly -or
+                (Test-ManagedViiperPath ($_.ExecutablePath -as [string]))
+        })
         if ($processes.Count -eq 0) { return $true }
 
         if ($attempt -eq 1) {
@@ -1741,7 +1761,10 @@ function Stop-ViiperProcesses([string]$operation) {
 
         Start-Sleep -Milliseconds 300
 
-        $remaining = @(Get-RunningViiperProcesses)
+        $remaining = @(Get-RunningViiperProcesses | Where-Object {
+            -not $ManagedOnly -or
+                (Test-ManagedViiperPath ($_.ExecutablePath -as [string]))
+        })
         if ($remaining.Count -eq 0) { return $true }
 
         if ($attempt -ge 3) {
@@ -3085,6 +3108,11 @@ try {
         "may require a reboot."
     ) -ForegroundColor Yellow
     if (-not $Yes) {
+        if (Test-SetupUnattended) {
+            throw "Installation requires explicit confirmation. Run setup " +
+                "interactively, or use -Yes after reviewing the installation " +
+                "and restart requirements."
+        }
         Write-Host "VIIPER is bundled and installs first. An incompatible USBIP driver is removed only after VIIPER is in place, and 0.9.7.7 is installed only after a separate reboot." -ForegroundColor Yellow
         Write-Host "Save work before continuing; a driver replacement can require you to restart Windows and run Repair again." -ForegroundColor Yellow
         $answer = Read-Host "Install bundled VIIPER first and continue? [Y/N]"
@@ -3129,7 +3157,7 @@ try {
     }
     Resolve-UsbipReplacementBoundary
 
-    Write-Step "Step 1 of 4 - Installing VIIPER 0.1.5-rc4.6"
+    Write-Step "Step 1 of 4 - Installing VIIPER 0.1.9-rc4.6.6"
     Remove-ForeignViiperInstallations
     $viiperPath = Join-Path $script:InstallDir "viiper.exe"
     $candidatePath = Join-Path $script:TempDir "viiper.exe"
@@ -3141,7 +3169,7 @@ try {
     $bundledViiperSha256 = Read-PackagedSha256 `
         $script:BundledViiperSha256Path `
         (Split-Path -Leaf $script:BundledViiperPath)
-    Write-SetupLog "Using packaged VIIPER 0.1.5-rc4.6 x64 binary." Green
+    Write-SetupLog "Using packaged VIIPER 0.1.9-rc4.6.6 x64 binary." Green
     Assert-ViiperFileSha256 $script:BundledViiperPath $bundledViiperSha256
     Copy-Item -LiteralPath $script:BundledViiperPath `
         -Destination $candidatePath -Force
@@ -3565,7 +3593,9 @@ catch {
         # Only tasks whose complete action/principal contract still belongs
         # to this package are touched.
         try {
-            [void](Stop-ViiperProcesses "failed infrastructure transaction")
+            # A failure can be the refusal to alter a foreign backend above.
+            # Contain only our managed process; failure is not extra consent.
+            [void](Stop-ViiperProcesses "failed infrastructure transaction" -ManagedOnly)
         }
         catch {
             Write-SetupLog (
@@ -3614,15 +3644,19 @@ finally {
         Remove-Item -LiteralPath $script:TempDir -Recurse -Force `
             -ErrorAction SilentlyContinue
     }
-    if (-not $NoPause) {
-        Write-Host ""
-        Read-Host "Press Enter to close"
-    }
     if ($script:SetupMutexOwned -and $script:SetupMutex) {
         try { $script:SetupMutex.ReleaseMutex() } catch { }
+        $script:SetupMutexOwned = $false
     }
     if ($script:SetupMutex) {
         try { $script:SetupMutex.Dispose() } catch { }
+        $script:SetupMutex = $null
+    }
+    # Waiting for a user to dismiss a completed manual setup is not mutation.
+    # A hidden/unattended host must never prompt here, including failure paths.
+    if (-not (Test-SetupUnattended)) {
+        Write-Host ""
+        Read-Host "Press Enter to close"
     }
 }
 

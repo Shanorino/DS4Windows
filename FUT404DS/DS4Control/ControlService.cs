@@ -124,6 +124,7 @@ namespace FUT404DS
         private bool stickMouseFakerInputMissingNoticeShown = false;
         private readonly object outputKbmHandlerLock = new object();
         private readonly object serviceLifecycleLock = new object();
+        private readonly BackendMaintenanceTransaction backendMaintenance = new();
         private readonly InputControllerRegistrationTable inputRegistrationTable;
         private readonly ControlServiceInputSlotAdmission inputSlotAdmission;
         private readonly ControlServiceLegacyHidSlotAuthority
@@ -623,18 +624,22 @@ namespace FUT404DS
         {
             lock (outputKbmHandlerLock)
             {
-                if (Global.outputKBMHandler != null)
+                Mapping.ReplaceMouseOutput(() =>
                 {
-                    Global.outputKBMHandler.Disconnect();
-                    Global.outputKBMHandler = null;
-                }
+                    if (Global.outputKBMHandler != null)
+                    {
+                        Global.outputKBMHandler.Disconnect();
+                        Global.outputKBMHandler = null;
+                    }
 
-                if (Global.outputKBMMapping != null)
-                {
-                    Global.outputKBMMapping = null;
-                }
+                    if (Global.outputKBMMapping != null)
+                    {
+                        Global.outputKBMMapping = null;
+                    }
 
-                InitOutputKBMHandler();
+                    InitOutputKBMHandler();
+                    return true;
+                });
             }
         }
 
@@ -696,22 +701,25 @@ namespace FUT404DS
                 VirtualKBMBase oldHandler = Global.outputKBMHandler;
                 VirtualKBMMapping oldMapping = Global.outputKBMMapping;
 
-                try
+                return Mapping.ReplaceMouseOutput(() =>
                 {
-                    InitOutputKBMHandler(identifier);
-                    if (Global.outputKBMHandler?.GetIdentifier() == identifier)
+                    try
                     {
-                        RefreshLoadedActionAliases();
-                        oldHandler?.Disconnect();
-                        return true;
+                        InitOutputKBMHandler(identifier);
+                        if (Global.outputKBMHandler?.GetIdentifier() == identifier)
+                        {
+                            RefreshLoadedActionAliases();
+                            oldHandler?.Disconnect();
+                            return true;
+                        }
                     }
-                }
-                catch { }
+                    catch { }
 
-                Global.outputKBMHandler?.Disconnect();
-                Global.outputKBMHandler = oldHandler;
-                Global.outputKBMMapping = oldMapping;
-                return false;
+                    Global.outputKBMHandler?.Disconnect();
+                    Global.outputKBMHandler = oldHandler;
+                    Global.outputKBMMapping = oldMapping;
+                    return false;
+                });
             }
         }
 
@@ -1141,6 +1149,67 @@ namespace FUT404DS
                 return true;
             }
             finally { Monitor.Exit(outputKbmHandlerLock); }
+        }
+
+        internal bool BackendMaintenanceActive => backendMaintenance?.IsActive == true;
+        internal bool BackendMaintenanceRequiresRepair => backendMaintenance?.RequiresRepair == true;
+
+        // The caller stages any download before this transaction and runs it on
+        // a worker, keeping the STA free to service normal lifecycle events.
+        // The action must repair, start and verify the exact broker synchronously.
+        internal void ExecuteBackendMaintenance(Action operation)
+        {
+            ArgumentNullException.ThrowIfNull(operation);
+            if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA ||
+                ControlServiceMouseCallbackSubscription.IsInsideCallback)
+                throw new InvalidOperationException("Backend maintenance must run on a background worker, not the UI or an input callback.");
+
+            DSXUdpServer detached = null;
+            bool rejectedStop = false;
+            try
+            {
+                backendMaintenance.Execute(serviceLifecycleLock, () => running,
+                    () =>
+                    {
+                        // Mirror Stop's admission revocation before draining.
+                        ++dsxConfigurationRevision;
+                        detached = DetachDsxSession();
+                        bool stopped = StopCore(showlog: true, immediateUnplug: true);
+                        rejectedStop = !stopped;
+                        if (stopped)
+                        {
+                            lock (DsxOutputGate) dsxLastError = "";
+                            // Release the UDP port before StartCore creates its
+                            // replacement. The revoked DSX callbacks use only
+                            // DsxOutputGate/device lifetimes, never this service
+                            // gate; Start/HotPlug also reject while Active.
+                            detached?.Dispose();
+                            detached = null;
+                        }
+                        return stopped;
+                    }, operation, () => StartCore(showlog: true));
+            }
+            finally
+            {
+                // A failed/throwing drain still retires the detached listener.
+                detached?.Dispose();
+                if (rejectedStop && running && Global.IsUsingDSXUDPServer())
+                    ChangeDSXUDPStatus(true);
+            }
+        }
+
+        // Queued profile workers acquire this BEFORE pausing a source. A KBM
+        // replacement may take time, but the existing profile keeps reporting
+        // while we wait; the final mapping commit never waits on that work.
+        internal bool RunWithStableProfileKbmMapping(Action apply)
+        {
+            lock (outputKbmHandlerLock)
+            {
+                if (Global.outputKBMMapping == null)
+                    return false;
+                apply();
+                return true;
+            }
         }
 
         public void LoadPermanentSlotsConfig()
@@ -2421,6 +2490,15 @@ namespace FUT404DS
                 if (ViiperOutDevice.IsViiperType(contType))
                 {
                     activeOutDevType[index] = contType;
+                    OutSlotDevice converterReplacementSlot = null;
+                    if (slotDevice?.OutputDevice is ViiperOutDevice existingViiper &&
+                        !existingViiper.CanReuseForPhysicalController(index))
+                    {
+                        if (outputslotMan.TryRetireIncompatibleHapticsOutput(
+                            slotDevice, existingViiper, index))
+                            converterReplacementSlot = slotDevice;
+                        slotDevice = null;
+                    }
                     if (slotDevice != null)
                     {
                         if (outputslotMan.TryBindExistingUnboundOutput(slotDevice,
@@ -2434,13 +2512,14 @@ namespace FUT404DS
                     }
                     if (slotDevice == null)
                     {
-                        slotDevice = outputslotMan.FindOpenSlot();
+                        slotDevice = converterReplacementSlot ?? outputslotMan.FindOpenSlot();
                         if (slotDevice != null)
                         {
                             OutputDevice tempViiper = EstablishOutDevice(index, contType);
                             produced = tempViiper;
                             slotDevice = outputslotMan.DeferredPlugin(tempViiper, index,
-                                $"{device.DisplayName} [{device.MacAddress}]", outputDevices, contType);
+                                $"{device.DisplayName} [{device.MacAddress}]", outputDevices, contType,
+                                preferredSlot: converterReplacementSlot);
                             success = slotDevice != null;
                         }
                         else
@@ -2555,9 +2634,13 @@ namespace FUT404DS
 
         public bool Start(bool showlog = true)
         {
-            if (ControlServiceMouseCallbackSubscription.IsInsideCallback) return false;
+            if (ControlServiceMouseCallbackSubscription.IsInsideCallback ||
+                backendMaintenance?.RejectControllerStart == true) return false;
             lock (serviceLifecycleLock)
             {
+                // Recheck after waiting: a failed repair must also reject a
+                // start that was queued before maintenance acquired this gate.
+                if (backendMaintenance?.RejectControllerStart == true) return false;
                 if (running)
                 {
                     StartupDiag("ControlService.Start ignored because the service is already running");
@@ -3430,6 +3513,10 @@ namespace FUT404DS
                 // Disconnect from KBM system when stopping ControlService
                 StartupDiag($"ControlService.Stop outputKBM Disconnect begin handler={outputKBMHandler?.GetFullDisplayName()}");
                 LogDebug($"Closing connection to output handler {outputKBMHandler.GetDisplayName()}");
+                // Include empty/legacy slots and deliberately retained macro
+                // buttons, not just controllers with a typed retirement path.
+                for (int index = 0; index < Global.MAX_DS4_CONTROLLER_COUNT; index++)
+                    Mapping.CommitNeutral(index);
                 outputKBMHandler.Disconnect();
                 StartupDiag("ControlService.Stop outputKBM Disconnect end");
                 inServiceTask = false;
@@ -3450,9 +3537,11 @@ namespace FUT404DS
 
         public bool HotPlug()
         {
-            if (ControlServiceMouseCallbackSubscription.IsInsideCallback) return false;
+            if (ControlServiceMouseCallbackSubscription.IsInsideCallback ||
+                backendMaintenance?.RejectControllerStart == true) return false;
             lock (serviceLifecycleLock)
             {
+                if (backendMaintenance?.RejectControllerStart == true) return false;
                 return HotPlugCore();
             }
         }
@@ -3960,7 +4049,8 @@ namespace FUT404DS
                 ViiperOutDevice existing =
                     playStationFeatureOutputDevices[index];
                 if (existing?.IsRuntimeConnected == true &&
-                    existing.OutputType == desiredSidecar)
+                    existing.OutputType == desiredSidecar &&
+                    existing.CanReuseForPhysicalController(index))
                 {
                     existing.BindPhysicalController(index);
                     return existing;
@@ -3981,8 +4071,8 @@ namespace FUT404DS
                 {
                     StartupDiag(
                         $"Persistent PlayStation audio owner connect begin index={index} type={desiredSidecar}");
-                    sidecar.Connect();
                     sidecar.BindPhysicalController(index);
+                    sidecar.Connect();
                     playStationFeatureOutputDevices[index] = sidecar;
                     StartupDiag(
                         $"Persistent PlayStation audio owner ready index={index} type={desiredSidecar} port={sidecar.DirectSpeakerUsbipPort}");
@@ -4033,13 +4123,79 @@ namespace FUT404DS
 
         public void CheckProfileOptions(int ind, DS4Device device, bool startUp = false)
         {
-            EnsureVirtualMouseForStickMouseProfile(ind);
+            CheckProfileMappingOptions(ind, device);
+            CheckProfileColdOptions(ind, device);
+            if (!startUp) CheckLauchProfileOption(ind, device);
+        }
 
-            ViiperOutDevice playStationFeatureOutput =
-                EnsurePlayStationFeatureOutput(ind, device);
-            OutContType playStationFeatureOutputType =
-                playStationFeatureOutput?.OutputType ?? OutContType.None;
+        private readonly ProfileColdWorkQueue[] profileColdWorkQueues =
+            Enumerable.Range(0, MAX_DS4_CONTROLLER_COUNT).Select(index =>
+                new ProfileColdWorkQueue(ex => StartupDiag(
+                    $"Profile cold options failed index={index}: {ex}"))).ToArray();
 
+        private readonly ProfileColdWorkQueue[] profileOptionsRefreshQueues =
+            Enumerable.Range(0, MAX_DS4_CONTROLLER_COUNT).Select(index =>
+                new ProfileColdWorkQueue(ex => StartupDiag(
+                    $"Profile options refresh failed index={index}: {ex}"))).ToArray();
+
+        internal void QueueProfileOptionsRefresh(int ind, DS4Device device)
+        {
+            if (!TryCaptureProfileActionTarget(ind, device, out var target)) return;
+            long revision = Global.ReadProfileSwitchRevision(ind);
+            long deadline = Environment.TickCount64 + 500;
+            _ = profileOptionsRefreshQueues[ind].Queue(() =>
+            {
+                if (!target.IsCurrent ||
+                    !Global.IsCurrentProfileSwitchRevision(ind, revision)) return true;
+                if (Environment.TickCount64 >= deadline)
+                {
+                    StartupDiag($"Profile options refresh admission remained busy index={ind}; no stale refresh was applied.");
+                    return true;
+                }
+                // Retry outside all gates and the physical event queue. That
+                // queue still drains while another action owns a report pause.
+                bool finished = ProfileColdWorkQueue.TryRefreshMapping(ind,
+                    target, revision, TryRunWithStableProfileKbmMapping,
+                    () => CheckProfileMappingOptions(ind, device), out bool applied);
+                if (applied)
+                    QueueProfileColdOptions(ind, target, revision, launchProgram: true);
+                return finished;
+            });
+        }
+
+        internal void CheckProfileOptionsAfterLoad(int ind, DS4Device device,
+            long revision)
+        {
+            // Called only on the source's serialized queue. Touch/gyro filters
+            // and mapping state must remain owned by that bounded boundary.
+            CheckProfileMappingOptions(ind, device);
+            if (!TryCaptureProfileActionTarget(ind, device, out var target)) return;
+            QueueProfileColdOptions(ind, target, revision, launchProgram: false);
+        }
+
+        private void QueueProfileColdOptions(int ind, ControllerProfileActionTarget target,
+            long revision, bool launchProgram)
+        {
+            _ = profileColdWorkQueues[ind].Queue(() =>
+                TryApplyProfileColdOptions(ind, target, revision, launchProgram));
+        }
+
+        private bool TryApplyProfileColdOptions(int ind, ControllerProfileActionTarget target,
+            long revision, bool launchProgram)
+        {
+            bool IsCurrent() => target.IsCurrent && !target.Source.IsRemoved &&
+                (revision <= 0 || Global.IsCurrentProfileSwitchRevision(ind, revision));
+            return ProfileColdWorkQueue.TryApply(ind, serviceLifecycleLock,
+                IsCurrent, () =>
+                {
+                    CheckProfileColdOptions(ind, target.Source);
+                    if (launchProgram && IsCurrent())
+                        CheckLauchProfileOption(ind, target.Source);
+                });
+        }
+
+        private void CheckProfileMappingOptions(int ind, DS4Device device)
+        {
             if (device.DeviceType == InputDevices.InputDeviceType.DS4)
                 device.ConfigureDualShock4ProfileOutput(getEnableOutputDataToDS4(ind));
             else
@@ -4090,6 +4246,15 @@ namespace FUT404DS
             device.RumbleAutostopTime = getRumbleAutostopTime(ind);
             device.setRumble(0, 0);
             device.LightBarColor = Global.getMainColor(ind);
+        }
+
+        private void CheckProfileColdOptions(int ind, DS4Device device)
+        {
+            EnsureVirtualMouseForStickMouseProfile(ind);
+            ViiperOutDevice playStationFeatureOutput =
+                EnsurePlayStationFeatureOutput(ind, device);
+            OutContType playStationFeatureOutputType =
+                playStationFeatureOutput?.OutputType ?? OutContType.None;
 
             // DualSense specific profile settings
             if (device is InputDevices.DualSenseDevice dualsense)
@@ -4281,10 +4446,6 @@ namespace FUT404DS
                 DualSenseAudioSpeakerEndpointId[ind],
                 playStationFeatureOutput?.DirectSpeakerUsbipPort ?? -1);
 
-            if (!startUp)
-            {
-                CheckLauchProfileOption(ind, device);
-            }
         }
 
         internal bool ApplyAudioHapticsToGameReport(int deviceIndex,
@@ -4944,7 +5105,7 @@ namespace FUT404DS
 
         private static void CommitNeutralMapping(int index)
         {
-            Task.Run(() => Mapping.Commit(index)).Wait();
+            Task.Run(() => Mapping.CommitNeutral(index)).Wait();
         }
 
         private bool ClearExactControllerSlot(DS4Device device, int index)

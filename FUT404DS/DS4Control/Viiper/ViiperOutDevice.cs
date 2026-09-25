@@ -518,7 +518,6 @@ namespace FUT404DS
         private bool hasPendingSwitch2RuntimeStatus;
         private int switch2RuntimeStatusFailureLogged;
         private int lastMicrophoneRecoveryStage;
-        private int edgePhysicalMismatchLogged;
         private int feedbackSpeakerCallbackFailureLogged;
         private int feedbackControlCallbackFailureLogged;
         private long lastFeedbackSpeakerDispatchTimestamp;
@@ -1022,12 +1021,16 @@ namespace FUT404DS
 
         internal void BindPhysicalController(int deviceIndex)
         {
+            DualSenseDevice converterTarget = ResolvePhysicalControllerTarget(deviceIndex);
+            if (connected && !CanReuseHapticsConverterForTarget(converterTarget))
+                throw new InvalidOperationException("The VIIPER haptics converter requires a new virtual device for this physical controller.");
             int previousDeviceIndex = Volatile.Read(ref lastInputDeviceIndex);
             if (previousDeviceIndex != deviceIndex)
             {
                 ReleaseTriggerLabRumbleOverrides(previousDeviceIndex);
             }
             PublishPhysicalControllerBinding(deviceIndex);
+            ApproveHapticsConverterTarget(converterTarget);
             if (connected)
             {
                 RebindSwitch2RuntimeStatusBridge();
@@ -1208,7 +1211,6 @@ namespace FUT404DS
             stateWriteMinimumIntervalTicks =
                 ViiperStateWriteRateSettings.GetMinimumIntervalTicks(
                     stateWriteRateHz);
-            Volatile.Write(ref edgePhysicalMismatchLogged, 0);
             Volatile.Write(ref feedbackSpeakerCallbackFailureLogged, 0);
             Volatile.Write(ref feedbackControlCallbackFailureLogged, 0);
             Interlocked.Exchange(ref lastFeedbackSpeakerDispatchTimestamp, 0);
@@ -1865,11 +1867,25 @@ namespace FUT404DS
             string legacyDeviceName,
             bool supportsMicrophoneInterfaceEvents)
         {
+            int physicalIndex = Volatile.Read(ref lastInputDeviceIndex);
+            DualSenseDevice target = ResolvePhysicalControllerTarget(physicalIndex);
+            bool requestSony = WantsSonyBluetoothHaptics(target);
             ViiperDeviceStream stream = OpenRawInputV5StreamWithFallback(
-                name => client.CreateDeviceAndOpenStream(name),
+                name => client.CreateDeviceAndOpenStream(name,
+                    deviceSpecific: requestSony ? new ViiperHapticsConverter.CreateOptions() : null,
+                    requestSonyBluetoothHaptics: requestSony),
                 rawInputDeviceName, eventDeviceName, legacyDeviceName,
                 supportsMicrophoneInterfaceEvents,
                 out bool rawInputStatus, out bool microphoneEvents);
+            if (!ReferenceEquals(target, ResolvePhysicalControllerTarget(physicalIndex)) ||
+                requestSony && !WantsSonyBluetoothHaptics(target))
+            {
+                stream.Dispose();
+                throw new IOException("The physical haptics target changed while VIIPER was creating its stream.");
+            }
+            requestedSonyBluetoothHaptics = requestSony;
+            Volatile.Write(ref activeHapticsConverter, stream.HapticsConverter);
+            ApproveHapticsConverterTarget(target);
             activeStreamSupportsRawInputStatus = rawInputStatus;
             activeStreamSupportsMicrophoneInterfaceEvents = microphoneEvents;
             return stream;
@@ -6437,17 +6453,31 @@ namespace FUT404DS
                 (feedback[DualSenseCombinedBluetoothReportOffset] != 0x36 &&
                  feedback[DualSenseCombinedBluetoothReportOffset] != 0x32));
 
+        internal static bool IsUnsupportedEdgeNativeOutput(
+            ViiperVirtualDeviceType type, byte[] feedback, int length,
+            bool physicalEdge = false) =>
+            (type == ViiperVirtualDeviceType.DualSenseEdge ||
+                (type == ViiperVirtualDeviceType.DualSense && physicalEdge)) &&
+            feedback != null && length <= feedback.Length &&
+            length >= DualSenseNativeOutputReportOffset + DualSenseNativeOutputReportLength &&
+            feedback[DualSenseNativeOutputReportOffset] == 0x02 &&
+            ((feedback[DualSenseNativeOutputReportOffset + 39] & 0x80) != 0 ||
+             (feedback[DualSenseNativeOutputReportOffset + 41] & 0x80) != 0);
+
         internal bool TryCaptureNativeCommandContext(byte[] feedback, int length,
             int deviceIndex, out ViiperNativeCommandContext context)
         {
             context = default;
             if (audioOnlySidecar || !IsDualSenseType() ||
-                !IsExactNativeDualSenseCommand(feedback, length)) return false;
+                !IsExactNativeDualSenseCommand(feedback, length) ||
+                IsUnsupportedEdgeNativeOutput(viiperType, feedback, length)) return false;
             lock (feedbackCallbackAdmissionLock)
             {
                 DualSenseDevice target = ResolvePhysicalControllerTarget(deviceIndex);
                 if (deviceIndex != Volatile.Read(ref lastInputDeviceIndex) ||
-                    target == null || !IsNativeDualSenseFeedbackCompatible(target)) return false;
+                    target == null || !IsNativeDualSenseFeedbackCompatible(target) ||
+                    IsUnsupportedEdgeNativeOutput(viiperType, feedback, length,
+                        target.SubType == DualSenseDevice.DeviceSubType.DSEdge)) return false;
                 context = new(target, Interlocked.Read(ref physicalControllerBindingRevision),
                     Global.ReadProfileSwitchRevision(deviceIndex), feedbackDispatchBuffer.PendingBoundaryRevision);
                 return true;
@@ -6569,8 +6599,10 @@ namespace FUT404DS
                     sourceGeneration != Interlocked.Read(ref streamGeneration) ||
                     !IsNativeCommandTargetCurrent(deviceIndex, context) ||
                     !Global.EnableOutputDataToDS4[deviceIndex]) return true;
-                if (!IsExactNativeDualSenseCommand(feedback, length)) return true;
                 target = (DualSenseDevice)context.Target;
+                if (!IsExactNativeDualSenseCommand(feedback, length) ||
+                    IsUnsupportedEdgeNativeOutput(viiperType, feedback, length,
+                        target.SubType == DualSenseDevice.DeviceSubType.DSEdge)) return true;
                 byte triggerLabValidity = PrepareNativeDualSenseOutputReportForProfileInto(feedback,
                     deviceIndex, nativeOutputScratch);
                 if (!target.WriteRawOutputReportFromGame(nativeOutputScratch, 0,
@@ -6599,6 +6631,18 @@ namespace FUT404DS
             byte[] nativeOutputScratch = null,
             long nativeOutputStreamGeneration = 0)
         {
+            // Edge profile-preview/extension commands authorize data beyond
+            // the common 48-byte native prefix carried by older V5 brokers.
+            // Forwarding that prefix alone can alter the physical Edge with
+            // missing parameters. Retire the complete unsupported command,
+            // never turn it into scalar rumble/trigger/LED fallback. Ordinary
+            // trigger validity and all standard DualSense reports are intact.
+            // Media-only callbacks are independent: the physical compositor
+            // ignores their imported state and retains its last valid state.
+            if (freshNativeOutput &&
+                IsUnsupportedEdgeNativeOutput(viiperType, feedback, feedbackLength))
+                return;
+
             int deviceIndex = Volatile.Read(ref lastInputDeviceIndex);
             if ((expectedDeviceIndex >= 0 &&
                     expectedDeviceIndex != deviceIndex) ||
@@ -6615,6 +6659,22 @@ namespace FUT404DS
             {
                 return;
             }
+            // A base virtual persona does not change the physical Edge's
+            // interpretation of its configuration bits. Apply the same atomic
+            // guard to that cross-model path before any scalar fallback.
+            if (freshNativeOutput && device is DualSenseDevice sonyTarget &&
+                IsUnsupportedEdgeNativeOutput(viiperType, feedback, feedbackLength,
+                    sonyTarget.SubType == DualSenseDevice.DeviceSubType.DSEdge))
+                return;
+
+            // A report-thread rebind cannot approve a new recipient for an
+            // immutable Sony DSP stream. Retain the complete compact/native
+            // control prefix, whose existing ownership rules are independent
+            // of DSP, but never expose a Sony-filtered carrier to Nintendo's
+            // raw64 interpreter. Media-only callbacks are not native commands.
+            feedbackLength = GetHapticsCompatibleFeedbackLength(device,
+                feedbackLength, freshNativeOutput);
+            if (feedbackLength == 0) return;
 
             // A compatibility sidecar exists only to carry PlayStation audio.
             // If an older VIIPER backend had to expose its neutral HID
@@ -9904,24 +9964,13 @@ namespace FUT404DS
 
         private bool IsNativeDualSenseFeedbackCompatible(DS4Device device)
         {
-            if (device is not DualSenseDevice dualSenseDevice ||
-                !IsCurrentPhysicalSonyDualSense(dualSenseDevice))
-            {
-                return false;
-            }
-
-            if (viiperType != ViiperVirtualDeviceType.DualSenseEdge ||
-                dualSenseDevice.SubType == DualSenseDevice.DeviceSubType.DSEdge)
-            {
-                return true;
-            }
-
-            if (Interlocked.Exchange(ref edgePhysicalMismatchLogged, 1) == 0)
-            {
-                AppLogger.LogToGui("VIIPER DualSense Edge native feedback is not being forwarded to a physical non-Edge DualSense. Use DualSense output for normal DualSense controllers, or connect a DualSense Edge for Edge native feedback.", true);
-            }
-
-            return false;
+            // Both Sony models share the native game-feedback prefix and
+            // audio format. The virtual persona must not reduce these effects
+            // to legacy rumble on a standard DualSense. Edge configuration
+            // extensions are rejected separately before command admission;
+            // onboard feature/profile writes are never forwarded here.
+            return device is DualSenseDevice dualSenseDevice &&
+                IsCurrentPhysicalSonyDualSense(dualSenseDevice);
         }
 
         private bool IsCurrentPhysicalSonyDualSense(DualSenseDevice device)
@@ -10482,13 +10531,14 @@ namespace FUT404DS
         }
 
         public ViiperDeviceStream CreateDeviceAndOpenStream(string deviceName,
-            ushort? idProduct = null, object deviceSpecific = null)
+            ushort? idProduct = null, object deviceSpecific = null,
+            bool requestSonyBluetoothHaptics = false)
         {
             string payload = SerializeDeviceCreateRequest(deviceName,
                 idProduct, deviceSpecific);
             return CreateDeviceAndOpenStream(busId =>
                 SendRequest<ViiperDeviceResponse>($"bus/{busId}/add",
-                    payload));
+                    payload), requestSonyBluetoothHaptics);
         }
 
         internal ViiperDeviceStream CreateAuthorizedXboxOneDeviceAndOpenStream(
@@ -10635,14 +10685,16 @@ namespace FUT404DS
         }
 
         private ViiperDeviceStream CreateDeviceAndOpenStream(
-            Func<uint, ViiperDeviceResponse> createDevice)
+            Func<uint, ViiperDeviceResponse> createDevice,
+            bool requestSonyBluetoothHaptics = false)
         {
             return ViiperUsbipPortManager.WithNativePortMutationLock(() =>
-                CreateDeviceAndOpenStreamCore(createDevice));
+                CreateDeviceAndOpenStreamCore(createDevice, requestSonyBluetoothHaptics));
         }
 
         private ViiperDeviceStream CreateDeviceAndOpenStreamCore(
-            Func<uint, ViiperDeviceResponse> createDevice)
+            Func<uint, ViiperDeviceResponse> createDevice,
+            bool requestSonyBluetoothHaptics)
         {
             ArgumentNullException.ThrowIfNull(createDevice);
             ViiperUsbipPortManager.DetachStaleLocalViiperPorts();
@@ -10654,6 +10706,8 @@ namespace FUT404DS
             try
             {
                 device = createDevice(bus.BusId);
+                string hapticsConverter = ViiperHapticsConverter.ParseSelection(
+                    device.DeviceSpecific, requestSonyBluetoothHaptics);
                 usbipPort = device.UsbipPort;
                 if (!ViiperUsbipPortManager.IsTrustedCreateResponse(
                     usbipPort, device.UsbipOwnerSerial))
@@ -10666,7 +10720,8 @@ namespace FUT404DS
                     bus.BusId, device.DevId, usbipPort);
                 ViiperUsbipPortManager.RegisterActivePort(usbipPort,
                     $"{bus.BusId}-{device.DevId}");
-                return OpenStream(bus.BusId, device.DevId, usbipPort);
+                return OpenStream(bus.BusId, device.DevId, usbipPort,
+                    hapticsConverter: hapticsConverter);
             }
             catch
             {
@@ -10830,7 +10885,8 @@ namespace FUT404DS
 
         private ViiperDeviceStream OpenStream(uint busId, string devId,
             int usbipPort,
-            ViiperVirtualDeviceLifetime deviceLifetime = null)
+            ViiperVirtualDeviceLifetime deviceLifetime = null,
+            string hapticsConverter = ViiperHapticsConverter.Legacy)
         {
             XboxOneAuthorizedRegistrationV1 registration =
                 deviceLifetime?.XboxOneRegistration;
@@ -10852,7 +10908,7 @@ namespace FUT404DS
                 stream.Write(request, 0, request.Length);
                 deviceLifetime ??= new ViiperVirtualDeviceLifetime(busId,
                     devId, usbipPort, RemoveDevice);
-                result = new ViiperDeviceStream(tcp, stream, deviceLifetime);
+                result = new ViiperDeviceStream(tcp, stream, deviceLifetime, hapticsConverter);
                 if (registration != null)
                 {
                     result.EnableXboxOneBroker();
@@ -11100,6 +11156,9 @@ namespace FUT404DS
 
         private sealed class ViiperDeviceResponse
         {
+            [JsonPropertyName("deviceSpecific")]
+            public JsonElement DeviceSpecific { get; set; }
+
             [JsonPropertyName("devId")]
             public string DevId { get; set; }
 
@@ -12227,14 +12286,17 @@ namespace FUT404DS
         private static readonly uint[] FramedCrcTable = BuildFramedCrcTable();
 
         public ViiperDeviceStream(TcpClient tcp, Stream stream,
-            ViiperVirtualDeviceLifetime deviceLifetime)
-            : this(stream, tcp, deviceLifetime)
+            ViiperVirtualDeviceLifetime deviceLifetime,
+            string hapticsConverter = ViiperHapticsConverter.Legacy)
+            : this(stream, tcp, deviceLifetime, hapticsConverter)
         {
         }
 
         internal ViiperDeviceStream(Stream stream, IDisposable transport,
-            ViiperVirtualDeviceLifetime deviceLifetime)
+            ViiperVirtualDeviceLifetime deviceLifetime,
+            string hapticsConverter = ViiperHapticsConverter.Legacy)
         {
+            HapticsConverter = hapticsConverter;
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
             this.transport = transport ?? throw new ArgumentNullException(nameof(transport));
             this.deviceLifetime = deviceLifetime ??
@@ -12242,6 +12304,8 @@ namespace FUT404DS
         }
 
         public uint BusId => deviceLifetime.BusId;
+
+        internal string HapticsConverter { get; }
 
         public string DevId => deviceLifetime.DevId;
 

@@ -19,9 +19,9 @@ namespace FUT404DS.SetupActions
     {
         private const string RegistryKeyPath = @"SOFTWARE\FUT404DS";
         private const string InfrastructureVersion =
-            "VIIPER-0.1.5-rc4.6+USBIP-0.9.7.7";
+            "VIIPER-0.1.9-rc4.6.6+USBIP-0.9.7.7";
         private const string CurrentBundledViiperName =
-            "VIIPER-0.1.5-rc4.6-x64.exe";
+            "VIIPER-0.1.9-rc4.6.6-x64.exe";
         private static string CorrelationId =
             Guid.NewGuid().ToString("N");
         private static readonly string InstallerLogRoot = Path.Combine(

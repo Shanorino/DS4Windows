@@ -150,6 +150,20 @@ namespace FUT404DSWPF
             FUT404DS.PortableLabContext.Initialize(e.Args,
                 Path.GetDirectoryName(FUT404DS.Global.exelocation));
 
+            if (FUT404DS.ViiperProcessRepair.TryRunHelper(e.Args, out int brokerStopExitCode))
+            {
+                runShutdown = false;
+                Current.Shutdown(brokerStopExitCode);
+                return;
+            }
+
+            if (FUT404DS.ViiperManagedRepair.TryRunHelper(e.Args, out int brokerRepairExitCode))
+            {
+                runShutdown = false;
+                Current.Shutdown(brokerRepairExitCode);
+                return;
+            }
+
             if (StartupMethods.TryRunTaskRefreshHelper(e.Args,
                     out int startupTaskExitCode))
             {
@@ -235,15 +249,35 @@ namespace FUT404DSWPF
             // can be changed; development lab mode remains externally owned.
             if (!FUT404DS.PortableLabContext.IsActive)
             {
+                bool startupMaintenanceAttempted = true;
                 try
                 {
+                    string portableRoot = FUT404DS.PortableBrokerRepair.TryGetPortableRoot(
+                        Path.GetDirectoryName(FUT404DS.Global.exelocation));
+                    if (portableRoot != null && !AcquirePortableRepairStartupGate()) return;
+                    startupMaintenanceAttempted = FUT404DS.PortableBrokerMaintenance.EnsureStartupPayload(
+                        Path.GetDirectoryName(FUT404DS.Global.exelocation));
+                    if (startupMaintenanceAttempted) FUT404DS.ViiperRecovery.TryBeginAutomaticRecovery();
                     FUT404DS.PortableBrokerContext.Initialize(
                         Path.GetDirectoryName(FUT404DS.Global.exelocation));
                 }
-                catch (FUT404DS.PortableBrokerStartupException exception)
+                catch (Exception exception)
                 {
-                    CancelPortableStartup(exception.Message);
-                    return;
+                    // Preserve portable ownership even when offline repair
+                    // fails. Settings must remain available; never fall back
+                    // to an installed broker or migrate this user's package.
+                    if (!FUT404DS.PortableBrokerContext.TryInitializeUnavailable(
+                            Path.GetDirectoryName(FUT404DS.Global.exelocation), out string identityFailure))
+                    {
+                        // An unverified folder cannot safely become a portable
+                        // repair target or fall back to the installed broker.
+                        CancelPortableStartup(exception.Message + "\n\n" + identityFailure +
+                            "\n\nExtract a complete portable package into a writable local folder, then reopen FUT404DS. No installed broker was selected.");
+                        return;
+                    }
+                    if (startupMaintenanceAttempted) FUT404DS.ViiperRecovery.TryBeginAutomaticRecovery();
+                    MessageBox.Show(exception.Message, "VIIPER needs attention",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
 
@@ -272,7 +306,7 @@ namespace FUT404DSWPF
             // another instance is already running if TryOpenExisting returns true.
             try
             {
-                if (EventWaitHandleAcl.TryOpenExisting(SingleAppComEventName,
+                if (threadComEvent == null && EventWaitHandleAcl.TryOpenExisting(SingleAppComEventName,
                 EventWaitHandleRights.Synchronize |
                 EventWaitHandleRights.Modify,
                 out EventWaitHandle tempComEvent))
@@ -307,9 +341,12 @@ namespace FUT404DSWPF
             // Create the Event handle
             try
             {
-                threadComEvent = CreateSingleAppComEvent(SingleAppComEventName,
-                    requireNew: FUT404DS.PortableLabContext.IsActive ||
-                        FUT404DS.PortableBrokerContext.IsActive);
+                if (threadComEvent == null)
+                    // The earlier open-existing check is only an activation
+                    // convenience. Another installed launch can win after it;
+                    // only creating the named event authorizes a mapper.
+                    threadComEvent = CreateSingleAppComEvent(SingleAppComEventName,
+                        requireNew: true);
                 if (threadComEvent == null)
                 {
                     MessageBox.Show("Another FUT404DS instance started first. This startup was cancelled.",
@@ -503,6 +540,28 @@ namespace FUT404DSWPF
             StartupDiag(logger, "MainWindow.LateChecks returned");
         }
 
+        private bool AcquirePortableRepairStartupGate()
+        {
+            try
+            {
+                if (EventWaitHandleAcl.TryOpenExisting(SingleAppComEventName,
+                        EventWaitHandleRights.Synchronize | EventWaitHandleRights.Modify,
+                        out EventWaitHandle existing))
+                {
+                    using (existing) existing.Set();
+                    runShutdown = false;
+                    Current.Shutdown();
+                    return false;
+                }
+                threadComEvent = CreateSingleAppComEvent(SingleAppComEventName, requireNew: true);
+                if (threadComEvent != null) return true;
+            }
+            catch (UnauthorizedAccessException) { ShowSingleInstanceAccessError(); }
+            runShutdown = false;
+            Current.Shutdown();
+            return false;
+        }
+
         private void CancelPortableStartup(string message)
         {
             MessageBox.Show(message, "FUT404DS portable",
@@ -516,27 +575,23 @@ namespace FUT404DSWPF
             FUT404DS.PortableBrokerContext portable =
                 FUT404DS.PortableBrokerContext.Current;
             if (portable == null) return true;
+            if (!portable.IsVerifiedBackend(portable.ViiperPath)) return true;
             try
             {
                 portable.Start();
-                Stopwatch startup = Stopwatch.StartNew();
-                const int startupBudgetMilliseconds = 8000;
-                string lastProbeFailure = null;
-                while (startup.ElapsedMilliseconds < startupBudgetMilliseconds)
+                bool Probe(int timeoutMilliseconds, out string lastProbeFailure)
                 {
                     if (!portable.InspectOwnedProcess(out bool running, out string failure) || !running)
                         throw new FUT404DS.PortableBrokerStartupException(failure ??
                             "The portable VIIPER process stopped before it was ready. Check that USB/IP 0.9.7.7 is installed and available, then restart FUT404DS.");
 
-                    int remaining = startupBudgetMilliseconds - (int)startup.ElapsedMilliseconds;
-                    if (FUT404DS.ViiperSetupManager.ProbeServer(
+                    return FUT404DS.ViiperSetupManager.ProbeServer(
                             FUT404DS.ViiperSetupManager.ApiHost,
                             FUT404DS.ViiperSetupManager.ApiPort, authenticated: true,
-                            out lastProbeFailure, totalTimeoutMilliseconds: Math.Max(1, Math.Min(1000, remaining))) &&
-                        portable.InspectOwnedProcess(out running, out _) && running)
-                        return true;
-                    Thread.Sleep(50);
+                            out lastProbeFailure, totalTimeoutMilliseconds: timeoutMilliseconds) &&
+                        portable.InspectOwnedProcess(out running, out _) && running;
                 }
+                if (FUT404DS.ViiperStartupReadiness.Wait(Probe, out string lastProbeFailure)) return true;
                 throw new FUT404DS.PortableBrokerStartupException(
                     FUT404DS.PortableBrokerContext.DescribeReadinessFailure(lastProbeFailure));
             }
@@ -546,9 +601,17 @@ namespace FUT404DSWPF
                 // child before showing a modal dialog; otherwise its ports stay
                 // occupied until the user dismisses the error. Borrowed brokers
                 // are never stopped by this context, including this failure path.
-                portable.Dispose();
-                CancelPortableStartup(exception.Message);
-                return false;
+                string message = exception.Message;
+                try { portable.Dispose(); }
+                catch (FUT404DS.PortableBrokerStartupException retirementFailure)
+                {
+                    // A child Windows could not retire remains pinned for the
+                    // explicit repair path; keep the application available.
+                    message += "\n\n" + retirementFailure.Message;
+                }
+                MessageBox.Show(message, "VIIPER needs attention",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return true;
             }
         }
 
@@ -1191,7 +1254,7 @@ namespace FUT404DSWPF
             }
             finally
             {
-                FUT404DS.PortableBrokerContext.Current?.Dispose();
+                DisposePortableBrokerForShutdown();
                 FUT404DS.PortableLabContext.Current?.Dispose();
             }
         }
@@ -1314,6 +1377,14 @@ namespace FUT404DSWPF
             try { classNameMmf?.Dispose(); }
             catch (ObjectDisposedException) { }
 
+            if (shutdownTimedOut)
+            {
+                // Environment.Exit bypasses Application_Exit's finally. Retire
+                // our child before closing the log; a failed stop must not throw
+                // through WPF shutdown or be hidden by the logger teardown.
+                DisposePortableBrokerForShutdown();
+            }
+
             try
             {
                 LogManager.Flush();
@@ -1323,10 +1394,16 @@ namespace FUT404DSWPF
 
             if (shutdownTimedOut)
             {
-                // Environment.Exit bypasses the outer Application_Exit
-                // finally. Retire only our child after the attempted drain.
-                FUT404DS.PortableBrokerContext.Current?.Dispose();
                 Environment.Exit(0);
+            }
+        }
+
+        private static void DisposePortableBrokerForShutdown()
+        {
+            try { FUT404DS.PortableBrokerContext.Current?.Dispose(); }
+            catch (FUT404DS.PortableBrokerStartupException error)
+            {
+                logHolder?.Logger?.Warn("Portable VIIPER shutdown needs attention: " + error.Message);
             }
         }
     }
